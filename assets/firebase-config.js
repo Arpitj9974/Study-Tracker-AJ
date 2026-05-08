@@ -3,15 +3,15 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 // ==========================================
-// 🔴 ACTION REQUIRED: PASTE YOUR KEYS HERE!
+// 🟢 DATABASE CONNECTED!
 // ==========================================
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyC8Wkh81i0wfR1qxCO1zSNz3f8mIuK1DAo",
+  authDomain: "arpits-exam-hub.firebaseapp.com",
+  projectId: "arpits-exam-hub",
+  storageBucket: "arpits-exam-hub.firebasestorage.app",
+  messagingSenderId: "110326918692",
+  appId: "1:110326918692:web:5088181cc70543ec16b2b1"
 };
 
 let app, auth, db;
