@@ -59,13 +59,13 @@ function getTimelineProgress() {
 function buildNav() {
   const page = window.location.pathname.split('/').pop() || 'index.html';
   const links = [
-    { page: 'index.html',              href: 'index.html',              icon: '📊', label: 'Dashboard' },
-    { page: 'tracker-speedmath.html',  href: 'tracker-speedmath.html',  icon: '⚡', label: 'Speed Math' },
-    { page: 'tracker-quant.html',      href: 'tracker-quant.html',      icon: '🔢', label: 'Quant' },
-    { page: 'tracker-reasoning.html',  href: 'tracker-reasoning.html',  icon: '🧠', label: 'Reasoning' },
-    { page: 'tracker-english.html',    href: 'tracker-english.html',    icon: '📝', label: 'English' },
-    { page: 'tracker-coding.html',     href: 'tracker-coding.html',     icon: '💻', label: 'NQT Coding' },
-    { page: 'tracker-gk.html',         href: 'tracker-gk.html',         icon: '🌍', label: 'General Knowledge' },
+    { page: 'index.html',              href: 'index.html?v=3',              icon: '📊', label: 'Dashboard' },
+    { page: 'tracker-speedmath.html',  href: 'tracker-speedmath.html?v=3',  icon: '⚡', label: 'Speed Math' },
+    { page: 'tracker-quant.html',      href: 'tracker-quant.html?v=3',      icon: '🔢', label: 'Quant' },
+    { page: 'tracker-reasoning.html',  href: 'tracker-reasoning.html?v=3',  icon: '🧠', label: 'Reasoning' },
+    { page: 'tracker-english.html',    href: 'tracker-english.html?v=3',    icon: '📝', label: 'English' },
+    { page: 'tracker-coding.html',     href: 'tracker-coding.html?v=3',     icon: '💻', label: 'NQT Coding' },
+    { page: 'tracker-gk.html',         href: 'tracker-gk.html?v=3',         icon: '🌍', label: 'General Knowledge' },
   ];
 
   const stats   = readStats();
