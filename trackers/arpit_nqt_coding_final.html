@@ -1,0 +1,314 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.w{font-family:var(--font-sans, 'DM Sans', sans-serif);padding:1rem 0}
+.note{padding:12px 16px;background:var(--bg-elevated, #1C2030);border-left:3px solid var(--accent-amber, #D97706);border-radius:var(--radius-md, 10px);font-size:12px;color:var(--text-secondary, #9BA3C4);line-height:1.6;margin-bottom:16px;border-top:1px solid var(--border-subtle);border-right:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);}
+.note b{color:var(--text-primary, #F0F2FF);font-weight:600}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.sc{padding:10px 12px;background:var(--bg-surface, #141720);border-radius:var(--radius-md, 10px);text-align:center;border:1px solid var(--border-medium, rgba(255,255,255,0.12))}
+.sn{font-size:24px;font-weight:500;color:var(--text-primary, #F0F2FF);font-family:var(--font-mono, 'JetBrains Mono', monospace);transition:color .3s}
+.sl{font-size:11px;color:var(--text-secondary, #9BA3C4);margin-top:4px;line-height:1.4}
+.lv{margin-bottom:16px}
+.lv-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px 14px;border-radius:var(--radius-md, 10px);border-left:3px solid;background:var(--bg-elevated, #1C2030)}
+.l1{border-color:var(--accent-purple, #7F77DD)}
+.l2{border-color:var(--accent-green, #1D9E75)}
+.l3{border-color:var(--accent-amber, #D97706)}
+.l4{border-color:#9CA3AF}
+.lv-info{flex:1}
+.lv-title{font-size:13px;font-weight:600;color:var(--text-primary, #F0F2FF)}
+.lv-meta{font-size:10px;color:var(--text-tertiary, #5A6080);margin-top:2px}
+.lv-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.lv-ct{font-size:11px;color:var(--text-tertiary, #5A6080);white-space:nowrap;font-family:var(--font-mono, 'JetBrains Mono', monospace)}
+.pb-bg{height:4px;background:var(--bg-hover, #222640);border-radius:2px;overflow:hidden;width:60px}
+.pb-f{height:100%;border-radius:2px;transition:width .4s}
+.f1{background:var(--accent-purple, #7F77DD)}.f2{background:var(--accent-green, #1D9E75)}.f3{background:var(--accent-amber, #D97706)}.f4{background:#9CA3AF}
+.roi-bar{font-size:9px;padding:2px 7px;border-radius:3px;font-weight:600;white-space:nowrap}
+.roi-h{background:rgba(29,158,117,0.15);color:var(--accent-green, #1D9E75);border:1px solid rgba(29,158,117,0.3)}
+.roi-m{background:rgba(217,119,6,0.15);color:var(--accent-amber, #D97706);border:1px solid rgba(217,119,6,0.3)}
+.roi-l{background:rgba(156,163,175,0.15);color:#9CA3AF;border:1px solid rgba(156,163,175,0.3)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.card{background:var(--bg-surface, #141720);border:1px solid var(--border-subtle, rgba(255,255,255,0.07));border-radius:var(--radius-md, 10px);padding:12px;cursor:pointer;transition:all .15s;user-select:none;position:relative}
+.card:hover{background:var(--bg-hover, #222640);border-color:var(--border-medium, rgba(255,255,255,0.12))}
+.card.done{opacity:.5}
+.card.done .cn{text-decoration:line-through;color:var(--text-tertiary, #5A6080)}
+.card-top{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.ck{width:16px;height:16px;border-radius:4px;border:1px solid var(--border-medium, rgba(255,255,255,0.12));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:transparent;transition:all .2s;background:var(--bg-elevated, #1C2030)}
+.card.done .ck{color:white}
+.card.l1d .ck{background:var(--accent-purple, #7F77DD);border-color:var(--accent-purple, #7F77DD)}
+.card.l2d .ck{background:var(--accent-green, #1D9E75);border-color:var(--accent-green, #1D9E75)}
+.card.l3d .ck{background:var(--accent-amber, #D97706);border-color:var(--accent-amber, #D97706)}
+.card.l4d .ck{background:#9CA3AF;border-color:#9CA3AF}
+.cn{font-size:13px;font-weight:600;color:var(--text-primary, #F0F2FF);flex:1;line-height:1.3}
+.pri-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-h{background:var(--accent-green, #1D9E75)}.dot-m{background:var(--accent-amber, #D97706)}.dot-l{background:#9CA3AF}
+.csub{font-size:11px;color:var(--text-secondary, #9BA3C4);line-height:1.55;margin-bottom:8px}
+.cmeta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.cprob{font-size:11px;color:var(--text-tertiary, #5A6080)}
+.cprob b{color:var(--text-secondary, #9BA3C4);font-weight:500}
+.ctag{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600;white-space:nowrap}
+.tg-h{background:rgba(29,158,117,0.15);color:var(--accent-green, #1D9E75);border:1px solid rgba(29,158,117,0.3)}
+.tg-m{background:rgba(217,119,6,0.15);color:var(--accent-amber, #D97706);border:1px solid rgba(217,119,6,0.3)}
+.tg-s{background:rgba(156,163,175,0.15);color:#9CA3AF;border:1px solid rgba(156,163,175,0.3)}
+.sec-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(156,163,175,0.15);color:#9CA3AF;margin-bottom:10px;font-weight:500;border:1px solid rgba(156,163,175,0.3)}
+.io-box{margin-top:16px;padding:12px 16px;background:var(--bg-elevated, #1C2030);border-radius:var(--radius-md, 10px);border:1px solid var(--border-subtle, rgba(255,255,255,0.07))}
+.io-title{font-size:12px;font-weight:600;color:var(--text-primary, #F0F2FF);margin-bottom:8px}
+.io-code{font-size:11px;color:var(--text-secondary, #9BA3C4);font-family:var(--font-mono, 'JetBrains Mono', monospace);line-height:1.9;background:var(--bg-surface, #141720);padding:10px 12px;border-radius:var(--radius-md, 10px);border:1px solid var(--border-subtle, rgba(255,255,255,0.07))}
+.strat{margin-top:16px;padding:12px 16px;background:var(--bg-elevated, #1C2030);border-radius:var(--radius-md, 10px);border-left:3px solid var(--accent-purple, #7F77DD);border-top:1px solid var(--border-subtle);border-right:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);}
+.strat-t{font-size:12px;font-weight:600;color:var(--text-primary, #F0F2FF);margin-bottom:8px}
+.srow{display:flex;gap:8px;margin-bottom:6px;font-size:11px;color:var(--text-secondary, #9BA3C4);line-height:1.5}
+.stime{font-size:11px;font-weight:600;color:var(--text-primary, #F0F2FF);min-width:72px;flex-shrink:0;font-family:var(--font-mono, 'JetBrains Mono', monospace)}
+.legend{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary, #9BA3C4)}
+.sp{height:0}
+.sr-only { display: none; }
+</style>
+
+<div class="w">
+<h2 class="sr-only">Arpit NQT coding roadmap final with priority weights</h2>
+
+<div class="note"><b>Language: Python · Platform: LeetCode + HackerRank · Target: 80–100 problems · Timeline: May → August</b><br>Coding = 2 questions, 45 min, partial scoring. Green dot = highest ROI for NQT. Do not move to Level 4 until Levels 1+2 are fully done.</div>
+
+<div class="legend">
+  <div class="leg"><div class="pri-dot dot-h"></div>Must master — highest NQT return</div>
+  <div class="leg"><div class="pri-dot dot-m"></div>Important — study after green topics</div>
+  <div class="leg"><div class="pri-dot dot-l"></div>Secondary — time-box to 2 weeks max</div>
+</div>
+
+<div class="st">
+  <div class="sc"><div class="sn" id="dn">0</div><div class="sl">topics done</div></div>
+  <div class="sc"><div class="sn" id="prb">0</div><div class="sl">problems solved</div></div>
+  <div class="sc"><div class="sn" id="pc">0%</div><div class="sl">complete</div></div>
+</div>
+
+<!-- LEVEL 1 -->
+<div class="lv">
+  <div class="lv-hdr l1">
+    <div class="lv-info">
+      <div class="lv-title">Level 1 — Foundation</div>
+      <div class="lv-meta">3 weeks · 32 problems · Complete before Level 2</div>
+    </div>
+    <div class="lv-right">
+      <span class="roi-bar roi-h">Highest ROI</span>
+      <div class="pb-bg"><div class="pb-f f1" id="l1b" style="width:0%"></div></div>
+      <span class="lv-ct" id="l1c">0/5</span>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card" data-n="1" data-lv="1" data-p="0" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Python Basics for DSA</span></div>
+      <div class="csub">Lists · Dicts · Sets · String methods · List comprehension · enumerate · zip · Map/Filter · Lambda</div>
+      <div class="cmeta"><span class="cprob">Target: <b>0 problems</b> (concept only)</span><span class="ctag tg-h">Day 1</span></div>
+    </div>
+    <div class="card" data-n="2" data-lv="1" data-p="10" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Arrays & Lists</span></div>
+      <div class="csub">Traversal · Reverse · Rotate · Max/Min/Sum · Find duplicates · Subarray problems · Two sum brute force</div>
+      <div class="cmeta"><span class="cprob">Target: <b>10 problems</b> · LeetCode Easy</span><span class="ctag tg-h">Top priority</span></div>
+    </div>
+    <div class="card" data-n="3" data-lv="1" data-p="8" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Strings</span></div>
+      <div class="csub">Reverse · Palindrome check · Anagram check · Count characters · Substring search · Split/Join · Replace</div>
+      <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy</span><span class="ctag tg-h">Top priority</span></div>
+    </div>
+    <div class="card" data-n="4" data-lv="1" data-p="8" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Basic Math & Number Theory</span></div>
+      <div class="csub">Prime check · Sieve of Eratosthenes · GCD/LCM · Factorial · Fibonacci · Digit sum/reverse · Modular arithmetic</div>
+      <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy</span><span class="ctag tg-h">Top priority</span></div>
+    </div>
+    <div class="card" data-n="5" data-lv="1" data-p="6" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Functions & Recursion</span></div>
+      <div class="csub">Defining functions · Default args · *args/**kwargs · Recursive factorial/Fibonacci · Base case logic · Call stack</div>
+      <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy</span><span class="ctag tg-m">Important</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL 2 -->
+<div class="lv">
+  <div class="lv-hdr l2">
+    <div class="lv-info">
+      <div class="lv-title">Level 2 — Core DSA Techniques</div>
+      <div class="lv-meta">4 weeks · 32 problems · Highest return after Level 1</div>
+    </div>
+    <div class="lv-right">
+      <span class="roi-bar roi-h">Highest ROI</span>
+      <div class="pb-bg"><div class="pb-f f2" id="l2b" style="width:0%"></div></div>
+      <span class="lv-ct" id="l2c">0/4</span>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card" data-n="6" data-lv="2" data-p="8" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Searching</span></div>
+      <div class="csub">Linear search · Binary search iterative + recursive · Binary search on answer · Search in rotated sorted array</div>
+      <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
+    </div>
+    <div class="card" data-n="7" data-lv="2" data-p="6" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Sorting</span></div>
+      <div class="csub">Bubble/Selection/Insertion (understand why, not memorise) · Python sorted() & sort() · Custom comparators · sort by key</div>
+      <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
+    </div>
+    <div class="card" data-n="8" data-lv="2" data-p="8" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Two Pointer Technique</span></div>
+      <div class="csub">Left-right pointers on sorted array · Pair with target sum · Remove duplicates in-place · Container with most water · Triplet sum</div>
+      <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
+    </div>
+    <div class="card" data-n="9" data-lv="2" data-p="10" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Hashing — Dict & Set</span></div>
+      <div class="csub">Frequency count · Find duplicates · Two Sum O(n) · Group anagrams · Counter · defaultdict · First non-repeating character</div>
+      <div class="cmeta"><span class="cprob">Target: <b>10 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL 3 -->
+<div class="lv">
+  <div class="lv-hdr l3">
+    <div class="lv-info">
+      <div class="lv-title">Level 3 — Data Structures</div>
+      <div class="lv-meta">2 weeks · 17 problems · After Levels 1 + 2 are fully done</div>
+    </div>
+    <div class="lv-right">
+      <span class="roi-bar roi-m">Important</span>
+      <div class="pb-bg"><div class="pb-f f3" id="l3b" style="width:0%"></div></div>
+      <span class="lv-ct" id="l3c">0/3</span>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card" data-n="10" data-lv="3" data-p="6" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Stack</span></div>
+      <div class="csub">Implement using list · Valid parentheses · Next greater element · Balanced brackets · Infix to Postfix · Min stack</div>
+      <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top in Level 3</span></div>
+    </div>
+    <div class="card" data-n="11" data-lv="3" data-p="5" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Queue & Deque</span></div>
+      <div class="csub">Implement using collections.deque · Sliding window max · First non-repeating char · Circular queue concept · BFS intro</div>
+      <div class="cmeta"><span class="cprob">Target: <b>5 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top in Level 3</span></div>
+    </div>
+    <div class="card" data-n="12" data-lv="3" data-p="6" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Linked List Basics</span></div>
+      <div class="csub">Node creation · Traversal · Insert/Delete · Reverse a linked list · Find middle node · Detect cycle (Floyd's)</div>
+      <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-m">Important</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL 4 -->
+<div class="lv">
+  <div class="lv-hdr l4">
+    <div class="lv-info">
+      <div class="lv-title">Level 4 — NQT Patterns</div>
+      <div class="lv-meta">2 weeks MAX · 22 problems · Time-box strictly — do not overinvest</div>
+    </div>
+    <div class="lv-right">
+      <span class="roi-bar roi-l">Secondary</span>
+      <div class="pb-bg"><div class="pb-f f4" id="l4b" style="width:0%"></div></div>
+      <span class="lv-ct" id="l4c">0/4</span>
+    </div>
+  </div>
+  <div class="sec-badge">⚠ Do not start Level 4 until Levels 1 + 2 are fully complete. These are Q2 insurance, not Q1 foundation.</div>
+  <div class="cards">
+    <div class="card" data-n="13" data-lv="4" data-p="6" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Sliding Window</span></div>
+      <div class="csub">Fixed size window sum · Max subarray (Kadane's algo) · Longest substring without repeat · Minimum window substring</div>
+      <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Medium</span><span class="ctag tg-m">Q2 pattern</span></div>
+    </div>
+    <div class="card" data-n="14" data-lv="4" data-p="6" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Basic Dynamic Programming</span></div>
+      <div class="csub">Fibonacci with memoisation · Climbing stairs · Coin change · 0/1 Knapsack basic · Longest Common Subsequence</div>
+      <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Medium</span><span class="ctag tg-m">Q2 pattern</span></div>
+    </div>
+    <div class="card" data-n="15" data-lv="4" data-p="5" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-l"></div><span class="cn">Greedy Basics</span></div>
+      <div class="csub">Activity selection · Minimum coins · Fractional knapsack · Job sequencing · Meeting rooms problem</div>
+      <div class="cmeta"><span class="cprob">Target: <b>5 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-s">Secondary</span></div>
+    </div>
+    <div class="card" data-n="16" data-lv="4" data-p="5" onclick="tog(this)">
+      <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-l"></div><span class="cn">Matrix & 2D Arrays</span></div>
+      <div class="csub">Traverse 2D array · Rotate matrix · Search in sorted matrix · Spiral order · Diagonal sum · Pascal's triangle</div>
+      <div class="cmeta"><span class="cprob">Target: <b>5 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-s">Secondary</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- I/O -->
+<div class="io-box">
+  <div class="io-title">Python I/O Template — memorise before exam day</div>
+  <div class="io-code">
+n = int(input())&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# single integer<br>
+a, b = map(int, input().split())&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# two integers<br>
+arr = list(map(int, input().split()))&nbsp;&nbsp;# list of integers<br>
+data = [int(input()) for _ in range(n)]# n lines → list<br>
+grid = [list(map(int,input().split())) for _ in range(n)] # 2D<br>
+print(result)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# output<br>
+print(*arr)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# list without brackets
+  </div>
+</div>
+
+<!-- Strategy -->
+<div class="strat">
+  <div class="strat-t">45-Minute Exam Strategy</div>
+  <div class="srow"><span class="stime">0–5 min</span><span>Read BOTH questions fully. Decide which is easier. Never start coding before planning.</span></div>
+  <div class="srow"><span class="stime">5–25 min</span><span>Solve Q1 completely. Check edge cases: n=0, n=1, empty input, all same values. Submit.</span></div>
+  <div class="srow"><span class="stime">25–40 min</span><span>Write brute force for Q2 first. Get it working and submitted. Partial marks are real marks.</span></div>
+  <div class="srow"><span class="stime">40–45 min</span><span>Optimise Q2 only if brute force is already submitted. Working > elegant every time.</span></div>
+</div>
+
+</div>
+
+<script>
+if (!window.storage) {
+  window.storage = {
+    get: async (k) => ({ value: localStorage.getItem(k) }),
+    set: async (k, v) => localStorage.setItem(k, v),
+    delete: async (k) => localStorage.removeItem(k)
+  };
+}
+var st={};
+var probs={1:0,2:10,3:8,4:8,5:6,6:8,7:6,8:8,9:10,10:6,11:5,12:6,13:6,14:6,15:5,16:5};
+var lvMap={1:1,2:1,3:1,4:1,5:1,6:2,7:2,8:2,9:2,10:3,11:3,12:3,13:4,14:4,15:4,16:4};
+var lvCls={1:'l1d',2:'l2d',3:'l3d',4:'l4d'};
+var lvMax={1:5,2:4,3:3,4:4};
+
+async function load(){
+  for(var i=1;i<=16;i++){
+    try{var r=await window.storage.get('cdf_'+i);if(r&&r.value==='1')st[i]=true;}catch(e){}
+  }
+  render();
+}
+function render(){
+  document.querySelectorAll('.card').forEach(function(c){
+    var n=parseInt(c.getAttribute('data-n'));
+    var lv=parseInt(c.getAttribute('data-lv'));
+    if(st[n]){c.classList.add('done');c.classList.add(lvCls[lv]);}
+    else{c.classList.remove('done');c.classList.remove(lvCls[lv]);}
+  });
+  upd();
+}
+async function tog(el){
+  var n=parseInt(el.getAttribute('data-n'));
+  var lv=parseInt(el.getAttribute('data-lv'));
+  st[n]=!st[n];
+  if(st[n]){el.classList.add('done');el.classList.add(lvCls[lv]);}
+  else{el.classList.remove('done');el.classList.remove(lvCls[lv]);}
+  try{
+    if(st[n])await window.storage.set('cdf_'+n,'1');
+    else await window.storage.delete('cdf_'+n);
+  }catch(e){}
+  upd();
+}
+function upd(){
+  var tot=0,totalP=0;
+  var lc={1:0,2:0,3:0,4:0};
+  for(var i=1;i<=16;i++){
+    if(st[i]){tot++;lc[lvMap[i]]++;totalP+=probs[i];}
+  }
+  document.getElementById('dn').textContent=tot;
+  document.getElementById('prb').textContent=totalP;
+  document.getElementById('pc').textContent=Math.round(tot/16*100)+'%';
+  for(var l=1;l<=4;l++){
+    document.getElementById('l'+l+'c').textContent=lc[l]+'/'+lvMax[l];
+    document.getElementById('l'+l+'b').style.width=Math.round(lc[l]/lvMax[l]*100)+'%';
+  }
+  document.getElementById('dn').style.color=tot>0?'#7F77DD':'var(--color-text-primary)';
+}
+load();
+</script>

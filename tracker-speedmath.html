@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Speed Math Tracker — Arpit's Exam Hub</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+</head>
+<body style="--page-accent:#F97316">
+<main>
+  <div class="topbar"><h1>Speed Math Tracker</h1></div>
+  <div class="content-wrapper">
+  <div class="tracker-shell page-content">
+    <div class="tracker-header">
+      <div class="th-top">
+        <div class="th-title">⚡ Speed Math</div>
+        <div class="th-badges">
+          <span class="badge badge--nqt" style="background:rgba(249,115,22,0.15);color:#F97316;border-color:rgba(249,115,22,0.4)">Foundation · 28 Items</span>
+        </div>
+      </div>
+      <div class="th-mini-stats" id="speedmath-mini"></div>
+    </div>
+    <div class="tracker-iframe-wrap">
+      <iframe id="tracker-frame" src="trackers/speed_math_tracker.html?v=1" title="Speed Math Tracker"
+        onload="syncIframeHeight(this)"></iframe>
+    </div>
+  </div>
+  </div>
+</main>
+<script src="assets/nav.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => renderMiniStats('speedmath', 'speedmath-mini'));
+</script>
+</body>
+</html>

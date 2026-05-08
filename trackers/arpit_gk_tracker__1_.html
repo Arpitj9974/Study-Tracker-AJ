@@ -1,0 +1,169 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.w{font-family:var(--font-sans, 'DM Sans', sans-serif);padding:1rem 0}
+.ca{padding:12px 16px;background:var(--bg-elevated, #1C2030);border-left:3px solid var(--accent-amber, #D97706);border-radius:var(--radius-md, 10px);font-size:12px;color:var(--text-secondary, #9BA3C4);line-height:1.6;margin-bottom:12px;border-top:1px solid var(--border-subtle);border-right:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);}
+.ca b{color:var(--text-primary, #F0F2FF);font-weight:600}
+.res{padding:12px 16px;background:var(--bg-elevated, #1C2030);border-left:3px solid var(--accent-purple, #7F77DD);border-radius:var(--radius-md, 10px);font-size:12px;color:var(--text-secondary, #9BA3C4);line-height:1.6;margin-bottom:16px;border-top:1px solid var(--border-subtle);border-right:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);}
+.res b{color:var(--text-primary, #F0F2FF);font-weight:600}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.sc{padding:10px 12px;background:var(--bg-surface, #141720);border-radius:var(--radius-md, 10px);text-align:center;border:1px solid var(--border-medium, rgba(255,255,255,0.12))}
+.sn{font-size:24px;font-weight:500;color:var(--text-primary, #F0F2FF);font-family:var(--font-mono, 'JetBrains Mono', monospace);transition:color .3s}
+.sl{font-size:11px;color:var(--text-secondary, #9BA3C4);margin-top:4px;line-height:1.4}
+.sh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:var(--radius-md, 10px);border-left:3px solid;margin-bottom:10px;background:var(--bg-elevated, #1C2030)}
+.sh-p{border-color:var(--accent-purple, #7F77DD)}
+.sh-t{border-color:var(--accent-green, #1D9E75)}
+.sht{font-size:13px;font-weight:600;color:var(--text-primary, #F0F2FF)}
+.shc{font-size:11px;color:var(--text-secondary, #9BA3C4);font-family:var(--font-mono, 'JetBrains Mono', monospace)}
+.pb{margin-bottom:12px}
+.pb-bg{height:4px;background:var(--bg-hover, #222640);border-radius:2px;overflow:hidden}
+.pb-f{height:100%;border-radius:2px;transition:width .4s}
+.fp{background:var(--accent-purple, #7F77DD)}.ft{background:var(--accent-green, #1D9E75)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.cl{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:8px 0 3px}
+.cl-n{font-size:10px;font-weight:600;color:var(--text-tertiary, #5A6080);text-transform:uppercase;letter-spacing:.08em}
+.cl-q{font-size:10px;color:var(--text-tertiary, #5A6080);background:var(--bg-elevated, #1C2030);padding:2px 8px;border-radius:4px;border:1px solid var(--border-subtle, rgba(255,255,255,0.07))}
+.tr{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:var(--bg-surface, #141720);border:1px solid var(--border-subtle, rgba(255,255,255,0.07));border-radius:var(--radius-md, 10px);cursor:pointer;transition:all .15s;user-select:none}
+.tr:hover{background:var(--bg-hover, #222640);border-color:var(--border-medium, rgba(255,255,255,0.12))}
+.tr.done{opacity:.6}
+.tr.done .tn{text-decoration:line-through;color:var(--text-tertiary, #5A6080)}
+.ck{width:16px;height:16px;border-radius:4px;border:1px solid var(--border-medium, rgba(255,255,255,0.12));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:transparent;transition:all .2s;margin-top:2px;background:var(--bg-elevated, #1C2030)}
+.tr.done .ck{background:var(--accent-purple, #7F77DD);border-color:var(--accent-purple, #7F77DD);color:white}
+.tr.done.bk .ck{background:var(--accent-green, #1D9E75);border-color:var(--accent-green, #1D9E75);color:white}
+.tn{font-size:13px;font-weight:500;color:var(--text-primary, #F0F2FF);line-height:1.4;margin-bottom:2px;flex:1}
+.ts{font-size:11px;color:var(--text-secondary, #9BA3C4);line-height:1.5}
+.tnum{font-size:12px;font-weight:500;color:var(--text-tertiary, #5A6080);font-family:var(--font-mono, 'JetBrains Mono', monospace);min-width:20px;flex-shrink:0;margin-top:2px}
+.bdg{font-size:9px;padding:2px 6px;border-radius:4px;flex-shrink:0;font-weight:600;white-space:nowrap;margin-top:2px;background:rgba(29,158,117,0.15);color:var(--accent-green, #1D9E75);border:1px solid rgba(29,158,117,0.3);text-transform:uppercase;letter-spacing:.05em}
+.div{margin:20px 0;padding:16px;background:var(--bg-elevated, #1C2030);border-radius:var(--radius-lg, 14px);border:1px solid var(--accent-purple, #7F77DD);text-align:center}
+.div-t{font-size:14px;font-weight:600;color:var(--text-primary, #F0F2FF);margin-bottom:4px}
+.div-s{font-size:12px;color:var(--text-secondary, #9BA3C4)}
+.sp{height:0}
+.sr-only { display: none; }
+</style>
+
+<div class="w">
+<h2 class="sr-only">GK tracker 23 chapters SSC Banking</h2>
+
+<div class="ca"><b>📰 Current Affairs — Daily habit, not a chapter.</b> 30 min newspaper daily (The Hindu / Indian Express) + one monthly CA magazine. SSC tests last 6 months. Start today, never stop.</div>
+<div class="res"><b>Core resources:</b> NCERT Class 6–10 (all subjects) → Lucent's GK → Last 10 years SSC CGL GA PYQ papers → Monthly CA magazine</div>
+
+<div class="st">
+  <div class="sc"><div class="sn" id="dn">0</div><div class="sl">done</div></div>
+  <div class="sc"><div class="sn" id="rm">23</div><div class="sl">remaining</div></div>
+  <div class="sc"><div class="sn" id="pc">0%</div><div class="sl">complete</div></div>
+</div>
+
+<div class="sh sh-p">
+  <div><div class="sht">Phase 1 — high priority SSC GK · May → August</div><div style="font-size:10px;margin-top:2px;color:#534AB7">Study now alongside NQT prep. Highest SSC marks. Needs revision cycles — start early.</div></div>
+  <span class="shc" id="p1c">0/12</span>
+</div>
+<div class="pb"><div class="pb-bg"><div class="pb-f fp" id="p1b" style="width:0%"></div></div></div>
+
+<div class="tg">
+  <div class="cl"><span class="cl-n">Science — highest SSC GA cluster</span><span class="cl-q">7–8 Qs</span></div>
+  <div class="tr" data-n="1" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">1</span><div><div class="tn">Physics</div><div class="ts">Light & optics · Sound · Motion · Electricity & magnetism · Heat · Nuclear basics</div></div></div>
+  <div class="tr" data-n="2" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">2</span><div><div class="tn">Chemistry</div><div class="ts">Periodic table · Acids/Bases/Salts · Chemical reactions · Carbon compounds · Metals & non-metals</div></div></div>
+  <div class="tr" data-n="3" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">3</span><div><div class="tn">Biology</div><div class="ts">Cell structure · Plant kingdom · Animal kingdom · Human body · Diseases · Vitamins · Genetics basics</div></div></div>
+
+  <div class="cl"><span class="cl-n">History</span><span class="cl-q">4–5 Qs</span></div>
+  <div class="tr" data-n="4" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">4</span><div><div class="tn">Ancient Indian History</div><div class="ts">Indus Valley · Vedic Age · Buddhism/Jainism · Maurya Empire (Ashoka) · Gupta Empire</div></div></div>
+  <div class="tr" data-n="5" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">5</span><div><div class="tn">Medieval Indian History</div><div class="ts">Delhi Sultanate · Mughal Empire · Bhakti/Sufi movements · Vijayanagara · Maratha Empire</div></div></div>
+  <div class="tr" data-n="6" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">6</span><div><div class="tn">Modern Indian History</div><div class="ts">British conquest · 1857 Revolt · Indian National Congress · Gandhi · Key Acts 1909–1947 · Partition</div></div></div>
+
+  <div class="cl"><span class="cl-n">Geography</span><span class="cl-q">3–4 Qs</span></div>
+  <div class="tr" data-n="7" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">7</span><div><div class="tn">Physical Geography</div><div class="ts">Earth's layers · Atmosphere · Rocks · Landforms · Ocean currents · Climate & cyclones</div></div></div>
+  <div class="tr" data-n="8" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">8</span><div><div class="tn">Indian Geography</div><div class="ts">Physiographic divisions · Rivers & dams · States/UTs · Climate · Soils · Agriculture · Minerals</div></div></div>
+
+  <div class="cl"><span class="cl-n">Indian Polity</span><span class="cl-q">3–4 Qs</span></div>
+  <div class="tr" data-n="9" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">9</span><div><div class="tn">Constitution & Fundamental Rights</div><div class="ts">Preamble · Parts & Schedules · Art 12–35 (FR) · DPSP · Duties · Key Amendments</div></div></div>
+  <div class="tr" data-n="10" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">10</span><div><div class="tn">Government Structure</div><div class="ts">Parliament · President · PM & Cabinet · Governor · Supreme Court · EC / CAG / UPSC</div></div></div>
+
+  <div class="cl"><span class="cl-n">Economy</span><span class="cl-q">2–3 Qs</span></div>
+  <div class="tr" data-n="11" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">11</span><div><div class="tn">Basic Economics</div><div class="ts">GDP/GNP/NNP · Inflation types · Monetary & Fiscal policy · Market structures · Elasticity</div></div></div>
+  <div class="tr" data-n="12" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">12</span><div><div class="tn">Indian Economy & Schemes</div><div class="ts">RBI · SEBI · NABARD · Budget terms · Five Year Plans · Key government schemes</div></div></div>
+</div>
+
+<div class="div">
+  <div class="div-t">TCS NQT Exam — August 2025</div>
+  <div class="div-s">GK is not in NQT. After NQT — shift 100% to SSC. Complete Phase 2 now.</div>
+</div>
+
+<div class="sh sh-t">
+  <div><div class="sht">Phase 2 — supporting GK + static + banking · after NQT</div><div style="font-size:10px;margin-top:2px;color:#0F6E56">Lower SSC weightage. Study when 100% SSC focused after NQT.</div></div>
+  <span class="shc" id="p2c">0/11</span>
+</div>
+<div class="pb"><div class="pb-bg"><div class="pb-f ft" id="p2b" style="width:0%"></div></div></div>
+
+<div class="tg">
+  <div class="cl"><span class="cl-n">Extended history & geography</span><span class="cl-q">1–2 Qs each</span></div>
+  <div class="tr" data-n="13" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">13</span><div><div class="tn">World History</div><div class="ts">French Revolution · American Independence · World War 1 & 2 · Cold War · UN formation</div></div></div>
+  <div class="tr" data-n="14" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">14</span><div><div class="tn">World Geography</div><div class="ts">Continents & countries · Capitals & currencies · Major rivers/mountains · Deserts · Straits</div></div></div>
+  <div class="tr" data-n="15" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">15</span><div><div class="tn">Environment & Ecology</div><div class="ts">Ecosystems · Biodiversity hotspots · National parks · Climate conventions (Paris, Kyoto, CBD)</div></div></div>
+  <div class="tr" data-n="16" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">16</span><div><div class="tn">Art & Culture</div><div class="ts">Classical dance forms · Indian music · Architecture · UNESCO Heritage Sites · Paintings · Festivals</div></div></div>
+
+  <div class="cl"><span class="cl-n">Static GK</span><span class="cl-q">1–2 Qs combined</span></div>
+  <div class="tr" data-n="17" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">17</span><div><div class="tn">Sports & Games</div><div class="ts">Olympics · Commonwealth/Asian Games · Trophies & cups · Stadiums · Governing bodies</div></div></div>
+  <div class="tr" data-n="18" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">18</span><div><div class="tn">Awards & Honours</div><div class="ts">Bharat Ratna · Padma awards · Nobel Prize · Gallantry awards · Sahitya Akademi</div></div></div>
+  <div class="tr" data-n="19" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">19</span><div><div class="tn">Books & Authors</div><div class="ts">Books by Gandhi, Nehru, Ambedkar · Recent Booker/Nobel winners · Indian leaders' books</div></div></div>
+  <div class="tr" data-n="20" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">20</span><div><div class="tn">Important Organizations</div><div class="ts">UN bodies (UNESCO, WHO, UNICEF) · IMF · World Bank · WTO · SAARC · G20 · Headquarters</div></div></div>
+  <div class="tr" data-n="21" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">21</span><div><div class="tn">Important Days & Themes</div><div class="ts">National & International days · UN observances · Current year themes · Scientific inventors</div></div></div>
+
+  <div class="cl"><span class="cl-n">Exam-specific</span><span class="cl-q">varies</span></div>
+  <div class="tr" data-n="22" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">22</span><div><div class="tn">Computer Awareness</div><div class="ts">Hardware/Software · Input/Output · Internet terms · MS Office · Storage units · Generations</div></div></div>
+  <div class="tr bk" data-n="23" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">23</span><div><div class="tn">Banking Awareness</div><div class="ts">RBI tools (CRR/SLR/Repo) · Types of banks · NEFT/RTGS/IMPS/UPI · NPA · Basel norms</div></div><span class="bdg">Banking</span></div>
+</div>
+</div>
+
+<script>
+if (!window.storage) {
+  window.storage = {
+    get: async (k) => ({ value: localStorage.getItem(k) }),
+    set: async (k, v) => localStorage.setItem(k, v),
+    delete: async (k) => localStorage.removeItem(k)
+  };
+}
+var st={};
+async function load(){
+  for(var i=1;i<=23;i++){
+    try{
+      var r=await window.storage.get('gk_'+i);
+      if(r&&r.value==='1')st[i]=true;
+    }catch(e){}
+  }
+  render();
+}
+function render(){
+  document.querySelectorAll('.tr').forEach(function(r){
+    var n=parseInt(r.getAttribute('data-n'));
+    if(st[n])r.classList.add('done');
+    else r.classList.remove('done');
+  });
+  upd();
+}
+async function tog(el){
+  var n=parseInt(el.getAttribute('data-n'));
+  st[n]=!st[n];
+  if(st[n])el.classList.add('done');
+  else el.classList.remove('done');
+  try{
+    if(st[n])await window.storage.set('gk_'+n,'1');
+    else await window.storage.delete('gk_'+n);
+  }catch(e){}
+  upd();
+}
+function upd(){
+  var tot=0,p1=0,p2=0;
+  for(var i=1;i<=23;i++){
+    if(st[i]){tot++;if(i<=12)p1++;else p2++;}
+  }
+  document.getElementById('dn').textContent=tot;
+  document.getElementById('rm').textContent=23-tot;
+  document.getElementById('pc').textContent=Math.round(tot/23*100)+'%';
+  document.getElementById('p1c').textContent=p1+'/12';
+  document.getElementById('p2c').textContent=p2+'/11';
+  document.getElementById('p1b').style.width=Math.round(p1/12*100)+'%';
+  document.getElementById('p2b').style.width=Math.round(p2/11*100)+'%';
+  document.getElementById('dn').style.color=tot>0?'#7F77DD':'var(--color-text-primary)';
+}
+load();
+</script>

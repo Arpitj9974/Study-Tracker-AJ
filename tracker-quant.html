@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Quant Tracker — Arpit's Exam Hub</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+</head>
+<body style="--page-accent:#7F77DD">
+<main>
+  <div class="topbar"><h1>Quant Tracker</h1></div>
+  <div class="content-wrapper">
+  <div class="tracker-shell page-content">
+    <div class="tracker-header">
+      <div class="th-top">
+        <div class="th-title">🔢 Quantitative Aptitude</div>
+        <div class="th-badges">
+          <span class="badge badge--nqt">NQT · Phase 1 · 27 ch</span>
+          <span class="badge badge--ssc">SSC · Phase 2 · 14 ch</span>
+        </div>
+      </div>
+      <div class="th-mini-stats" id="quant-mini"></div>
+    </div>
+    <div class="tracker-iframe-wrap">
+      <iframe id="tracker-frame" src="trackers/arpit_quant_tracker.html" title="Quant Tracker"
+        onload="syncIframeHeight(this)"></iframe>
+    </div>
+  </div>
+  </div>
+</main>
+<script src="assets/nav.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => renderMiniStats('quant', 'quant-mini'));
+</script>
+</body>
+</html>

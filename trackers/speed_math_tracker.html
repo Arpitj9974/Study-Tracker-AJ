@@ -1,0 +1,200 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.w{font-family:var(--font-sans,'DM Sans',sans-serif);padding:1rem 0}
+.sub{font-size:12px;color:var(--text-secondary,#9BA3C4);margin-bottom:16px;line-height:1.5}
+.warn{padding:12px 16px;background:var(--bg-elevated,#1C2030);border-left:3px solid #EF4444;border-radius:var(--radius-md,10px);font-size:12px;color:var(--text-secondary,#9BA3C4);line-height:1.6;margin-bottom:10px;border-top:1px solid var(--border-subtle);border-right:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)}
+.warn b{color:var(--text-primary,#F0F2FF);font-weight:600}
+.drill{padding:12px 16px;background:var(--bg-elevated,#1C2030);border-left:3px solid var(--accent-amber,#D97706);border-radius:var(--radius-md,10px);font-size:12px;color:var(--text-secondary,#9BA3C4);margin-bottom:16px;border-top:1px solid var(--border-subtle);border-right:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)}
+.drill b{color:var(--text-primary,#F0F2FF);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat{padding:10px 12px;background:var(--bg-surface,#141720);border-radius:var(--radius-md,10px);text-align:center;border:1px solid var(--border-medium,rgba(255,255,255,0.12))}
+.stat-n{font-size:24px;font-weight:500;color:var(--text-primary,#F0F2FF);font-family:var(--font-mono,'JetBrains Mono',monospace);transition:color .3s}
+.stat-l{font-size:11px;color:var(--text-secondary,#9BA3C4);margin-top:4px}
+.sec{margin-bottom:16px}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:var(--radius-md,10px);border-left:3px solid;margin-bottom:8px;background:var(--bg-elevated,#1C2030)}
+.sA{border-color:#7F77DD}.sB{border-color:#1D9E75}.sC{border-color:#D97706}.sD{border-color:#DB2777}.sE{border-color:#9CA3AF}
+.sec-title{font-size:13px;font-weight:600;color:var(--text-primary,#F0F2FF)}
+.sec-sub{font-size:10px;color:var(--text-tertiary,#5A6080);margin-top:2px}
+.sec-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.sec-ct{font-size:11px;color:var(--text-tertiary,#5A6080);font-family:var(--font-mono,'JetBrains Mono',monospace)}
+.pb{width:60px;height:4px;background:var(--bg-hover,#222640);border-radius:2px;overflow:hidden}
+.pbf{height:100%;border-radius:2px;transition:width .4s}
+.fA{background:#7F77DD}.fB{background:#1D9E75}.fC{background:#D97706}.fD{background:#DB2777}.fE{background:#9CA3AF}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.card{background:var(--bg-surface,#141720);border:1px solid var(--border-subtle,rgba(255,255,255,0.07));border-radius:var(--radius-md,10px);padding:12px;cursor:pointer;transition:all .15s;user-select:none}
+.card:hover{background:var(--bg-hover,#222640);border-color:var(--border-medium,rgba(255,255,255,0.12))}
+.card.done{opacity:.5}.card.done .cn{text-decoration:line-through;color:var(--text-tertiary,#5A6080)}
+.card.opt{border-style:dashed;opacity:.7}
+.ct{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.ck{width:16px;height:16px;border-radius:4px;border:1px solid var(--border-medium,rgba(255,255,255,0.12));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:transparent;transition:all .2s;background:var(--bg-elevated,#1C2030)}
+.card.done .ck{color:white}
+.cA.done .ck{background:#7F77DD;border-color:#7F77DD}
+.cB.done .ck{background:#1D9E75;border-color:#1D9E75}
+.cC.done .ck{background:#D97706;border-color:#D97706}
+.cD.done .ck{background:#DB2777;border-color:#DB2777}
+.cE.done .ck{background:#9CA3AF;border-color:#9CA3AF}
+.cn{font-size:13px;font-weight:600;color:var(--text-primary,#F0F2FF);flex:1;line-height:1.3}
+.bgs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.b{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600;white-space:nowrap;border:1px solid}
+.mm{background:rgba(29,158,117,0.15);color:#1D9E75;border-color:rgba(29,158,117,0.3)}
+.im{background:rgba(59,130,246,0.15);color:#3B82F6;border-color:rgba(59,130,246,0.3)}
+.op{background:rgba(156,163,175,0.1);color:#9CA3AF;border-color:rgba(156,163,175,0.2);border-style:dashed}
+.dd{background:rgba(217,119,6,0.15);color:#D97706;border-color:rgba(217,119,6,0.3)}
+.rv{background:rgba(219,39,119,0.15);color:#DB2777;border-color:rgba(219,39,119,0.3)}
+.cs{font-size:11px;color:var(--text-secondary,#9BA3C4);line-height:1.5}
+.sr-only{display:none}
+</style>
+
+<div class="w">
+<h2 class="sr-only">Speed Math Tracker — 28 items — Foundation</h2>
+<div class="sub">Foundation before SSC Quant chapters · 28 items · Progress saved automatically</div>
+
+<div class="warn"><b>⚠ Speed Math supports SSC Quant. It does NOT replace chapter practice, PYQs, or mocks.</b> Build this first — then start Quant chapters.</div>
+<div class="drill"><b>⏱ Daily drill = 15–20 min MAX.</b> Section A items only. Every morning before chapter study.</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n" id="dn">0</div><div class="stat-l">mastered</div></div>
+  <div class="stat"><div class="stat-n" id="rm">28</div><div class="stat-l">remaining</div></div>
+  <div class="stat"><div class="stat-n" id="pc">0%</div><div class="stat-l">complete</div></div>
+</div>
+
+<!-- A -->
+<div class="sec">
+<div class="sec-hdr sA">
+  <div><div class="sec-title">A — Memory Core</div><div class="sec-sub">Daily drill 15–20 min · Forward AND reverse recall</div></div>
+  <div class="sec-r"><div class="pb"><div class="pbf fA" id="sAb" style="width:0%"></div></div><span class="sec-ct" id="sAc">0/10</span></div>
+</div>
+<div class="grid">
+  <div class="card cA" data-n="1" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Multiplication Tables (2–20)</span></div><div class="bgs"><span class="b mm">MUST MASTER</span><span class="b dd">Daily drill</span></div><div class="cs">0-second recall on any table · No hesitation allowed</div></div>
+  <div class="card cA" data-n="2" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Squares (1–30)</span></div><div class="bgs"><span class="b mm">MUST MASTER</span><span class="b dd">Daily</span><span class="b rv">Reverse</span></div><div class="cs">17²=289 · Reverse: 289→17 · SSC gives answer, asks base</div></div>
+  <div class="card cA" data-n="3" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Cubes (1–20)</span></div><div class="bgs"><span class="b mm">MUST MASTER</span><span class="b dd">Daily</span><span class="b rv">Reverse</span></div><div class="cs">13³=2197 · Reverse: 2197→13 · Unit digit trick for cube roots</div></div>
+  <div class="card cA" data-n="4" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Powers (2¹–2¹², 3¹–3⁸, 4¹–4⁵, 5¹–5⁶)</span></div><div class="bgs"><span class="b im">IMPORTANT</span><span class="b dd">Daily</span></div><div class="cs">2¹²=4096 · 3⁸=6561 · Used in CI, indices, number system</div></div>
+  <div class="card cA" data-n="5" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Square Root Recognition</span></div><div class="bgs"><span class="b mm">MUST MASTER</span><span class="b dd">Daily</span></div><div class="cs">√2=1.414 · √3=1.732 · √5=2.236 · √7=2.646 · Perfect squares to 400</div></div>
+  <div class="card cA" data-n="6" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Cube Root Recognition</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">Perfect cubes to 21³=9261 · Unit digit: ends 3 → root ends 7</div></div>
+  <div class="card cA" data-n="7" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fraction ↔ % ↔ Decimal ↔ Ratio</span></div><div class="bgs"><span class="b mm">MUST MASTER</span><span class="b dd">Daily</span><span class="b rv">Reverse</span></div><div class="cs">1/2 to 1/20 + 1/7, 1/9, 1/11 · Reverse: 33.33%→1/3</div></div>
+  <div class="card cA" data-n="8" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Prime Numbers (2–100)</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">25 primes · Instant identification · Sieve method to memorise</div></div>
+  <div class="card cA" data-n="9" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Pythagorean Triplets (8 sets)</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">3-4-5 · 5-12-13 · 7-24-25 · 8-15-17 · 9-40-41 · 11-60-61 · 20-21-29 · 12-35-37</div></div>
+  <div class="card cA" data-n="10" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">CI Multipliers</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">5%: 1.05/1.1025/1.157 · 10%: 1.1/1.21/1.331 · 20%: 1.2/1.44/1.728</div></div>
+</div>
+</div>
+
+<!-- B -->
+<div class="sec">
+<div class="sec-hdr sB">
+  <div><div class="sec-title">B — Number Properties</div><div class="sec-sub">Study once · Apply in under 5 seconds · Rules, not formulas</div></div>
+  <div class="sec-r"><div class="pb"><div class="pbf fB" id="sBb" style="width:0%"></div></div><span class="sec-ct" id="sBc">0/5</span></div>
+</div>
+<div class="grid">
+  <div class="card cB" data-n="11" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Divisibility Rules (2–13)</span></div><div class="bgs"><span class="b mm">MUST MASTER</span></div><div class="cs">Rules for 2,3,4,5,6,7,8,9,10,11,12,13 · Every HCF/LCM + number system question uses this</div></div>
+  <div class="card cB" data-n="12" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Unit Digit Cycles</span></div><div class="bgs"><span class="b mm">MUST MASTER</span></div><div class="cs">2→4→8→6 (cycle 4) · 3→9→7→1 · 7→9→3→1 · 4&amp;6 fixed · 5&amp;0 fixed</div></div>
+  <div class="card cB" data-n="13" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Remainder Shortcuts</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">Cyclicity for large powers · Remainder by 9/10/11 pattern method</div></div>
+  <div class="card cB" data-n="14" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">LCM &amp; HCF Shortcuts</span></div><div class="bgs"><span class="b mm">MUST MASTER</span></div><div class="cs">Prime factorisation speed · Co-prime: LCM=product · LCM×HCF=product of numbers</div></div>
+  <div class="card cB" data-n="15" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Digital Sum / Casting Out 9s</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">Mod 9 answer check in 3 seconds · Catch calculation errors instantly</div></div>
+</div>
+</div>
+
+<!-- C -->
+<div class="sec">
+<div class="sec-hdr sC">
+  <div><div class="sec-title">C — Fast Computation</div><div class="sec-sub">Learn once · Drill until hand moves faster than brain</div></div>
+  <div class="sec-r"><div class="pb"><div class="pbf fC" id="sCb" style="width:0%"></div></div><span class="sec-ct" id="sCc">0/5</span></div>
+</div>
+<div class="grid">
+  <div class="card cC" data-n="16" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fast Addition + Subtraction</span></div><div class="bgs"><span class="b mm">MUST MASTER</span></div><div class="cs">Left-to-right addition · Complement from 10/100/1000 · SP=80% of CP directly</div></div>
+  <div class="card cC" data-n="17" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fast Multiplication — Vedic Toolkit</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">×11: add adjacent digits · Base-100: 97×98=9506 · ×25/125: ÷4/8</div></div>
+  <div class="card cC" data-n="18" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fast Division</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">Simplify fraction before dividing · Reciprocal multiplication · Divisibility check first</div></div>
+  <div class="card cC" data-n="19" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Squaring Shortcuts</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">75²=7×8|25=5625 · Near 100: 97²=94|09 · Near 50: 47²=22|09</div></div>
+  <div class="card cC opt" data-n="20" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Root Approximation</span></div><div class="bgs"><span class="b op">OPTIONAL — low SSC ROI</span></div><div class="cs">Newton's method · Only after A–D fully solid · Skip if time pressure</div></div>
+</div>
+</div>
+
+<!-- D -->
+<div class="sec">
+<div class="sec-hdr sD">
+  <div><div class="sec-title">D — Percentage, Ratio &amp; DI Mastery</div><div class="sec-sub">Heart of SSC Quant · 60% of marks live here</div></div>
+  <div class="sec-r"><div class="pb"><div class="pbf fD" id="sDb" style="width:0%"></div></div><span class="sec-ct" id="sDc">0/6</span></div>
+</div>
+<div class="grid">
+  <div class="card cD" data-n="21" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Unified % Calculation Speed</span></div><div class="bgs"><span class="b mm">MUST MASTER</span></div><div class="cs">x% of y = y% of x · 10%+5%+1% breakup · Convert % to fraction before calculating</div></div>
+  <div class="card cD" data-n="22" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Approximation by Fraction Memory</span></div><div class="bgs"><span class="b mm">MUST MASTER</span><span class="b rv">Reverse</span></div><div class="cs">14.28%=1/7 · 16.66%=1/6 · 11.11%=1/9 · 12.5%=1/8 · 8.33%=1/12</div></div>
+  <div class="card cD" data-n="23" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Successive % Change — Net Effect</span></div><div class="bgs"><span class="b mm">MUST MASTER</span></div><div class="cs">a+b+ab/100 · Two changes → one net % · P&amp;L chains · CI vs SI difference</div></div>
+  <div class="card cD" data-n="24" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Ratio + Fraction Comparison</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">HCF reduction · Compare by cross multiply without LCM · Ratio ↔ % conversion</div></div>
+  <div class="card cD" data-n="25" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Balancing / Assumed Mean Method</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">Reference point for averages · Work with deviations · 5× faster than direct calculation</div></div>
+  <div class="card cD" data-n="26" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Smart DI Rounding + Logical Approximation</span></div><div class="bgs"><span class="b mm">MUST MASTER</span></div><div class="cs">Error tolerance · Option elimination by range · Back-calculate from answer choices</div></div>
+</div>
+</div>
+
+<!-- E -->
+<div class="sec">
+<div class="sec-hdr sE">
+  <div><div class="sec-title">E — Advanced Tricks</div><div class="sec-sub">Only after Sections A–D are solid · Do not start early</div></div>
+  <div class="sec-r"><div class="pb"><div class="pbf fE" id="sEb" style="width:0%"></div></div><span class="sec-ct" id="sEc">0/2</span></div>
+</div>
+<div class="grid">
+  <div class="card cE" data-n="27" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Surds &amp; Indices Speed Shortcuts</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">Index laws in 3 seconds · Rationalise by conjugate · Compare surds without calculating</div></div>
+  <div class="card cE" data-n="28" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Successive P&amp;L + Recurring Decimals</span></div><div class="bgs"><span class="b im">IMPORTANT</span></div><div class="cs">M-D-MD/100 formula · 0.142857=1/7 · 0.0909=1/11 · Use in simplification questions</div></div>
+</div>
+</div>
+</div>
+
+<script>
+// Storage polyfill
+if (!window.storage) {
+  window.storage = {
+    get: async (k) => ({ value: localStorage.getItem(k) }),
+    set: async (k, v) => localStorage.setItem(k, v),
+    delete: async (k) => localStorage.removeItem(k)
+  };
+}
+// One-time migration from old sm_arpit JSON format
+try {
+  var _old = localStorage.getItem('sm_arpit');
+  if (_old) {
+    var _o = JSON.parse(_old);
+    for (var _k in _o) { if (_o[_k]) localStorage.setItem('sm_' + _k, '1'); }
+    localStorage.removeItem('sm_arpit');
+  }
+} catch(e) {}
+
+var st = {};
+var sm = {1:'A',2:'A',3:'A',4:'A',5:'A',6:'A',7:'A',8:'A',9:'A',10:'A',11:'B',12:'B',13:'B',14:'B',15:'B',16:'C',17:'C',18:'C',19:'C',20:'C',21:'D',22:'D',23:'D',24:'D',25:'D',26:'D',27:'E',28:'E'};
+var mx = {A:10,B:5,C:5,D:6,E:2};
+
+async function load() {
+  for (var i = 1; i <= 28; i++) {
+    try { var r = await window.storage.get('sm_' + i); if (r && r.value === '1') st[i] = true; } catch(e) {}
+  }
+  render();
+}
+function render() {
+  document.querySelectorAll('.card').forEach(function(c) {
+    var n = parseInt(c.getAttribute('data-n'));
+    if (st[n]) c.classList.add('done'); else c.classList.remove('done');
+  });
+  upd();
+}
+async function tog(el) {
+  var n = parseInt(el.getAttribute('data-n'));
+  st[n] = !st[n];
+  if (st[n]) el.classList.add('done'); else el.classList.remove('done');
+  try {
+    if (st[n]) await window.storage.set('sm_' + n, '1');
+    else await window.storage.delete('sm_' + n);
+  } catch(e) {}
+  upd();
+}
+function upd() {
+  var tot = 0, sc = {A:0,B:0,C:0,D:0,E:0};
+  for (var i = 1; i <= 28; i++) { if (st[i]) { tot++; sc[sm[i]]++; } }
+  document.getElementById('dn').textContent = tot;
+  document.getElementById('rm').textContent = 28 - tot;
+  document.getElementById('pc').textContent = Math.round(tot / 28 * 100) + '%';
+  document.getElementById('dn').style.color = tot > 0 ? '#F97316' : 'var(--text-primary,#F0F2FF)';
+  ['A','B','C','D','E'].forEach(function(s) {
+    document.getElementById('s' + s + 'c').textContent = sc[s] + '/' + mx[s];
+    document.getElementById('s' + s + 'b').style.width = Math.round(sc[s] / mx[s] * 100) + '%';
+  });
+}
+load();
+</script>

@@ -1,0 +1,159 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{font-family:var(--font-sans, 'DM Sans', sans-serif);padding:1rem 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.sc{padding:10px 12px;background:var(--bg-surface, #141720);border-radius:var(--radius-md, 10px);text-align:center;border:1px solid var(--border-medium, rgba(255,255,255,0.12))}
+.sn{font-size:24px;font-weight:500;color:var(--text-primary, #F0F2FF);font-family:var(--font-mono, 'JetBrains Mono', monospace)}
+.sl{font-size:11px;color:var(--text-secondary, #9BA3C4);margin-top:4px;line-height:1.4}
+.mc{display:block}
+.sh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:var(--radius-md, 10px);border-left:3px solid;margin-bottom:10px;background:var(--bg-elevated, #1C2030)}
+.sh-p{border-color:var(--accent-purple, #7F77DD)}
+.sh-t{border-color:var(--accent-green, #1D9E75)}
+.sht{font-size:13px;font-weight:600;color:var(--text-primary, #F0F2FF)}
+.shc{font-size:11px;color:var(--text-secondary, #9BA3C4);font-family:var(--font-mono, 'JetBrains Mono', monospace)}
+.pb{margin-bottom:12px}
+.pb-bg{height:4px;background:var(--bg-hover, #222640);border-radius:2px;overflow:hidden}
+.pb-f{height:100%;border-radius:2px;transition:width .4s}
+.fp{background:var(--accent-purple, #7F77DD)}.ft{background:var(--accent-green, #1D9E75)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.cl{grid-column:1/-1;font-size:10px;font-weight:600;color:var(--text-tertiary, #5A6080);text-transform:uppercase;letter-spacing:.08em;padding:8px 0 3px}
+.tr{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg-surface, #141720);border:1px solid var(--border-subtle, rgba(255,255,255,0.07));border-radius:var(--radius-md, 10px);cursor:pointer;transition:all .15s;user-select:none}
+.tr:hover{background:var(--bg-hover, #222640);border-color:var(--border-medium, rgba(255,255,255,0.12))}
+.tr.done{opacity:.6}
+.tr.done .tn{text-decoration:line-through;color:var(--text-tertiary, #5A6080)}
+.ck{width:16px;height:16px;border-radius:4px;border:1px solid var(--border-medium, rgba(255,255,255,0.12));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:transparent;transition:all .2s;background:var(--bg-elevated, #1C2030)}
+.tr.done .ck{background:var(--accent-purple, #7F77DD);border-color:var(--accent-purple, #7F77DD);color:white}
+.tr.done.ssc .ck{background:var(--accent-green, #1D9E75);border-color:var(--accent-green, #1D9E75);color:white}
+.tr.done.opt .ck{background:var(--accent-amber, #D97706);border-color:var(--accent-amber, #D97706);color:white}
+.tnum{font-size:12px;font-weight:500;color:var(--text-tertiary, #5A6080);font-family:var(--font-mono, 'JetBrains Mono', monospace);min-width:20px;flex-shrink:0}
+.tn{font-size:13px;color:var(--text-primary, #F0F2FF);flex:1;line-height:1.4}
+.badge{font-size:9px;padding:2px 6px;border-radius:4px;flex-shrink:0;font-weight:600;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
+.b-s{background:rgba(29,158,117,0.15);color:var(--accent-green, #1D9E75);border:1px solid rgba(29,158,117,0.3)}
+.b-mv{background:rgba(59,130,246,0.15);color:var(--accent-blue, #3B82F6);border:1px solid rgba(59,130,246,0.3)}
+.nqt-div{margin:20px 0;padding:16px;background:var(--bg-elevated, #1C2030);border-radius:var(--radius-lg, 14px);border:1px solid var(--accent-purple, #7F77DD);text-align:center}
+.nd-t{font-size:14px;font-weight:600;color:var(--text-primary, #F0F2FF);margin-bottom:4px}
+.nd-s{font-size:12px;color:var(--text-secondary, #9BA3C4)}
+.sp{height:0}
+</style>
+
+<div class="wrap">
+<div class="stats">
+  <div class="sc"><div class="sn" id="dn">0</div><div class="sl">done</div></div>
+  <div class="sc"><div class="sn" id="rm">44</div><div class="sl">remaining</div></div>
+  <div class="sc"><div class="sn" id="pc">0%</div><div class="sl">complete</div></div>
+</div>
+
+<div class="mc" id="r-c">
+  <div class="sh sh-p"><div class="sht">Phase 1 — before NQT · May → August</div><span class="shc" id="r-p1c">0 / 23</span></div>
+  <div class="pb"><div class="pb-bg"><div class="pb-f fp" id="r-p1b" style="width:0%"></div></div></div>
+  <div class="tg">
+    <div class="cl">Foundation — letter positions</div>
+    <div class="tr ssc" data-n="1" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">1</span><span class="tn">Alphabet Test</span><span class="badge b-s">SSC only</span></div>
+    <div class="sp"></div>
+    <div class="cl">Series</div>
+    <div class="tr" data-n="2" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">2</span><span class="tn">Number Series</span></div>
+    <div class="tr" data-n="3" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">3</span><span class="tn">Alphabet Series</span></div>
+    <div class="tr" data-n="4" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">4</span><span class="tn">Letter Series</span></div>
+    <div class="tr" data-n="5" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">5</span><span class="tn">Alphanumeric Series</span></div>
+    <div class="cl">Analogy & classification</div>
+    <div class="tr" data-n="6" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">6</span><span class="tn">Analogy (Word / Semantic)</span></div>
+    <div class="tr" data-n="7" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">7</span><span class="tn">Analogy Or... (Number / Letter)</span></div>
+    <div class="tr" data-n="8" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">8</span><span class="tn">Odd One Out</span></div>
+    <div class="cl">Coding & pattern</div>
+    <div class="tr" data-n="9" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">9</span><span class="tn">Coding - Decoding</span></div>
+    <div class="tr" data-n="10" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">10</span><span class="tn">Missing Number</span></div>
+    <div class="cl">Relational reasoning</div>
+    <div class="tr" data-n="11" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">11</span><span class="tn">Blood Relation</span></div>
+    <div class="tr" data-n="12" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">12</span><span class="tn">Direction Sense</span></div>
+    <div class="tr ssc" data-n="13" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">13</span><span class="tn">Ranking</span><span class="badge b-s">SSC only</span></div>
+    <div class="sp"></div>
+    <div class="cl">Logical reasoning</div>
+    <div class="tr" data-n="14" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">14</span><span class="tn">Venn Diagram</span></div>
+    <div class="tr" data-n="15" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">15</span><span class="tn">Syllogism</span></div>
+    <div class="tr" data-n="16" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">16</span><span class="tn">Statement - Conclusions</span></div>
+    <div class="tr" data-n="17" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">17</span><span class="tn">Statement - Argument</span></div>
+    <div class="tr" data-n="18" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">18</span><span class="tn">Statement - Assumptions</span></div>
+    <div class="tr" data-n="19" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">19</span><span class="tn">Data Sufficiency</span></div>
+    <div class="cl">Arrangement & puzzle</div>
+    <div class="tr" data-n="20" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">20</span><span class="tn">Seating Arrangement</span></div>
+    <div class="tr" data-n="21" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">21</span><span class="tn">Puzzle</span></div>
+    <div class="cl">Time-based — NQT tests these</div>
+    <div class="tr" data-n="22" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">22</span><span class="tn">Calendar</span><span class="badge b-mv">moved up</span></div>
+    <div class="tr" data-n="23" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">23</span><span class="tn">Clock</span><span class="badge b-mv">moved up</span></div>
+  </div>
+
+  <div class="nqt-div"><div class="nd-t">TCS NQT Exam — August 2025</div><div class="nd-s">23 chapters · NQT fully covered · Now SSC-only chapters</div></div>
+
+  <div class="sh sh-t"><div class="sht">Phase 2 — after NQT · SSC focus</div><span class="shc" id="r-p2c">0 / 21</span></div>
+  <div class="pb"><div class="pb-bg"><div class="pb-f ft" id="r-p2b" style="width:0%"></div></div></div>
+  <div class="tg">
+    <div class="cl">Verbal & word-based</div>
+    <div class="tr ssc" data-n="24" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">24</span><span class="tn">Word Formation</span></div>
+    <div class="tr ssc" data-n="25" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">25</span><span class="tn">Similarity</span></div>
+    <div class="tr ssc" data-n="26" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">26</span><span class="tn">Mathematical Operations</span></div>
+    <div class="tr ssc" data-n="27" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">27</span><span class="tn">Arrangement Of...</span></div>
+    <div class="cl">Logic extensions</div>
+    <div class="tr ssc" data-n="28" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">28</span><span class="tn">Coded Inequality</span></div>
+    <div class="tr ssc" data-n="29" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">29</span><span class="tn">Course of Action</span></div>
+    <div class="tr ssc" data-n="30" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">30</span><span class="tn">Cause and Effect</span></div>
+    <div class="tr ssc" data-n="31" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">31</span><span class="tn">Decision Making</span></div>
+    <div class="tr ssc" data-n="32" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">32</span><span class="tn">Input - Output</span></div>
+    <div class="tr ssc" data-n="33" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">33</span><span class="tn">Age Problem</span></div>
+    <div class="cl">Non-verbal visual</div>
+    <div class="tr ssc" data-n="34" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">34</span><span class="tn">Mirror and Water Image</span></div>
+    <div class="tr ssc" data-n="35" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">35</span><span class="tn">Paper Cutting & Folding</span></div>
+    <div class="tr ssc" data-n="36" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">36</span><span class="tn">Counting - Figure</span></div>
+    <div class="tr ssc" data-n="37" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">37</span><span class="tn">Figure Series</span></div>
+    <div class="tr ssc" data-n="38" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">38</span><span class="tn">Figure Completion</span></div>
+    <div class="tr ssc" data-n="39" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">39</span><span class="tn">Figure Formation</span></div>
+    <div class="tr ssc" data-n="40" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">40</span><span class="tn">Embedded Figures</span></div>
+    <div class="tr ssc" data-n="41" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">41</span><span class="tn">Classification</span></div>
+    <div class="tr ssc" data-n="42" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">42</span><span class="tn">Dot Situation</span></div>
+    <div class="tr ssc" data-n="43" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">43</span><span class="tn">Dice</span></div>
+    <div class="tr ssc" data-n="44" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">44</span><span class="tn">Cube & Cuboid</span></div>
+  </div>
+</div>
+</div>
+
+<script>
+if (!window.storage) {
+  window.storage = {
+    get: async (k) => ({ value: localStorage.getItem(k) }),
+    set: async (k, v) => localStorage.setItem(k, v),
+    delete: async (k) => localStorage.removeItem(k)
+  };
+}
+var rS={};
+async function loadAll(){
+  for(var i=1;i<=44;i++){try{var r=await window.storage.get('rs3_'+i);if(r&&r.value==='1')rS[i]=true;}catch(e){}}
+  renderAll();
+}
+function renderAll(){
+  document.querySelectorAll('.tr').forEach(function(r){var n=parseInt(r.getAttribute('data-n'));if(rS[n])r.classList.add('done');else r.classList.remove('done');});
+  upd();
+}
+async function tog(el){
+  var n=parseInt(el.getAttribute('data-n'));
+  rS[n]=!rS[n];
+  if(rS[n])el.classList.add('done');else el.classList.remove('done');
+  var k='rs3_'+n;
+  try{if(rS[n])await window.storage.set(k,'1');else await window.storage.delete(k);}catch(e){}
+  upd();
+}
+function upd(){
+  var tot=44;
+  var p1m=23;
+  var p2m=tot-p1m;
+  var dn=0,p1=0,p2=0;
+  for(var i=1;i<=tot;i++){if(rS[i]){dn++;if(i<=p1m)p1++;else p2++;}}
+  document.getElementById('dn').textContent=dn;
+  document.getElementById('rm').textContent=tot-dn;
+  document.getElementById('pc').textContent=Math.round(dn/tot*100)+'%';
+  document.getElementById('r-p1c').textContent=p1+' / '+p1m;
+  document.getElementById('r-p2c').textContent=p2+' / '+p2m;
+  document.getElementById('r-p1b').style.width=p1m>0?Math.round(p1/p1m*100)+'%':'0%';
+  document.getElementById('r-p2b').style.width=p2m>0?Math.round(p2/p2m*100)+'%':'0%';
+  document.getElementById('dn').style.color=dn>0?'var(--text-primary)':'var(--text-primary)';
+}
+loadAll();
+</script>

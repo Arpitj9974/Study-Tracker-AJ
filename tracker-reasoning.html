@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Reasoning Tracker — Arpit's Exam Hub</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+</head>
+<body style="--page-accent:#3B82F6">
+<main>
+  <div class="topbar"><h1>Reasoning Tracker</h1></div>
+  <div class="content-wrapper">
+  <div class="tracker-shell page-content">
+    <div class="tracker-header">
+      <div class="th-top">
+        <div class="th-title">🧠 Logical Reasoning</div>
+        <div class="th-badges">
+          <span class="badge badge--nqt">NQT · Phase 1 · 23 ch</span>
+          <span class="badge badge--ssc">SSC · Phase 2 · 21 ch</span>
+        </div>
+      </div>
+      <div class="th-mini-stats" id="reasoning-mini"></div>
+    </div>
+    <div class="tracker-iframe-wrap">
+      <iframe id="tracker-frame" src="trackers/arpit_reasoning_tracker.html" title="Reasoning Tracker"
+        onload="syncIframeHeight(this)"></iframe>
+    </div>
+  </div>
+  </div>
+</main>
+<script src="assets/nav.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => renderMiniStats('reasoning', 'reasoning-mini'));
+</script>
+</body>
+</html>

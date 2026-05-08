@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>GK Tracker — Arpit's Exam Hub</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+</head>
+<body style="--page-accent:#EC4899">
+<main>
+  <div class="topbar"><h1>General Knowledge Tracker</h1></div>
+  <div class="content-wrapper">
+  <div class="tracker-shell page-content">
+    <div class="tracker-header">
+      <div class="th-top">
+        <div class="th-title">🌍 General Knowledge</div>
+        <div class="th-badges">
+          <span class="badge badge--ssc">SSC · Priority · 12 ch</span>
+          <span class="badge badge--ssc">SSC · Supporting · 11 ch</span>
+        </div>
+      </div>
+      <div class="th-mini-stats" id="gk-mini"></div>
+    </div>
+    <div class="tracker-iframe-wrap">
+      <iframe id="tracker-frame" src="trackers/arpit_gk_tracker__1_.html?v=2" title="GK Tracker"
+        onload="syncIframeHeight(this)"></iframe>
+    </div>
+  </div>
+  </div>
+</main>
+<script src="assets/nav.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => renderMiniStats('gk', 'gk-mini'));
+</script>
+</body>
+</html>
