@@ -46,6 +46,16 @@
   .card,.tr{width:100% !important;box-sizing:border-box !important}
   body{overflow-x:hidden !important}
 }
+
+.ch-info{display:flex;flex-direction:column;flex:1;min-width:0}
+.ch-meta{display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap}
+.pri{font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.pri-veryhigh{background:rgba(239,68,68,.15);color:#F87171;border:1px solid rgba(239,68,68,.3)}
+.pri-high{background:rgba(251,146,60,.15);color:#FB923C;border:1px solid rgba(251,146,60,.3)}
+.pri-medium{background:rgba(250,204,21,.12);color:#FCD34D;border:1px solid rgba(250,204,21,.25)}
+.pri-low{background:rgba(148,163,184,.1);color:#94A3B8;border:1px solid rgba(148,163,184,.2)}
+.pri-skip{background:rgba(100,116,139,.1);color:#64748B;border:1px solid rgba(100,116,139,.15)}
+.ch-pill{font-size:9px;color:#5A6080;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;white-space:nowrap}
 </style>
 
 <div class="w">
@@ -68,26 +78,26 @@
 
 <div class="tg">
   <div class="cl"><span class="cl-n">Science — highest SSC GA cluster</span><span class="cl-q">7–8 Qs</span></div>
-  <div class="tr" data-n="1" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">1</span><div><div class="tn">Physics</div><div class="ts">Light & optics · Sound · Motion · Electricity & magnetism · Heat · Nuclear basics</div></div></div>
-  <div class="tr" data-n="2" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">2</span><div><div class="tn">Chemistry</div><div class="ts">Periodic table · Acids/Bases/Salts · Chemical reactions · Carbon compounds · Metals & non-metals</div></div></div>
-  <div class="tr" data-n="3" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">3</span><div><div class="tn">Biology</div><div class="ts">Cell structure · Plant kingdom · Animal kingdom · Human body · Diseases · Vitamins · Genetics basics</div></div></div>
+  <div class="tr" data-n="1" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">1</span><div><div class="tn">Physics</div><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 10 days</span></div><div class="ts">Light & optics · Sound · Motion · Electricity & magnetism · Heat · Nuclear basics</div></div></div>
+  <div class="tr" data-n="2" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">2</span><div><div class="tn">Chemistry</div><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 10 days</span></div><div class="ts">Periodic table · Acids/Bases/Salts · Chemical reactions · Carbon compounds · Metals & non-metals</div></div></div>
+  <div class="tr" data-n="3" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">3</span><div><div class="tn">Biology</div><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 10 days</span></div><div class="ts">Cell structure · Plant kingdom · Animal kingdom · Human body · Diseases · Vitamins · Genetics basics</div></div></div>
 
   <div class="cl"><span class="cl-n">History</span><span class="cl-q">4–5 Qs</span></div>
-  <div class="tr" data-n="4" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">4</span><div><div class="tn">Ancient Indian History</div><div class="ts">Indus Valley · Vedic Age · Buddhism/Jainism · Maurya Empire (Ashoka) · Gupta Empire</div></div></div>
-  <div class="tr" data-n="5" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">5</span><div><div class="tn">Medieval Indian History</div><div class="ts">Delhi Sultanate · Mughal Empire · Bhakti/Sufi movements · Vijayanagara · Maratha Empire</div></div></div>
-  <div class="tr" data-n="6" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">6</span><div><div class="tn">Modern Indian History</div><div class="ts">British conquest · 1857 Revolt · Indian National Congress · Gandhi · Key Acts 1909–1947 · Partition</div></div></div>
+  <div class="tr" data-n="4" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">4</span><div><div class="tn">Ancient Indian History</div><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 7 days</span></div><div class="ts">Indus Valley · Vedic Age · Buddhism/Jainism · Maurya Empire (Ashoka) · Gupta Empire</div></div></div>
+  <div class="tr" data-n="5" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">5</span><div><div class="tn">Medieval Indian History</div><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 7 days</span></div><div class="ts">Delhi Sultanate · Mughal Empire · Bhakti/Sufi movements · Vijayanagara · Maratha Empire</div></div></div>
+  <div class="tr" data-n="6" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">6</span><div><div class="tn">Modern Indian History</div><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 8 days</span></div><div class="ts">British conquest · 1857 Revolt · Indian National Congress · Gandhi · Key Acts 1909–1947 · Partition</div></div></div>
 
   <div class="cl"><span class="cl-n">Geography</span><span class="cl-q">3–4 Qs</span></div>
-  <div class="tr" data-n="7" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">7</span><div><div class="tn">Physical Geography</div><div class="ts">Earth's layers · Atmosphere · Rocks · Landforms · Ocean currents · Climate & cyclones</div></div></div>
-  <div class="tr" data-n="8" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">8</span><div><div class="tn">Indian Geography</div><div class="ts">Physiographic divisions · Rivers & dams · States/UTs · Climate · Soils · Agriculture · Minerals</div></div></div>
+  <div class="tr" data-n="7" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">7</span><div><div class="tn">Physical Geography</div><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 5 days</span></div><div class="ts">Earth's layers · Atmosphere · Rocks · Landforms · Ocean currents · Climate & cyclones</div></div></div>
+  <div class="tr" data-n="8" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">8</span><div><div class="tn">Indian Geography</div><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 7 days</span></div><div class="ts">Physiographic divisions · Rivers & dams · States/UTs · Climate · Soils · Agriculture · Minerals</div></div></div>
 
   <div class="cl"><span class="cl-n">Indian Polity</span><span class="cl-q">3–4 Qs</span></div>
-  <div class="tr" data-n="9" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">9</span><div><div class="tn">Constitution & Fundamental Rights</div><div class="ts">Preamble · Parts & Schedules · Art 12–35 (FR) · DPSP · Duties · Key Amendments</div></div></div>
-  <div class="tr" data-n="10" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">10</span><div><div class="tn">Government Structure</div><div class="ts">Parliament · President · PM & Cabinet · Governor · Supreme Court · EC / CAG / UPSC</div></div></div>
+  <div class="tr" data-n="9" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">9</span><div><div class="tn">Constitution & Fundamental Rights</div><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 6 days</span></div><div class="ts">Preamble · Parts & Schedules · Art 12–35 (FR) · DPSP · Duties · Key Amendments</div></div></div>
+  <div class="tr" data-n="10" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">10</span><div><div class="tn">Government Structure</div><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 6 days</span></div><div class="ts">Parliament · President · PM & Cabinet · Governor · Supreme Court · EC / CAG / UPSC</div></div></div>
 
   <div class="cl"><span class="cl-n">Economy</span><span class="cl-q">2–3 Qs</span></div>
-  <div class="tr" data-n="11" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">11</span><div><div class="tn">Basic Economics</div><div class="ts">GDP/GNP/NNP · Inflation types · Monetary & Fiscal policy · Market structures · Elasticity</div></div></div>
-  <div class="tr" data-n="12" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">12</span><div><div class="tn">Indian Economy & Schemes</div><div class="ts">RBI · SEBI · NABARD · Budget terms · Five Year Plans · Key government schemes</div></div></div>
+  <div class="tr" data-n="11" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">11</span><div><div class="tn">Basic Economics</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 5 days</span></div><div class="ts">GDP/GNP/NNP · Inflation types · Monetary & Fiscal policy · Market structures · Elasticity</div></div></div>
+  <div class="tr" data-n="12" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">12</span><div><div class="tn">Indian Economy & Schemes</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 5 days</span></div><div class="ts">RBI · SEBI · NABARD · Budget terms · Five Year Plans · Key government schemes</div></div></div>
 </div>
 
 <div class="div">
@@ -103,21 +113,21 @@
 
 <div class="tg">
   <div class="cl"><span class="cl-n">Extended history & geography</span><span class="cl-q">1–2 Qs each</span></div>
-  <div class="tr" data-n="13" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">13</span><div><div class="tn">World History</div><div class="ts">French Revolution · American Independence · World War 1 & 2 · Cold War · UN formation</div></div></div>
-  <div class="tr" data-n="14" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">14</span><div><div class="tn">World Geography</div><div class="ts">Continents & countries · Capitals & currencies · Major rivers/mountains · Deserts · Straits</div></div></div>
-  <div class="tr" data-n="15" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">15</span><div><div class="tn">Environment & Ecology</div><div class="ts">Ecosystems · Biodiversity hotspots · National parks · Climate conventions (Paris, Kyoto, CBD)</div></div></div>
-  <div class="tr" data-n="16" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">16</span><div><div class="tn">Art & Culture</div><div class="ts">Classical dance forms · Indian music · Architecture · UNESCO Heritage Sites · Paintings · Festivals</div></div></div>
+  <div class="tr" data-n="13" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">13</span><div><div class="tn">World History</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div><div class="ts">French Revolution · American Independence · World War 1 & 2 · Cold War · UN formation</div></div></div>
+  <div class="tr" data-n="14" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">14</span><div><div class="tn">World Geography</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 4 days</span></div><div class="ts">Continents & countries · Capitals & currencies · Major rivers/mountains · Deserts · Straits</div></div></div>
+  <div class="tr" data-n="15" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">15</span><div><div class="tn">Environment & Ecology</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 4 days</span></div><div class="ts">Ecosystems · Biodiversity hotspots · National parks · Climate conventions (Paris, Kyoto, CBD)</div></div></div>
+  <div class="tr" data-n="16" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">16</span><div><div class="tn">Art & Culture</div><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 5 days</span></div><div class="ts">Classical dance forms · Indian music · Architecture · UNESCO Heritage Sites · Paintings · Festivals</div></div></div>
 
   <div class="cl"><span class="cl-n">Static GK</span><span class="cl-q">1–2 Qs combined</span></div>
-  <div class="tr" data-n="17" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">17</span><div><div class="tn">Sports & Games</div><div class="ts">Olympics · Commonwealth/Asian Games · Trophies & cups · Stadiums · Governing bodies</div></div></div>
-  <div class="tr" data-n="18" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">18</span><div><div class="tn">Awards & Honours</div><div class="ts">Bharat Ratna · Padma awards · Nobel Prize · Gallantry awards · Sahitya Akademi</div></div></div>
-  <div class="tr" data-n="19" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">19</span><div><div class="tn">Books & Authors</div><div class="ts">Books by Gandhi, Nehru, Ambedkar · Recent Booker/Nobel winners · Indian leaders' books</div></div></div>
-  <div class="tr" data-n="20" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">20</span><div><div class="tn">Important Organizations</div><div class="ts">UN bodies (UNESCO, WHO, UNICEF) · IMF · World Bank · WTO · SAARC · G20 · Headquarters</div></div></div>
-  <div class="tr" data-n="21" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">21</span><div><div class="tn">Important Days & Themes</div><div class="ts">National & International days · UN observances · Current year themes · Scientific inventors</div></div></div>
+  <div class="tr" data-n="17" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">17</span><div><div class="tn">Sports & Games</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div><div class="ts">Olympics · Commonwealth/Asian Games · Trophies & cups · Stadiums · Governing bodies</div></div></div>
+  <div class="tr" data-n="18" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">18</span><div><div class="tn">Awards & Honours</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div><div class="ts">Bharat Ratna · Padma awards · Nobel Prize · Gallantry awards · Sahitya Akademi</div></div></div>
+  <div class="tr" data-n="19" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">19</span><div><div class="tn">Books & Authors</div><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 2 days</span></div><div class="ts">Books by Gandhi, Nehru, Ambedkar · Recent Booker/Nobel winners · Indian leaders' books</div></div></div>
+  <div class="tr" data-n="20" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">20</span><div><div class="tn">Important Organizations</div><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div><div class="ts">UN bodies (UNESCO, WHO, UNICEF) · IMF · World Bank · WTO · SAARC · G20 · Headquarters</div></div></div>
+  <div class="tr" data-n="21" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">21</span><div><div class="tn">Important Days & Themes</div><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 2 days</span></div><div class="ts">National & International days · UN observances · Current year themes · Scientific inventors</div></div></div>
 
   <div class="cl"><span class="cl-n">Exam-specific</span><span class="cl-q">varies</span></div>
-  <div class="tr" data-n="22" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">22</span><div><div class="tn">Computer Awareness</div><div class="ts">Hardware/Software · Input/Output · Internet terms · MS Office · Storage units · Generations</div></div></div>
-  <div class="tr bk" data-n="23" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">23</span><div><div class="tn">Banking Awareness</div><div class="ts">RBI tools (CRR/SLR/Repo) · Types of banks · NEFT/RTGS/IMPS/UPI · NPA · Basel norms</div></div><span class="bdg">Banking</span></div>
+  <div class="tr" data-n="22" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">22</span><div><div class="tn">Computer Awareness</div><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 3 days</span></div><div class="ts">Hardware/Software · Input/Output · Internet terms · MS Office · Storage units · Generations</div></div></div>
+  <div class="tr bk" data-n="23" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">23</span><div><div class="tn">Banking Awareness</div><div class="ch-meta"><span class="pri pri-skip">SKIP</span><span class="ch-pill">📊 0 Qs</span><span class="ch-pill">⏱ 3 days</span></div><div class="ts">RBI tools (CRR/SLR/Repo) · Types of banks · NEFT/RTGS/IMPS/UPI · NPA · Basel norms</div></div><span class="bdg">Banking</span></div>
 </div>
 </div>
 

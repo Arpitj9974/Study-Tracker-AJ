@@ -68,6 +68,16 @@
   .card,.tr{width:100% !important;box-sizing:border-box !important}
   body{overflow-x:hidden !important}
 }
+
+.ch-info{display:flex;flex-direction:column;flex:1;min-width:0}
+.ch-meta{display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap}
+.pri{font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.pri-veryhigh{background:rgba(239,68,68,.15);color:#F87171;border:1px solid rgba(239,68,68,.3)}
+.pri-high{background:rgba(251,146,60,.15);color:#FB923C;border:1px solid rgba(251,146,60,.3)}
+.pri-medium{background:rgba(250,204,21,.12);color:#FCD34D;border:1px solid rgba(250,204,21,.25)}
+.pri-low{background:rgba(148,163,184,.1);color:#94A3B8;border:1px solid rgba(148,163,184,.2)}
+.pri-skip{background:rgba(100,116,139,.1);color:#64748B;border:1px solid rgba(100,116,139,.15)}
+.ch-pill{font-size:9px;color:#5A6080;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;white-space:nowrap}
 </style>
 
 <div class="w">
@@ -103,26 +113,31 @@
   <div class="cards">
     <div class="card" data-n="1" data-lv="1" data-p="0" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Python Basics for DSA</span></div>
+      <div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div>
       <div class="csub">Lists · Dicts · Sets · String methods · List comprehension · enumerate · zip · Map/Filter · Lambda</div>
       <div class="cmeta"><span class="cprob">Target: <b>0 problems</b> (concept only)</span><span class="ctag tg-h">Day 1</span></div>
     </div>
     <div class="card" data-n="2" data-lv="1" data-p="10" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Arrays & Lists</span></div>
+      <div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 7 days</span></div>
       <div class="csub">Traversal · Reverse · Rotate · Max/Min/Sum · Find duplicates · Subarray problems · Two sum brute force</div>
       <div class="cmeta"><span class="cprob">Target: <b>10 problems</b> · LeetCode Easy</span><span class="ctag tg-h">Top priority</span></div>
     </div>
     <div class="card" data-n="3" data-lv="1" data-p="8" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Strings</span></div>
+      <div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 7 days</span></div>
       <div class="csub">Reverse · Palindrome check · Anagram check · Count characters · Substring search · Split/Join · Replace</div>
       <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy</span><span class="ctag tg-h">Top priority</span></div>
     </div>
     <div class="card" data-n="4" data-lv="1" data-p="8" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Basic Math & Number Theory</span></div>
+      <div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 6 days</span></div>
       <div class="csub">Prime check · Sieve of Eratosthenes · GCD/LCM · Factorial · Fibonacci · Digit sum/reverse · Modular arithmetic</div>
       <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy</span><span class="ctag tg-h">Top priority</span></div>
     </div>
     <div class="card" data-n="5" data-lv="1" data-p="6" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Functions & Recursion</span></div>
+      <div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 5 days</span></div>
       <div class="csub">Defining functions · Default args · *args/**kwargs · Recursive factorial/Fibonacci · Base case logic · Call stack</div>
       <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy</span><span class="ctag tg-m">Important</span></div>
     </div>
@@ -145,21 +160,25 @@
   <div class="cards">
     <div class="card" data-n="6" data-lv="2" data-p="8" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Searching</span></div>
+      <div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 6 days</span></div>
       <div class="csub">Linear search · Binary search iterative + recursive · Binary search on answer · Search in rotated sorted array</div>
       <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
     </div>
     <div class="card" data-n="7" data-lv="2" data-p="6" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Sorting</span></div>
+      <div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 5 days</span></div>
       <div class="csub">Bubble/Selection/Insertion (understand why, not memorise) · Python sorted() & sort() · Custom comparators · sort by key</div>
       <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
     </div>
     <div class="card" data-n="8" data-lv="2" data-p="8" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Two Pointer Technique</span></div>
+      <div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 6 days</span></div>
       <div class="csub">Left-right pointers on sorted array · Pair with target sum · Remove duplicates in-place · Container with most water · Triplet sum</div>
       <div class="cmeta"><span class="cprob">Target: <b>8 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
     </div>
     <div class="card" data-n="9" data-lv="2" data-p="10" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Hashing — Dict & Set</span></div>
+      <div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 7 days</span></div>
       <div class="csub">Frequency count · Find duplicates · Two Sum O(n) · Group anagrams · Counter · defaultdict · First non-repeating character</div>
       <div class="cmeta"><span class="cprob">Target: <b>10 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top priority</span></div>
     </div>
@@ -182,16 +201,19 @@
   <div class="cards">
     <div class="card" data-n="10" data-lv="3" data-p="6" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Stack</span></div>
+      <div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 5 days</span></div>
       <div class="csub">Implement using list · Valid parentheses · Next greater element · Balanced brackets · Infix to Postfix · Min stack</div>
       <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top in Level 3</span></div>
     </div>
     <div class="card" data-n="11" data-lv="3" data-p="5" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-h"></div><span class="cn">Queue & Deque</span></div>
+      <div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 4 days</span></div>
       <div class="csub">Implement using collections.deque · Sliding window max · First non-repeating char · Circular queue concept · BFS intro</div>
       <div class="cmeta"><span class="cprob">Target: <b>5 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-h">Top in Level 3</span></div>
     </div>
     <div class="card" data-n="12" data-lv="3" data-p="6" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Linked List Basics</span></div>
+      <div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">⏱ 5 days</span></div>
       <div class="csub">Node creation · Traversal · Insert/Delete · Reverse a linked list · Find middle node · Detect cycle (Floyd's)</div>
       <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-m">Important</span></div>
     </div>
@@ -215,21 +237,25 @@
   <div class="cards">
     <div class="card" data-n="13" data-lv="4" data-p="6" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Sliding Window</span></div>
+      <div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 6 days</span></div>
       <div class="csub">Fixed size window sum · Max subarray (Kadane's algo) · Longest substring without repeat · Minimum window substring</div>
       <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Medium</span><span class="ctag tg-m">Q2 pattern</span></div>
     </div>
     <div class="card" data-n="14" data-lv="4" data-p="6" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-m"></div><span class="cn">Basic Dynamic Programming</span></div>
+      <div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 7 days</span></div>
       <div class="csub">Fibonacci with memoisation · Climbing stairs · Coin change · 0/1 Knapsack basic · Longest Common Subsequence</div>
       <div class="cmeta"><span class="cprob">Target: <b>6 problems</b> · LeetCode Medium</span><span class="ctag tg-m">Q2 pattern</span></div>
     </div>
     <div class="card" data-n="15" data-lv="4" data-p="5" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-l"></div><span class="cn">Greedy Basics</span></div>
+      <div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">⏱ 5 days</span></div>
       <div class="csub">Activity selection · Minimum coins · Fractional knapsack · Job sequencing · Meeting rooms problem</div>
       <div class="cmeta"><span class="cprob">Target: <b>5 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-s">Secondary</span></div>
     </div>
     <div class="card" data-n="16" data-lv="4" data-p="5" onclick="tog(this)">
       <div class="card-top"><div class="ck">✓</div><div class="pri-dot dot-l"></div><span class="cn">Matrix & 2D Arrays</span></div>
+      <div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">⏱ 5 days</span></div>
       <div class="csub">Traverse 2D array · Rotate matrix · Search in sorted matrix · Spiral order · Diagonal sum · Pascal's triangle</div>
       <div class="cmeta"><span class="cprob">Target: <b>5 problems</b> · LeetCode Easy-Medium</span><span class="ctag tg-s">Secondary</span></div>
     </div>

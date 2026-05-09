@@ -17,7 +17,7 @@
 .fp{background:var(--accent-purple, #7F77DD)}.ft{background:var(--accent-green, #1D9E75)}
 .tg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
 .cl{grid-column:1/-1;font-size:10px;font-weight:600;color:var(--text-tertiary, #5A6080);text-transform:uppercase;letter-spacing:.08em;padding:8px 0 3px}
-.tr{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg-surface, #141720);border:1px solid var(--border-subtle, rgba(255,255,255,0.07));border-radius:var(--radius-md, 10px);cursor:pointer;transition:all .15s;user-select:none}
+.tr{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:var(--bg-surface, #141720);border:1px solid var(--border-subtle, rgba(255,255,255,0.07));border-radius:var(--radius-md, 10px);cursor:pointer;transition:all .15s;user-select:none}
 .tr:hover{background:var(--bg-hover, #222640);border-color:var(--border-medium, rgba(255,255,255,0.12))}
 .tr.done{opacity:.6}
 .tr.done .tn{text-decoration:line-through;color:var(--text-tertiary, #5A6080)}
@@ -41,6 +41,16 @@
   .tr{width:100% !important;box-sizing:border-box !important}
   body{overflow-x:hidden !important}
 }
+
+.ch-info{display:flex;flex-direction:column;flex:1;min-width:0}
+.ch-meta{display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap}
+.pri{font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.pri-veryhigh{background:rgba(239,68,68,.15);color:#F87171;border:1px solid rgba(239,68,68,.3)}
+.pri-high{background:rgba(251,146,60,.15);color:#FB923C;border:1px solid rgba(251,146,60,.3)}
+.pri-medium{background:rgba(250,204,21,.12);color:#FCD34D;border:1px solid rgba(250,204,21,.25)}
+.pri-low{background:rgba(148,163,184,.1);color:#94A3B8;border:1px solid rgba(148,163,184,.2)}
+.pri-skip{background:rgba(100,116,139,.1);color:#64748B;border:1px solid rgba(100,116,139,.15)}
+.ch-pill{font-size:9px;color:#5A6080;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;white-space:nowrap}
 </style>
 
 <div class="wrap">
@@ -55,38 +65,38 @@
   <div class="pb"><div class="pb-bg"><div class="pb-f fp" id="r-p1b" style="width:0%"></div></div></div>
   <div class="tg">
     <div class="cl">Foundation — letter positions</div>
-    <div class="tr ssc" data-n="1" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">1</span><span class="tn">Alphabet Test</span><span class="badge b-s">SSC only</span></div>
+    <div class="tr ssc" data-n="1" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">1</span><div class="ch-info"><span class="tn">Alphabet Test</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 2 days</span></div></div><span class="badge b-s">SSC only</span></div>
     <div class="sp"></div>
     <div class="cl">Series</div>
-    <div class="tr" data-n="2" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">2</span><span class="tn">Number Series</span></div>
-    <div class="tr" data-n="3" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">3</span><span class="tn">Alphabet Series</span></div>
-    <div class="tr" data-n="4" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">4</span><span class="tn">Letter Series</span></div>
-    <div class="tr" data-n="5" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">5</span><span class="tn">Alphanumeric Series</span></div>
+    <div class="tr" data-n="2" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">2</span><div class="ch-info"><span class="tn">Number Series</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 5 days</span></div></div></div>
+    <div class="tr" data-n="3" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">3</span><div class="ch-info"><span class="tn">Alphabet Series</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
+    <div class="tr" data-n="4" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">4</span><div class="ch-info"><span class="tn">Letter Series</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr" data-n="5" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">5</span><div class="ch-info"><span class="tn">Alphanumeric Series</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
     <div class="cl">Analogy & classification</div>
-    <div class="tr" data-n="6" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">6</span><span class="tn">Analogy (Word / Semantic)</span></div>
-    <div class="tr" data-n="7" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">7</span><span class="tn">Analogy Or... (Number / Letter)</span></div>
-    <div class="tr" data-n="8" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">8</span><span class="tn">Odd One Out</span></div>
+    <div class="tr" data-n="6" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">6</span><div class="ch-info"><span class="tn">Analogy (Word / Semantic)</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 5 days</span></div></div></div>
+    <div class="tr" data-n="7" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">7</span><div class="ch-info"><span class="tn">Analogy Or... (Number / Letter)</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
+    <div class="tr" data-n="8" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">8</span><div class="ch-info"><span class="tn">Odd One Out</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
     <div class="cl">Coding & pattern</div>
-    <div class="tr" data-n="9" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">9</span><span class="tn">Coding - Decoding</span></div>
-    <div class="tr" data-n="10" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">10</span><span class="tn">Missing Number</span></div>
+    <div class="tr" data-n="9" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">9</span><div class="ch-info"><span class="tn">Coding - Decoding</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 5 days</span></div></div></div>
+    <div class="tr" data-n="10" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">10</span><div class="ch-info"><span class="tn">Missing Number</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
     <div class="cl">Relational reasoning</div>
-    <div class="tr" data-n="11" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">11</span><span class="tn">Blood Relation</span></div>
-    <div class="tr" data-n="12" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">12</span><span class="tn">Direction Sense</span></div>
-    <div class="tr ssc" data-n="13" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">13</span><span class="tn">Ranking</span><span class="badge b-s">SSC only</span></div>
+    <div class="tr" data-n="11" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">11</span><div class="ch-info"><span class="tn">Blood Relation</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 5 days</span></div></div></div>
+    <div class="tr" data-n="12" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">12</span><div class="ch-info"><span class="tn">Direction Sense</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
+    <div class="tr ssc" data-n="13" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">13</span><div class="ch-info"><span class="tn">Ranking</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div><span class="badge b-s">SSC only</span></div>
     <div class="sp"></div>
     <div class="cl">Logical reasoning</div>
-    <div class="tr" data-n="14" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">14</span><span class="tn">Venn Diagram</span></div>
-    <div class="tr" data-n="15" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">15</span><span class="tn">Syllogism</span></div>
-    <div class="tr" data-n="16" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">16</span><span class="tn">Statement - Conclusions</span></div>
-    <div class="tr" data-n="17" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">17</span><span class="tn">Statement - Argument</span></div>
-    <div class="tr" data-n="18" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">18</span><span class="tn">Statement - Assumptions</span></div>
-    <div class="tr" data-n="19" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">19</span><span class="tn">Data Sufficiency</span></div>
+    <div class="tr" data-n="14" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">14</span><div class="ch-info"><span class="tn">Venn Diagram</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr" data-n="15" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">15</span><div class="ch-info"><span class="tn">Syllogism</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 6 days</span></div></div></div>
+    <div class="tr" data-n="16" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">16</span><div class="ch-info"><span class="tn">Statement - Conclusions</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
+    <div class="tr" data-n="17" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">17</span><div class="ch-info"><span class="tn">Statement - Argument</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr" data-n="18" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">18</span><div class="ch-info"><span class="tn">Statement - Assumptions</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr" data-n="19" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">19</span><div class="ch-info"><span class="tn">Data Sufficiency</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
     <div class="cl">Arrangement & puzzle</div>
-    <div class="tr" data-n="20" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">20</span><span class="tn">Seating Arrangement</span></div>
-    <div class="tr" data-n="21" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">21</span><span class="tn">Puzzle</span></div>
+    <div class="tr" data-n="20" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">20</span><div class="ch-info"><span class="tn">Seating Arrangement</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 6 days</span></div></div></div>
+    <div class="tr" data-n="21" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">21</span><div class="ch-info"><span class="tn">Puzzle</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">📊 2-3 Qs</span><span class="ch-pill">⏱ 7 days</span></div></div></div>
     <div class="cl">Time-based — NQT tests these</div>
-    <div class="tr" data-n="22" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">22</span><span class="tn">Calendar</span><span class="badge b-mv">moved up</span></div>
-    <div class="tr" data-n="23" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">23</span><span class="tn">Clock</span><span class="badge b-mv">moved up</span></div>
+    <div class="tr" data-n="22" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">22</span><div class="ch-info"><span class="tn">Calendar</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div><span class="badge b-mv">moved up</span></div>
+    <div class="tr" data-n="23" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">23</span><div class="ch-info"><span class="tn">Clock</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div><span class="badge b-mv">moved up</span></div>
   </div>
 
   <div class="nqt-div"><div class="nd-t">TCS NQT Exam — August 2025</div><div class="nd-s">23 chapters · NQT fully covered · Now SSC-only chapters</div></div>
@@ -95,29 +105,29 @@
   <div class="pb"><div class="pb-bg"><div class="pb-f ft" id="r-p2b" style="width:0%"></div></div></div>
   <div class="tg">
     <div class="cl">Verbal & word-based</div>
-    <div class="tr ssc" data-n="24" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">24</span><span class="tn">Word Formation</span></div>
-    <div class="tr ssc" data-n="25" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">25</span><span class="tn">Similarity</span></div>
-    <div class="tr ssc" data-n="26" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">26</span><span class="tn">Mathematical Operations</span></div>
-    <div class="tr ssc" data-n="27" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">27</span><span class="tn">Arrangement Of...</span></div>
+    <div class="tr ssc" data-n="24" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">24</span><div class="ch-info"><span class="tn">Word Formation</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+    <div class="tr ssc" data-n="25" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">25</span><div class="ch-info"><span class="tn">Similarity</span><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+    <div class="tr ssc" data-n="26" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">26</span><div class="ch-info"><span class="tn">Mathematical Operations</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr ssc" data-n="27" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">27</span><div class="ch-info"><span class="tn">Arrangement Of...</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
     <div class="cl">Logic extensions</div>
-    <div class="tr ssc" data-n="28" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">28</span><span class="tn">Coded Inequality</span></div>
-    <div class="tr ssc" data-n="29" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">29</span><span class="tn">Course of Action</span></div>
-    <div class="tr ssc" data-n="30" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">30</span><span class="tn">Cause and Effect</span></div>
-    <div class="tr ssc" data-n="31" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">31</span><span class="tn">Decision Making</span></div>
-    <div class="tr ssc" data-n="32" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">32</span><span class="tn">Input - Output</span></div>
-    <div class="tr ssc" data-n="33" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">33</span><span class="tn">Age Problem</span></div>
+    <div class="tr ssc" data-n="28" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">28</span><div class="ch-info"><span class="tn">Coded Inequality</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr ssc" data-n="29" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">29</span><div class="ch-info"><span class="tn">Course of Action</span><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+    <div class="tr ssc" data-n="30" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">30</span><div class="ch-info"><span class="tn">Cause and Effect</span><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+    <div class="tr ssc" data-n="31" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">31</span><div class="ch-info"><span class="tn">Decision Making</span><div class="ch-meta"><span class="pri pri-skip">SKIP</span><span class="ch-pill">📊 0 Qs</span><span class="ch-pill">⏱ 1 day</span></div></div></div>
+    <div class="tr ssc" data-n="32" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">32</span><div class="ch-info"><span class="tn">Input - Output</span><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+    <div class="tr ssc" data-n="33" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">33</span><div class="ch-info"><span class="tn">Age Problem</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
     <div class="cl">Non-verbal visual</div>
-    <div class="tr ssc" data-n="34" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">34</span><span class="tn">Mirror and Water Image</span></div>
-    <div class="tr ssc" data-n="35" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">35</span><span class="tn">Paper Cutting & Folding</span></div>
-    <div class="tr ssc" data-n="36" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">36</span><span class="tn">Counting - Figure</span></div>
-    <div class="tr ssc" data-n="37" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">37</span><span class="tn">Figure Series</span></div>
-    <div class="tr ssc" data-n="38" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">38</span><span class="tn">Figure Completion</span></div>
-    <div class="tr ssc" data-n="39" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">39</span><span class="tn">Figure Formation</span></div>
-    <div class="tr ssc" data-n="40" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">40</span><span class="tn">Embedded Figures</span></div>
-    <div class="tr ssc" data-n="41" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">41</span><span class="tn">Classification</span></div>
-    <div class="tr ssc" data-n="42" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">42</span><span class="tn">Dot Situation</span></div>
-    <div class="tr ssc" data-n="43" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">43</span><span class="tn">Dice</span></div>
-    <div class="tr ssc" data-n="44" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">44</span><span class="tn">Cube & Cuboid</span></div>
+    <div class="tr ssc" data-n="34" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">34</span><div class="ch-info"><span class="tn">Mirror and Water Image</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
+    <div class="tr ssc" data-n="35" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">35</span><div class="ch-info"><span class="tn">Paper Cutting & Folding</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
+    <div class="tr ssc" data-n="36" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">36</span><div class="ch-info"><span class="tn">Counting - Figure</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr ssc" data-n="37" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">37</span><div class="ch-info"><span class="tn">Figure Series</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 4 days</span></div></div></div>
+    <div class="tr ssc" data-n="38" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">38</span><div class="ch-info"><span class="tn">Figure Completion</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr ssc" data-n="39" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">39</span><div class="ch-info"><span class="tn">Figure Formation</span><div class="ch-meta"><span class="pri pri-low">LOW</span><span class="ch-pill">📊 0-1 Qs</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+    <div class="tr ssc" data-n="40" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">40</span><div class="ch-info"><span class="tn">Embedded Figures</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr ssc" data-n="41" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">41</span><div class="ch-info"><span class="tn">Classification</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">📊 1-2 Qs</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr ssc" data-n="42" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">42</span><div class="ch-info"><span class="tn">Dot Situation</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+    <div class="tr ssc" data-n="43" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">43</span><div class="ch-info"><span class="tn">Dice</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+    <div class="tr ssc" data-n="44" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">44</span><div class="ch-info"><span class="tn">Cube & Cuboid</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">📊 1 Q</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
   </div>
 </div>
 </div>
