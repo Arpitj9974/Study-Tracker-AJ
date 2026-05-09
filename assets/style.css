@@ -93,7 +93,7 @@ main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 .section-head .sh-sub { font: 500 10px/1 'JetBrains Mono'; text-transform: uppercase; letter-spacing: .07em; color: var(--text-tertiary); }
 
 /* ── TRACKER SHELL (individual tracker pages) ── */
-.tracker-shell { padding: 28px 32px 48px; }
+.tracker-shell { padding: 28px 32px 0; }
 .tracker-header {
   display: flex; flex-direction: column; gap: 12px;
   padding: 20px 24px; border-radius: var(--radius-lg);
@@ -114,7 +114,7 @@ main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
   transition: box-shadow .2s;
 }
 .tracker-iframe-wrap:hover { box-shadow: 0 0 0 1px var(--border-medium), 0 8px 28px rgba(0,0,0,.4); }
-.tracker-iframe-wrap iframe { display: block; width: 100%; border: none; min-height: 300px; overflow: hidden; }
+.tracker-iframe-wrap iframe { display: block; width: 100%; border: none; overflow: hidden; }
 
 /* ── MOBILE BOTTOM TAB BAR ── */
 #mobile-tabs {

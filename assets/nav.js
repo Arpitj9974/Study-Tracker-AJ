@@ -159,46 +159,49 @@ function injectTheme(iframe) {
 
 function syncIframeHeight(iframe) {
   injectTheme(iframe);
-  iframe.setAttribute('scrolling', 'no'); // Force no scroll
+  iframe.setAttribute('scrolling', 'no');
   
-  let tries = 0;
-  const poll = () => {
-    tries++;
+  const resize = () => {
     try {
       const doc = iframe.contentDocument || iframe.contentWindow.document;
-      if (!doc || !doc.body) throw "no-doc";
+      if (!doc || !doc.body) return;
 
-      // Calculate full height using the most accurate methods
+      // 1. Kill any fixed heights inside the iframe that could inflate scrollHeight
+      if (!doc.getElementById('resize-fix-style')) {
+        const s = doc.createElement('style');
+        s.id = 'resize-fix-style';
+        s.textContent = `
+          html, body { min-height: 0 !important; height: auto !important; overflow: hidden !important; }
+          .w, .wrap { padding-bottom: 4px !important; margin-bottom: 0 !important; }
+        `;
+        doc.head.appendChild(s);
+      }
+
+      // 2. Reset height to 0 to force parent to shrink, then measure true content
+      iframe.style.height = '0px';
+      
       const body = doc.body;
       const html = doc.documentElement;
       
+      // Use offsetHeight as it's more accurate for content than scrollHeight in this context
       const height = Math.max(
-        body.scrollHeight, body.offsetHeight,
-        html.scrollHeight, html.offsetHeight
+        body.offsetHeight,
+        body.scrollHeight,
+        html.offsetHeight
       );
 
       if (height > 50) { 
-        iframe.style.height = (height + 40) + 'px';
+        iframe.style.height = (height + 24) + 'px'; // Minimal buffer
       }
-
-      // Keep polling for a while to catch async content loads (like checklists)
-      if (tries < 40) {
-        setTimeout(poll, tries < 10 ? 150 : 300);
-      } else {
-        // Final observe for any later dynamic changes (toggling items)
-        const ro = new ResizeObserver(() => {
-          try {
-            const h2 = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight);
-            if (h2 > 50) iframe.style.height = (h2 + 40) + 'px';
-          } catch(e) {}
-        });
-        ro.observe(doc.body);
-      }
-    } catch(e) {
-      if (tries < 40) setTimeout(poll, 200);
-    }
+    } catch(e) {}
   };
-  poll();
+
+  // Run multiple times to catch async rendering
+  resize();
+  setTimeout(resize, 200);
+  setTimeout(resize, 600);
+  setTimeout(resize, 1500);
+  setTimeout(resize, 4000); // Final catch-all
 }
 
 // ── Mini stats for tracker header ─────────────────────────────────────────────
