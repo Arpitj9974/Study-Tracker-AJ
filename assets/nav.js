@@ -159,25 +159,38 @@ function injectTheme(iframe) {
 
 function syncIframeHeight(iframe) {
   injectTheme(iframe);
-  // Poll until height stabilises — needed because tracker content renders async from localStorage
   let lastH = 0, tries = 0;
   const poll = () => {
     tries++;
     try {
-      const h = iframe.contentDocument.body.scrollHeight;
-      iframe.style.height = (h + 32) + 'px';
-      if (h !== lastH && tries < 30) {
-        lastH = h;
+      const doc = iframe.contentDocument;
+      // Read from both body and documentElement and take the max (different browsers differ)
+      const h = Math.max(
+        doc.body ? doc.body.scrollHeight : 0,
+        doc.documentElement ? doc.documentElement.scrollHeight : 0
+      );
+      if (h > 100) { // Only apply if we got a real value
+        iframe.style.height = (h + 40) + 'px';
+      }
+      // Keep polling for up to 4 seconds to catch async content rendering
+      if (tries < 34) {
         setTimeout(poll, 120);
       } else {
-        // Height is stable — now watch for any future changes
+        // Done polling — watch for future changes
         const ro = new ResizeObserver(() => {
-          try { iframe.style.height = (iframe.contentDocument.body.scrollHeight + 32) + 'px'; } catch(e) {}
+          try {
+            const doc2 = iframe.contentDocument;
+            const h2 = Math.max(
+              doc2.body ? doc2.body.scrollHeight : 0,
+              doc2.documentElement ? doc2.documentElement.scrollHeight : 0
+            );
+            if (h2 > 100) iframe.style.height = (h2 + 40) + 'px';
+          } catch(e) {}
         });
-        ro.observe(iframe.contentDocument.body);
+        try { ro.observe(doc.body); } catch(e) {}
       }
     } catch(e) {
-      if (tries < 30) setTimeout(poll, 120);
+      if (tries < 34) setTimeout(poll, 120);
     }
   };
   poll();

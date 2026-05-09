@@ -114,7 +114,7 @@ main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
   transition: box-shadow .2s;
 }
 .tracker-iframe-wrap:hover { box-shadow: 0 0 0 1px var(--border-medium), 0 8px 28px rgba(0,0,0,.4); }
-.tracker-iframe-wrap iframe { display: block; width: 100%; border: none; height: 200px; }
+.tracker-iframe-wrap iframe { display: block; width: 100%; border: none; min-height: 600px; }
 
 /* ── MOBILE BOTTOM TAB BAR ── */
 #mobile-tabs {
