@@ -157,3 +157,17 @@ function upd(){
 }
 loadAll();
 </script>
+<script>
+function reportHeight() {
+  requestAnimationFrame(function() {
+    var w = document.querySelector('.w, .wrap');
+    var h = w ? w.offsetHeight : document.body.scrollHeight;
+    if (h > 50) window.parent.postMessage({ type: 'iframeHeight', height: h }, '*');
+  });
+}
+reportHeight();
+setTimeout(reportHeight, 200);
+setTimeout(reportHeight, 600);
+setTimeout(reportHeight, 1500);
+document.addEventListener('click', function() { setTimeout(reportHeight, 100); });
+</script>

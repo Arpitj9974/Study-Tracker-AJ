@@ -160,45 +160,9 @@ function injectTheme(iframe) {
 function syncIframeHeight(iframe) {
   injectTheme(iframe);
   iframe.setAttribute('scrolling', 'no');
-  
-  try {
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    if (!doc || !doc.body) return;
-
-    // Inject a height-reporter script INSIDE the iframe.
-    // This is the only reliable way — the iframe measures its OWN content
-    // and sends the result to the parent via postMessage.
-    if (!doc.getElementById('height-reporter')) {
-      const script = doc.createElement('script');
-      script.id = 'height-reporter';
-      script.textContent = `
-        (function() {
-          function reportHeight() {
-            var w = document.querySelector('.w, .wrap');
-            var h = w ? w.offsetHeight : document.body.scrollHeight;
-            if (h > 50) {
-              window.parent.postMessage({ type: 'iframeHeight', height: h }, '*');
-            }
-          }
-          // Report multiple times to catch async data loads
-          reportHeight();
-          setTimeout(reportHeight, 100);
-          setTimeout(reportHeight, 400);
-          setTimeout(reportHeight, 1000);
-          setTimeout(reportHeight, 2500);
-          // Re-report when user clicks (toggles a checkbox)
-          document.addEventListener('click', function() {
-            setTimeout(reportHeight, 50);
-            setTimeout(reportHeight, 200);
-          });
-        })();
-      `;
-      doc.body.appendChild(script);
-    }
-  } catch(e) {
-    // Cross-origin fallback
-    iframe.style.height = '1200px';
-  }
+  // Height is now handled by each tracker file sending postMessage
+  // Set a reasonable initial height while waiting for the message
+  iframe.style.height = '600px';
 }
 
 // Global listener: receive height messages from tracker iframes
