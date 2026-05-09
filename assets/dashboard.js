@@ -173,6 +173,58 @@ function injectPriorityData(subjectKey) {
   if (!window.PRIORITY_DATA) return;
 
   const doInject = (root) => {
+    // Inject the necessary CSS for grid-based table structure
+    if (root !== document && !root.getElementById('priority-styles')) {
+      const style = root.createElement('style');
+      style.id = 'priority-styles';
+      style.textContent = `
+        .priority-badge {
+          display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
+          letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap; text-align: center;
+        }
+        .priority-VERY-HIGH { background: rgba(239,68,68,0.15);   color: #F87171; border: 1px solid rgba(239,68,68,0.3);   }
+        .priority-HIGH      { background: rgba(251,146,60,0.15);  color: #FB923C; border: 1px solid rgba(251,146,60,0.3);  }
+        .priority-MEDIUM    { background: rgba(250,204,21,0.12);  color: #FCD34D; border: 1px solid rgba(250,204,21,0.25); }
+        .priority-LOW       { background: rgba(148,163,184,0.10); color: #94A3B8; border: 1px solid rgba(148,163,184,0.2); }
+        .priority-SKIP      { background: rgba(100,116,139,0.10); color: #64748B; border: 1px solid rgba(100,116,139,0.15); text-decoration: line-through; }
+
+        .meta-pill { 
+          font-size: 10px; color: #9BA3C4; background: rgba(255,255,255,0.04); 
+          border: 1px solid rgba(255,255,255,0.08); padding: 3px 6px; border-radius: 4px; 
+          white-space: nowrap; text-align: center;
+        }
+        .meta-pill.ssc-qs { color: #7F77DD; border-color: rgba(127,119,221,0.25); }
+        .meta-pill.days   { color: #1D9E75; border-color: rgba(29,158,117,0.25);  }
+        
+        /* Grid Table Layout */
+        .tr { padding: 10px 14px !important; transition: background 0.2s; }
+        .ct { 
+          display: grid !important; 
+          grid-template-columns: 20px 24px 1fr 100px 75px 75px !important; 
+          align-items: center !important; 
+          gap: 12px !important; 
+          width: 100% !important; 
+        }
+        .chapter-meta { display: contents !important; }
+        
+        /* Mobile adjustment */
+        @media (max-width: 650px) {
+          .ct { 
+            grid-template-columns: 20px 24px 1fr !important; 
+            grid-template-rows: auto auto !important;
+            gap: 8px !important;
+          }
+          .chapter-meta { 
+            display: flex !important; 
+            grid-column: 3 / -1 !important; 
+            gap: 6px !important;
+            margin-top: 4px !important;
+          }
+        }
+      `;
+      root.head.appendChild(style);
+    }
+
     root.querySelectorAll('.tr').forEach(card => {
       const chNum = card.getAttribute('data-n');
       if (!chNum) return;
@@ -180,33 +232,43 @@ function injectPriorityData(subjectKey) {
       const data = window.PRIORITY_DATA[subjectKey + '_' + chNum];
       if (!data) return;
 
-      // Don't inject twice
       if (card.querySelector('.chapter-meta')) return;
 
-      // Find the inner text container (has .tn inside it)
-      const textContainer = card.querySelector('.tn')?.parentElement;
-      if (!textContainer) return;
+      const ct = card.querySelector('.ct');
+      if (!ct) return;
 
       const priorityClass = 'priority-' + data.priority.replace(' ', '-');
-      const sscHTML = data.sscQs !== '—' ? `<span class="meta-pill ssc-qs">📊 ${data.sscQs} Qs</span>` : '';
+      const sscHTML = data.sscQs !== '—' ? `<span class="meta-pill ssc-qs">📊 ${data.sscQs} Qs</span>` : '<span></span>';
       const daysHTML = `<span class="meta-pill days">⏱ ${data.days}</span>`;
 
-      const meta = document.createElement('div');
+      const meta = root.createElement('div');
       meta.className = 'chapter-meta';
-      meta.innerHTML = `<span class="priority-badge ${priorityClass}">${data.priority}</span>${sscHTML}${daysHTML}`;
-      textContainer.appendChild(meta);
+      meta.innerHTML = `
+        <span class="priority-badge ${priorityClass}">${data.priority}</span>
+        ${sscHTML}
+        ${daysHTML}
+      `;
+      
+      ct.appendChild(meta);
     });
   };
 
-  // Try outer page first
-  doInject(document);
+  const attempt = () => {
+    doInject(document);
+    document.querySelectorAll('iframe').forEach(iframe => {
+      try {
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+          doInject(iframe.contentDocument);
+        } else {
+          iframe.onload = () => doInject(iframe.contentDocument);
+        }
+      } catch (e) {}
+    });
+  };
 
-  // Then try all iframes (since trackers are usually in iframes)
-  document.querySelectorAll('iframe').forEach(iframe => {
-    try {
-      if (iframe.contentDocument) doInject(iframe.contentDocument);
-    } catch (e) {}
-  });
+  attempt();
+  setTimeout(attempt, 600);
+  setTimeout(attempt, 2000);
 }
 
 
