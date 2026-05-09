@@ -161,49 +161,62 @@ function syncIframeHeight(iframe) {
   injectTheme(iframe);
   iframe.setAttribute('scrolling', 'no');
   
-  const resize = () => {
-    try {
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      if (!doc || !doc.body) return;
+  try {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!doc || !doc.body) return;
 
-      // Step 1: Make iframe very tall so content renders at its NATURAL height
-      // (This is the key insight — content must NOT be constrained when measuring)
-      iframe.style.height = '50000px';
-
-      // Step 2: Find the actual content container inside the tracker
-      const wrapper = doc.querySelector('.w, .wrap');
-      
-      let height;
-      if (wrapper) {
-        // Best case: measure the wrapper directly
-        height = wrapper.offsetHeight;
-      } else {
-        // Fallback: measure the last element in the body
-        const children = doc.body.children;
-        if (children.length > 0) {
-          const last = children[children.length - 1];
-          height = last.offsetTop + last.offsetHeight;
-        } else {
-          height = doc.body.scrollHeight;
-        }
-      }
-
-      // Step 3: Set iframe to exactly the content height + small breathing room
-      if (height > 50) {
-        iframe.style.height = (height + 32) + 'px';
-      }
-    } catch(e) {
-      // If cross-origin or other error, set a reasonable fallback
-      iframe.style.height = '800px';
+    // Inject a height-reporter script INSIDE the iframe.
+    // This is the only reliable way — the iframe measures its OWN content
+    // and sends the result to the parent via postMessage.
+    if (!doc.getElementById('height-reporter')) {
+      const script = doc.createElement('script');
+      script.id = 'height-reporter';
+      script.textContent = `
+        (function() {
+          function reportHeight() {
+            var w = document.querySelector('.w, .wrap');
+            var h = w ? w.offsetHeight : document.body.scrollHeight;
+            if (h > 50) {
+              window.parent.postMessage({ type: 'iframeHeight', height: h }, '*');
+            }
+          }
+          // Report multiple times to catch async data loads
+          reportHeight();
+          setTimeout(reportHeight, 100);
+          setTimeout(reportHeight, 400);
+          setTimeout(reportHeight, 1000);
+          setTimeout(reportHeight, 2500);
+          // Re-report when user clicks (toggles a checkbox)
+          document.addEventListener('click', function() {
+            setTimeout(reportHeight, 50);
+            setTimeout(reportHeight, 200);
+          });
+        })();
+      `;
+      doc.body.appendChild(script);
     }
-  };
-
-  // Run at increasing intervals to catch async data loading from localStorage
-  resize();
-  setTimeout(resize, 300);
-  setTimeout(resize, 800);
-  setTimeout(resize, 2000);
+  } catch(e) {
+    // Cross-origin fallback
+    iframe.style.height = '1200px';
+  }
 }
+
+// Global listener: receive height messages from tracker iframes
+window.addEventListener('message', function(evt) {
+  if (!evt.data || evt.data.type !== 'iframeHeight') return;
+  var h = evt.data.height;
+  if (h < 50) return;
+  // Find the iframe that sent this message
+  var frames = document.querySelectorAll('iframe');
+  for (var i = 0; i < frames.length; i++) {
+    try {
+      if (frames[i].contentWindow === evt.source) {
+        frames[i].style.height = (h + 32) + 'px';
+        break;
+      }
+    } catch(ex) {}
+  }
+});
 
 // ── Mini stats for tracker header ─────────────────────────────────────────────
 function renderMiniStats(subj, containerId) {
