@@ -159,15 +159,28 @@ function injectTheme(iframe) {
 
 function syncIframeHeight(iframe) {
   injectTheme(iframe);
-  try {
-    const h = iframe.contentDocument.body.scrollHeight;
-    iframe.style.height = (h + 32) + 'px';
-    // watch for content changes
-    const ro = new ResizeObserver(() => {
-      try { iframe.style.height = (iframe.contentDocument.body.scrollHeight + 32) + 'px'; } catch(e) {}
-    });
-    ro.observe(iframe.contentDocument.body);
-  } catch(e) {}
+  // Poll until height stabilises — needed because tracker content renders async from localStorage
+  let lastH = 0, tries = 0;
+  const poll = () => {
+    tries++;
+    try {
+      const h = iframe.contentDocument.body.scrollHeight;
+      iframe.style.height = (h + 32) + 'px';
+      if (h !== lastH && tries < 30) {
+        lastH = h;
+        setTimeout(poll, 120);
+      } else {
+        // Height is stable — now watch for any future changes
+        const ro = new ResizeObserver(() => {
+          try { iframe.style.height = (iframe.contentDocument.body.scrollHeight + 32) + 'px'; } catch(e) {}
+        });
+        ro.observe(iframe.contentDocument.body);
+      }
+    } catch(e) {
+      if (tries < 30) setTimeout(poll, 120);
+    }
+  };
+  poll();
 }
 
 // ── Mini stats for tracker header ─────────────────────────────────────────────
