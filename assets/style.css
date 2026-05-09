@@ -131,10 +131,20 @@ main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 .mob-tab .mt-icon { font-size: 18px; }
 
 @media (max-width: 768px) {
-  body { flex-direction: column; height: auto; overflow: auto; }
+  body { flex-direction: column; height: auto; overflow: auto; overflow-x: hidden; }
   #sidebar { display: none; }
   #mobile-tabs { display: flex; }
-  main { padding-bottom: 68px; overflow-y: visible; }
-  .tracker-shell { padding: 16px 14px 48px; }
+  main { padding-bottom: 68px; overflow-y: visible; overflow-x: hidden; }
+  .tracker-shell { padding: 12px 12px 80px; }
   .th-mini-stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── MOBILE TRACKER CARDS — under 600px ── */
+@media (max-width: 600px) {
+  body { overflow-x: hidden !important; }
+
+  /* Tracker shell padding */
+  .tracker-shell { padding: 10px 10px 80px !important; }
+  .tracker-header { padding: 14px 14px !important; }
+  .tracker-iframe-wrap { border-radius: 8px; }
 }
