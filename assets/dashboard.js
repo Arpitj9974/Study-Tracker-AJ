@@ -167,3 +167,46 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFocusBox(stats);
   renderSmartSuggestion(stats);
 });
+
+// subjectKey = 'quant' | 'reasoning' | 'english' | 'gk' | 'coding' | 'speedmath'
+function injectPriorityData(subjectKey) {
+  if (!window.PRIORITY_DATA) return;
+
+  const doInject = (root) => {
+    root.querySelectorAll('.tr').forEach(card => {
+      const chNum = card.getAttribute('data-n');
+      if (!chNum) return;
+
+      const data = window.PRIORITY_DATA[subjectKey + '_' + chNum];
+      if (!data) return;
+
+      // Don't inject twice
+      if (card.querySelector('.chapter-meta')) return;
+
+      // Find the inner text container (has .tn inside it)
+      const textContainer = card.querySelector('.tn')?.parentElement;
+      if (!textContainer) return;
+
+      const priorityClass = 'priority-' + data.priority.replace(' ', '-');
+      const sscHTML = data.sscQs !== '—' ? `<span class="meta-pill ssc-qs">📊 ${data.sscQs} Qs</span>` : '';
+      const daysHTML = `<span class="meta-pill days">⏱ ${data.days}</span>`;
+
+      const meta = document.createElement('div');
+      meta.className = 'chapter-meta';
+      meta.innerHTML = `<span class="priority-badge ${priorityClass}">${data.priority}</span>${sscHTML}${daysHTML}`;
+      textContainer.appendChild(meta);
+    });
+  };
+
+  // Try outer page first
+  doInject(document);
+
+  // Then try all iframes (since trackers are usually in iframes)
+  document.querySelectorAll('iframe').forEach(iframe => {
+    try {
+      if (iframe.contentDocument) doInject(iframe.contentDocument);
+    } catch (e) {}
+  });
+}
+
+

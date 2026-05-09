@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Reasoning Tracker — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
+  <script src="./assets/priority-data.js"></script>
 </head>
 <body style="--page-accent:#3B82F6">
 <main>
@@ -30,7 +31,10 @@
 <script src="assets/nav.js?v=4"></script>
 <script type="module" src="assets/auth-sync.js?v=4"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => renderMiniStats('reasoning', 'reasoning-mini'));
+  document.addEventListener('DOMContentLoaded', () => {
+    renderMiniStats('reasoning', 'reasoning-mini');
+    setTimeout(() => injectPriorityData('reasoning'), 400);
+  });
 </script>
 </body>
 </html>
