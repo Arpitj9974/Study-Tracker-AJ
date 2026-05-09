@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase-config.js";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 // --- Form Elements ---
@@ -9,6 +9,8 @@ const loginBtn = document.getElementById('login-btn');
 const signupBtn = document.getElementById('signup-btn');
 const loginErr = document.getElementById('login-error');
 const signupErr = document.getElementById('signup-error');
+
+const googleProvider = new GoogleAuthProvider();
 
 // --- Hydrate LocalStorage from Cloud ---
 // This is the magic that restores progress on a new device
@@ -31,6 +33,31 @@ async function hydrateLocalCache(uid) {
     console.error("Failed to hydrate from cloud", e);
   }
 }
+
+// --- Google Sign In ---
+async function handleGoogleLogin(e) {
+  e.preventDefault();
+  const btn = e.currentTarget;
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = "Opening Google...";
+  
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    btn.innerHTML = "Syncing Data...";
+    await hydrateLocalCache(result.user.uid);
+    window.location.href = 'index.html';
+  } catch (err) {
+    console.error(err);
+    alert("Google Sign-In failed: " + err.message);
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
+}
+
+document.querySelectorAll('.google-login-btn').forEach(btn => {
+  btn.addEventListener('click', handleGoogleLogin);
+});
 
 // --- Handlers ---
 loginForm.addEventListener('submit', async (e) => {
