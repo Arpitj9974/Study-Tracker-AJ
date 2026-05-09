@@ -21,34 +21,35 @@
 .pb{width:60px;height:4px;background:var(--bg-hover,#222640);border-radius:2px;overflow:hidden}
 .pbf{height:100%;border-radius:2px;transition:width .4s}
 .fA{background:#7F77DD}.fB{background:#1D9E75}.fC{background:#D97706}.fD{background:#DB2777}.fE{background:#9CA3AF}
-.grid{display:grid;grid-template-columns:1fr;gap:6px}
-.card{background:var(--bg-surface,#141720);border:1px solid var(--border-subtle,rgba(255,255,255,0.07));border-radius:var(--radius-md,10px);padding:12px;cursor:pointer;transition:all .15s;user-select:none}
-.card:hover{background:var(--bg-hover,#222640);border-color:var(--border-medium,rgba(255,255,255,0.12))}
-.card.done{opacity:.5}.card.done .cn{text-decoration:line-through;color:var(--text-tertiary,#5A6080)}
-.card.opt{border-style:dashed;opacity:.7}
-.ct{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.tr{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:var(--bg-surface,#141720);border:1px solid var(--border-subtle,rgba(255,255,255,0.07));border-radius:var(--radius-md,10px);cursor:pointer;transition:all .15s;user-select:none}
+.tr:hover{background:var(--bg-hover,#222640);border-color:var(--border-medium,rgba(255,255,255,0.12))}
+.tr.done{opacity:.6}.tr.done .tn{text-decoration:line-through;color:var(--text-tertiary,#5A6080)}
+.tr.opt{border-style:dashed;opacity:.7}
+
 .ck{width:16px;height:16px;border-radius:4px;border:1px solid var(--border-medium,rgba(255,255,255,0.12));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:transparent;transition:all .2s;background:var(--bg-elevated,#1C2030)}
-.card.done .ck{color:white}
+.tr.done .ck{color:white}
 .cA.done .ck{background:#7F77DD;border-color:#7F77DD}
 .cB.done .ck{background:#1D9E75;border-color:#1D9E75}
 .cC.done .ck{background:#D97706;border-color:#D97706}
 .cD.done .ck{background:#DB2777;border-color:#DB2777}
 .cE.done .ck{background:#9CA3AF;border-color:#9CA3AF}
-.cn{font-size:13px;font-weight:600;color:var(--text-primary,#F0F2FF);flex:1;line-height:1.3}
-.bgs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.tnum{font-size:12px;font-weight:500;color:var(--text-tertiary,#5A6080);font-family:var(--font-mono,"JetBrains Mono",monospace);min-width:20px;flex-shrink:0}
+.tn{font-size:13px;color:var(--text-primary,#F0F2FF);flex:1;line-height:1.4}
+
 .b{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600;white-space:nowrap;border:1px solid}
 .mm{background:rgba(29,158,117,0.15);color:#1D9E75;border-color:rgba(29,158,117,0.3)}
 .im{background:rgba(59,130,246,0.15);color:#3B82F6;border-color:rgba(59,130,246,0.3)}
 .op{background:rgba(156,163,175,0.1);color:#9CA3AF;border-color:rgba(156,163,175,0.2);border-style:dashed}
 .dd{background:rgba(217,119,6,0.15);color:#D97706;border-color:rgba(217,119,6,0.3)}
 .rv{background:rgba(219,39,119,0.15);color:#DB2777;border-color:rgba(219,39,119,0.3)}
-.cs{font-size:11px;color:var(--text-secondary,#9BA3C4);line-height:1.5}
+
 .sr-only{display:none}
 @media(max-width:600px){
   .w,.wrap{padding:8px !important;overflow-x:hidden}
   .grid,.tg,.cards,.stats{grid-template-columns:1fr !important}
   .cl,.cl-n,.sec-sub{white-space:normal !important;font-size:9px !important;overflow:visible !important}
-  .card,.tr{width:100% !important;box-sizing:border-box !important}
+  .tr{width:100% !important;box-sizing:border-box !important}
   body{overflow-x:hidden !important}
 }
 
@@ -82,17 +83,17 @@
   <div><div class="sec-title">A — Memory Core</div><div class="sec-sub">Daily drill 15–20 min · Forward AND reverse recall</div></div>
   <div class="sec-r"><div class="pb"><div class="pbf fA" id="sAb" style="width:0%"></div></div><span class="sec-ct" id="sAc">0/10</span></div>
 </div>
-<div class="grid">
-  <div class="card cA" data-n="1" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Multiplication Tables (2–20)</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span></div><div class="cs">0-second recall on any table · No hesitation allowed</div></div>
-  <div class="card cA" data-n="2" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Squares (1–30)</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span><span class="b rv">Reverse</span></div><div class="cs">17²=289 · Reverse: 289→17 · SSC gives answer, asks base</div></div>
-  <div class="card cA" data-n="3" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Cubes (1–20)</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span><span class="b rv">Reverse</span></div><div class="cs">13³=2197 · Reverse: 2197→13 · Unit digit trick for cube roots</div></div>
-  <div class="card cA" data-n="4" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Powers (2¹–2¹², 3¹–3⁸, 4¹–4⁵, 5¹–5⁶)</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div><div class="cs">2¹²=4096 · 3⁸=6561 · Used in CI, indices, number system</div></div>
-  <div class="card cA" data-n="5" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Square Root Recognition</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span></div><div class="cs">√2=1.414 · √3=1.732 · √5=2.236 · √7=2.646 · Perfect squares to 400</div></div>
-  <div class="card cA" data-n="6" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Cube Root Recognition</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div><div class="cs">Perfect cubes to 21³=9261 · Unit digit: ends 3 → root ends 7</div></div>
-  <div class="card cA" data-n="7" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fraction ↔ % ↔ Decimal ↔ Ratio</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span><span class="b rv">Reverse</span></div><div class="cs">1/2 to 1/20 + 1/7, 1/9, 1/11 · Reverse: 33.33%→1/3</div></div>
-  <div class="card cA" data-n="8" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Prime Numbers (2–100)</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div><div class="cs">25 primes · Instant identification · Sieve method to memorise</div></div>
-  <div class="card cA" data-n="9" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Pythagorean Triplets (8 sets)</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div><div class="cs">3-4-5 · 5-12-13 · 7-24-25 · 8-15-17 · 9-40-41 · 11-60-61 · 20-21-29 · 12-35-37</div></div>
-  <div class="card cA" data-n="10" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">CI Multipliers</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div><div class="cs">5%: 1.05/1.1025/1.157 · 10%: 1.1/1.21/1.331 · 20%: 1.2/1.44/1.728</div></div>
+<div class="tg">
+  <div class="tr cA" data-n="1" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">1</span><div class="ch-info"><span class="tn">Multiplication Tables (2–20)</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span></div></div></div>
+  <div class="tr cA" data-n="2" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">2</span><div class="ch-info"><span class="tn">Squares (1–30)</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span><span class="b rv">Reverse</span></div></div></div>
+  <div class="tr cA" data-n="3" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">3</span><div class="ch-info"><span class="tn">Cubes (1–20)</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span><span class="b rv">Reverse</span></div></div></div>
+  <div class="tr cA" data-n="4" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">4</span><div class="ch-info"><span class="tn">Powers (2¹–2¹², 3¹–3⁸, 4¹–4⁵, 5¹–5⁶)</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div></div></div>
+  <div class="tr cA" data-n="5" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">5</span><div class="ch-info"><span class="tn">Square Root Recognition</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span></div></div></div>
+  <div class="tr cA" data-n="6" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">6</span><div class="ch-info"><span class="tn">Cube Root Recognition</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div></div></div>
+  <div class="tr cA" data-n="7" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">7</span><div class="ch-info"><span class="tn">Fraction ↔ % ↔ Decimal ↔ Ratio</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ Daily</span><span class="b rv">Reverse</span></div></div></div>
+  <div class="tr cA" data-n="8" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">8</span><div class="ch-info"><span class="tn">Prime Numbers (2–100)</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div></div></div>
+  <div class="tr cA" data-n="9" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">9</span><div class="ch-info"><span class="tn">Pythagorean Triplets (8 sets)</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div></div></div>
+  <div class="tr cA" data-n="10" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">10</span><div class="ch-info"><span class="tn">CI Multipliers</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ Daily</span></div></div></div>
 </div>
 </div>
 
@@ -102,12 +103,12 @@
   <div><div class="sec-title">B — Number Properties</div><div class="sec-sub">Study once · Apply in under 5 seconds · Rules, not formulas</div></div>
   <div class="sec-r"><div class="pb"><div class="pbf fB" id="sBb" style="width:0%"></div></div><span class="sec-ct" id="sBc">0/5</span></div>
 </div>
-<div class="grid">
-  <div class="card cB" data-n="11" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Divisibility Rules (2–13)</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">Rules for 2,3,4,5,6,7,8,9,10,11,12,13 · Every HCF/LCM + number system question uses this</div></div>
-  <div class="card cB" data-n="12" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Unit Digit Cycles</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 2 days</span></div><div class="cs">2→4→8→6 (cycle 4) · 3→9→7→1 · 7→9→3→1 · 4&amp;6 fixed · 5&amp;0 fixed</div></div>
-  <div class="card cB" data-n="13" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Remainder Shortcuts</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">Cyclicity for large powers · Remainder by 9/10/11 pattern method</div></div>
-  <div class="card cB" data-n="14" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">LCM &amp; HCF Shortcuts</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">Prime factorisation speed · Co-prime: LCM=product · LCM×HCF=product of numbers</div></div>
-  <div class="card cB" data-n="15" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Digital Sum / Casting Out 9s</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 2 days</span></div><div class="cs">Mod 9 answer check in 3 seconds · Catch calculation errors instantly</div></div>
+<div class="tg">
+  <div class="tr cB" data-n="11" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">11</span><div class="ch-info"><span class="tn">Divisibility Rules (2–13)</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cB" data-n="12" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">12</span><div class="ch-info"><span class="tn">Unit Digit Cycles</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+  <div class="tr cB" data-n="13" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">13</span><div class="ch-info"><span class="tn">Remainder Shortcuts</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cB" data-n="14" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">14</span><div class="ch-info"><span class="tn">LCM &amp; HCF Shortcuts</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cB" data-n="15" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">15</span><div class="ch-info"><span class="tn">Digital Sum / Casting Out 9s</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
 </div>
 </div>
 
@@ -117,12 +118,12 @@
   <div><div class="sec-title">C — Fast Computation</div><div class="sec-sub">Learn once · Drill until hand moves faster than brain</div></div>
   <div class="sec-r"><div class="pb"><div class="pbf fC" id="sCb" style="width:0%"></div></div><span class="sec-ct" id="sCc">0/5</span></div>
 </div>
-<div class="grid">
-  <div class="card cC" data-n="16" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fast Addition + Subtraction</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">Left-to-right addition · Complement from 10/100/1000 · SP=80% of CP directly</div></div>
-  <div class="card cC" data-n="17" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fast Multiplication — Vedic Toolkit</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 5 days</span></div><div class="cs">×11: add adjacent digits · Base-100: 97×98=9506 · ×25/125: ÷4/8</div></div>
-  <div class="card cC" data-n="18" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Fast Division</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">Simplify fraction before dividing · Reciprocal multiplication · Divisibility check first</div></div>
-  <div class="card cC" data-n="19" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Squaring Shortcuts</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">75²=7×8|25=5625 · Near 100: 97²=94|09 · Near 50: 47²=22|09</div></div>
-  <div class="card cC opt" data-n="20" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Root Approximation</span></div><div class="bgs"><span class="pri pri-skip">SKIP</span><span class="ch-pill">⏱ 2 days</span></div><div class="cs">Newton's method · Only after A–D fully solid · Skip if time pressure</div></div>
+<div class="tg">
+  <div class="tr cC" data-n="16" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">16</span><div class="ch-info"><span class="tn">Fast Addition + Subtraction</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cC" data-n="17" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">17</span><div class="ch-info"><span class="tn">Fast Multiplication — Vedic Toolkit</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 5 days</span></div></div></div>
+  <div class="tr cC" data-n="18" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">18</span><div class="ch-info"><span class="tn">Fast Division</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cC" data-n="19" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">19</span><div class="ch-info"><span class="tn">Squaring Shortcuts</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cC opt" data-n="20" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">20</span><div class="ch-info"><span class="tn">Root Approximation</span><div class="ch-meta"><span class="pri pri-skip">SKIP</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
 </div>
 </div>
 
@@ -132,13 +133,13 @@
   <div><div class="sec-title">D — Percentage, Ratio &amp; DI Mastery</div><div class="sec-sub">Heart of SSC Quant · 60% of marks live here</div></div>
   <div class="sec-r"><div class="pb"><div class="pbf fD" id="sDb" style="width:0%"></div></div><span class="sec-ct" id="sDc">0/6</span></div>
 </div>
-<div class="grid">
-  <div class="card cD" data-n="21" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Unified % Calculation Speed</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">x% of y = y% of x · 10%+5%+1% breakup · Convert % to fraction before calculating</div></div>
-  <div class="card cD" data-n="22" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Approximation by Fraction Memory</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span><span class="b rv">Reverse</span></div><div class="cs">14.28%=1/7 · 16.66%=1/6 · 11.11%=1/9 · 12.5%=1/8 · 8.33%=1/12</div></div>
-  <div class="card cD" data-n="23" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Successive % Change — Net Effect</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 2 days</span></div><div class="cs">a+b+ab/100 · Two changes → one net % · P&amp;L chains · CI vs SI difference</div></div>
-  <div class="card cD" data-n="24" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Ratio + Fraction Comparison</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 2 days</span></div><div class="cs">HCF reduction · Compare by cross multiply without LCM · Ratio ↔ % conversion</div></div>
-  <div class="card cD" data-n="25" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Balancing / Assumed Mean Method</span></div><div class="bgs"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">Reference point for averages · Work with deviations · 5× faster than direct calculation</div></div>
-  <div class="card cD" data-n="26" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Smart DI Rounding + Logical Approximation</span></div><div class="bgs"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div><div class="cs">Error tolerance · Option elimination by range · Back-calculate from answer choices</div></div>
+<div class="tg">
+  <div class="tr cD" data-n="21" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">21</span><div class="ch-info"><span class="tn">Unified % Calculation Speed</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cD" data-n="22" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">22</span><div class="ch-info"><span class="tn">Approximation by Fraction Memory</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span><span class="b rv">Reverse</span></div></div></div>
+  <div class="tr cD" data-n="23" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">23</span><div class="ch-info"><span class="tn">Successive % Change — Net Effect</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+  <div class="tr cD" data-n="24" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">24</span><div class="ch-info"><span class="tn">Ratio + Fraction Comparison</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+  <div class="tr cD" data-n="25" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">25</span><div class="ch-info"><span class="tn">Balancing / Assumed Mean Method</span><div class="ch-meta"><span class="pri pri-high">HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
+  <div class="tr cD" data-n="26" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">26</span><div class="ch-info"><span class="tn">Smart DI Rounding + Logical Approximation</span><div class="ch-meta"><span class="pri pri-veryhigh">VERY HIGH</span><span class="ch-pill">⏱ 3 days</span></div></div></div>
 </div>
 </div>
 
@@ -148,9 +149,9 @@
   <div><div class="sec-title">E — Advanced Tricks</div><div class="sec-sub">Only after Sections A–D are solid · Do not start early</div></div>
   <div class="sec-r"><div class="pb"><div class="pbf fE" id="sEb" style="width:0%"></div></div><span class="sec-ct" id="sEc">0/2</span></div>
 </div>
-<div class="grid">
-  <div class="card cE" data-n="27" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Surds &amp; Indices Speed Shortcuts</span></div><div class="bgs"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">⏱ 2 days</span></div><div class="cs">Index laws in 3 seconds · Rationalise by conjugate · Compare surds without calculating</div></div>
-  <div class="card cE" data-n="28" onclick="tog(this)"><div class="ct"><div class="ck">✓</div><span class="cn">Successive P&amp;L + Recurring Decimals</span></div><div class="bgs"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">⏱ 2 days</span></div><div class="cs">M-D-MD/100 formula · 0.142857=1/7 · 0.0909=1/11 · Use in simplification questions</div></div>
+<div class="tg">
+  <div class="tr cE" data-n="27" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">27</span><div class="ch-info"><span class="tn">Surds &amp; Indices Speed Shortcuts</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
+  <div class="tr cE" data-n="28" onclick="tog(this)"><div class="ck">✓</div><span class="tnum">28</span><div class="ch-info"><span class="tn">Successive P&amp;L + Recurring Decimals</span><div class="ch-meta"><span class="pri pri-medium">MEDIUM</span><span class="ch-pill">⏱ 2 days</span></div></div></div>
 </div>
 </div>
 </div>
@@ -185,7 +186,7 @@ async function load() {
   render();
 }
 function render() {
-  document.querySelectorAll('.card').forEach(function(c) {
+  document.querySelectorAll('.tr').forEach(function(c) {
     var n = parseInt(c.getAttribute('data-n'));
     if (st[n]) c.classList.add('done'); else c.classList.remove('done');
   });
