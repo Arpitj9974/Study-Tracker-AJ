@@ -159,37 +159,46 @@ function injectTheme(iframe) {
 
 function syncIframeHeight(iframe) {
   injectTheme(iframe);
+  iframe.setAttribute('scrolling', 'no'); // Force no scroll
   
-  const update = () => {
+  let tries = 0;
+  const poll = () => {
+    tries++;
     try {
-      const doc = iframe.contentDocument;
-      if (!doc || !doc.body) return;
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!doc || !doc.body) throw "no-doc";
 
-      // Force a tiny height temporarily to get the TRUE content height (prevents infinite growth)
-      const oldH = iframe.style.height;
-      iframe.style.height = "100px";
+      // Calculate full height using the most accurate methods
+      const body = doc.body;
+      const html = doc.documentElement;
       
-      const wrapper = doc.querySelector('.w, .wrap') || doc.body;
-      const h = wrapper.scrollHeight;
-      
-      // Use the new height, but never less than 350px to keep it looking good
-      const finalH = Math.max(h + 40, 350);
-      iframe.style.height = finalH + 'px';
+      const height = Math.max(
+        body.scrollHeight, body.offsetHeight,
+        html.scrollHeight, html.offsetHeight
+      );
+
+      if (height > 50) { 
+        iframe.style.height = (height + 40) + 'px';
+      }
+
+      // Keep polling for a while to catch async content loads (like checklists)
+      if (tries < 40) {
+        setTimeout(poll, tries < 10 ? 150 : 300);
+      } else {
+        // Final observe for any later dynamic changes (toggling items)
+        const ro = new ResizeObserver(() => {
+          try {
+            const h2 = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight);
+            if (h2 > 50) iframe.style.height = (h2 + 40) + 'px';
+          } catch(e) {}
+        });
+        ro.observe(doc.body);
+      }
     } catch(e) {
-      console.error("Height sync failed", e);
+      if (tries < 40) setTimeout(poll, 200);
     }
   };
-
-  // Run immediately, then again after a short delay (for async renders), then watch for changes
-  update();
-  setTimeout(update, 300);
-  setTimeout(update, 1000);
-  setTimeout(update, 3000);
-
-  try {
-    const ro = new ResizeObserver(update);
-    ro.observe(iframe.contentDocument.body);
-  } catch(e) {}
+  poll();
 }
 
 // ── Mini stats for tracker header ─────────────────────────────────────────────
