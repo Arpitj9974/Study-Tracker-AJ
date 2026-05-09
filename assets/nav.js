@@ -166,42 +166,43 @@ function syncIframeHeight(iframe) {
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       if (!doc || !doc.body) return;
 
-      // 1. Kill any fixed heights inside the iframe that could inflate scrollHeight
-      if (!doc.getElementById('resize-fix-style')) {
-        const s = doc.createElement('style');
-        s.id = 'resize-fix-style';
-        s.textContent = `
-          html, body { min-height: 0 !important; height: auto !important; overflow: hidden !important; }
-          .w, .wrap { padding-bottom: 4px !important; margin-bottom: 0 !important; }
-        `;
-        doc.head.appendChild(s);
+      // Step 1: Make iframe very tall so content renders at its NATURAL height
+      // (This is the key insight — content must NOT be constrained when measuring)
+      iframe.style.height = '50000px';
+
+      // Step 2: Find the actual content container inside the tracker
+      const wrapper = doc.querySelector('.w, .wrap');
+      
+      let height;
+      if (wrapper) {
+        // Best case: measure the wrapper directly
+        height = wrapper.offsetHeight;
+      } else {
+        // Fallback: measure the last element in the body
+        const children = doc.body.children;
+        if (children.length > 0) {
+          const last = children[children.length - 1];
+          height = last.offsetTop + last.offsetHeight;
+        } else {
+          height = doc.body.scrollHeight;
+        }
       }
 
-      // 2. Reset height to 0 to force parent to shrink, then measure true content
-      iframe.style.height = '0px';
-      
-      const body = doc.body;
-      const html = doc.documentElement;
-      
-      // Use offsetHeight as it's more accurate for content than scrollHeight in this context
-      const height = Math.max(
-        body.offsetHeight,
-        body.scrollHeight,
-        html.offsetHeight
-      );
-
-      if (height > 50) { 
-        iframe.style.height = (height + 24) + 'px'; // Minimal buffer
+      // Step 3: Set iframe to exactly the content height + small breathing room
+      if (height > 50) {
+        iframe.style.height = (height + 32) + 'px';
       }
-    } catch(e) {}
+    } catch(e) {
+      // If cross-origin or other error, set a reasonable fallback
+      iframe.style.height = '800px';
+    }
   };
 
-  // Run multiple times to catch async rendering
+  // Run at increasing intervals to catch async data loading from localStorage
   resize();
-  setTimeout(resize, 200);
-  setTimeout(resize, 600);
-  setTimeout(resize, 1500);
-  setTimeout(resize, 4000); // Final catch-all
+  setTimeout(resize, 300);
+  setTimeout(resize, 800);
+  setTimeout(resize, 2000);
 }
 
 // ── Mini stats for tracker header ─────────────────────────────────────────────
