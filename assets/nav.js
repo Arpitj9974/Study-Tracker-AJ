@@ -159,40 +159,37 @@ function injectTheme(iframe) {
 
 function syncIframeHeight(iframe) {
   injectTheme(iframe);
-  let tries = 0;
   
-  const poll = () => {
-    tries++;
+  const update = () => {
     try {
       const doc = iframe.contentDocument;
-      if (!doc || !doc.body) throw "no-doc";
+      if (!doc || !doc.body) return;
 
-      // 1. Try to find the actual content wrapper first (more accurate)
+      // Force a tiny height temporarily to get the TRUE content height (prevents infinite growth)
+      const oldH = iframe.style.height;
+      iframe.style.height = "100px";
+      
       const wrapper = doc.querySelector('.w, .wrap') || doc.body;
       const h = wrapper.scrollHeight;
       
-      if (h > 50) { 
-        iframe.style.height = (h + 30) + 'px';
-      }
-
-      // 2. Keep polling for up to 4 seconds to catch dynamic data loading
-      if (tries < 34) {
-        setTimeout(poll, 120);
-      } else {
-        // 3. Final watch: Observe the wrapper for any future checkmark toggles
-        const ro = new ResizeObserver(() => {
-          try {
-            const h2 = (doc.querySelector('.w, .wrap') || doc.body).scrollHeight;
-            if (h2 > 50) iframe.style.height = (h2 + 30) + 'px';
-          } catch(e) {}
-        });
-        ro.observe(wrapper);
-      }
+      // Use the new height, but never less than 350px to keep it looking good
+      const finalH = Math.max(h + 40, 350);
+      iframe.style.height = finalH + 'px';
     } catch(e) {
-      if (tries < 34) setTimeout(poll, 120);
+      console.error("Height sync failed", e);
     }
   };
-  poll();
+
+  // Run immediately, then again after a short delay (for async renders), then watch for changes
+  update();
+  setTimeout(update, 300);
+  setTimeout(update, 1000);
+  setTimeout(update, 3000);
+
+  try {
+    const ro = new ResizeObserver(update);
+    ro.observe(iframe.contentDocument.body);
+  } catch(e) {}
 }
 
 // ── Mini stats for tracker header ─────────────────────────────────────────────
