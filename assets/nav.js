@@ -159,35 +159,34 @@ function injectTheme(iframe) {
 
 function syncIframeHeight(iframe) {
   injectTheme(iframe);
-  let lastH = 0, tries = 0;
+  let tries = 0;
+  
   const poll = () => {
     tries++;
     try {
       const doc = iframe.contentDocument;
-      // Read from both body and documentElement and take the max (different browsers differ)
-      const h = Math.max(
-        doc.body ? doc.body.scrollHeight : 0,
-        doc.documentElement ? doc.documentElement.scrollHeight : 0
-      );
-      if (h > 100) { // Only apply if we got a real value
-        iframe.style.height = (h + 40) + 'px';
+      if (!doc || !doc.body) throw "no-doc";
+
+      // 1. Try to find the actual content wrapper first (more accurate)
+      const wrapper = doc.querySelector('.w, .wrap') || doc.body;
+      const h = wrapper.scrollHeight;
+      
+      if (h > 50) { 
+        iframe.style.height = (h + 30) + 'px';
       }
-      // Keep polling for up to 4 seconds to catch async content rendering
+
+      // 2. Keep polling for up to 4 seconds to catch dynamic data loading
       if (tries < 34) {
         setTimeout(poll, 120);
       } else {
-        // Done polling — watch for future changes
+        // 3. Final watch: Observe the wrapper for any future checkmark toggles
         const ro = new ResizeObserver(() => {
           try {
-            const doc2 = iframe.contentDocument;
-            const h2 = Math.max(
-              doc2.body ? doc2.body.scrollHeight : 0,
-              doc2.documentElement ? doc2.documentElement.scrollHeight : 0
-            );
-            if (h2 > 100) iframe.style.height = (h2 + 40) + 'px';
+            const h2 = (doc.querySelector('.w, .wrap') || doc.body).scrollHeight;
+            if (h2 > 50) iframe.style.height = (h2 + 30) + 'px';
           } catch(e) {}
         });
-        try { ro.observe(doc.body); } catch(e) {}
+        ro.observe(wrapper);
       }
     } catch(e) {
       if (tries < 34) setTimeout(poll, 120);
