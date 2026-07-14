@@ -157,16 +157,9 @@ function renderSmartSuggestion(stats) {
   box.innerHTML = `<div style="color:${color};font:500 14px/1.6 'DM Sans'">${msg}</div>`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderCountdown();
-  renderTimeline();
-  const stats = readStats();
-  renderDonutRing(stats);
-  renderMasterStats(stats);
-  renderSubjectCards(stats);
-  renderFocusBox(stats);
-  renderSmartSuggestion(stats);
-});
+// Old combined dashboard auto-render removed.
+// NQT and SSC dashboards now have their own JS files (dashboard-nqt.js, dashboard-ssc.js).
+// The functions above (renderMiniStats, injectPriorityData, etc.) are still used by tracker pages.
 
 // subjectKey = 'quant' | 'reasoning' | 'english' | 'gk' | 'coding' | 'speedmath'
 function injectPriorityData(subjectKey) {

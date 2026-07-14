@@ -28,6 +28,74 @@ const KEYS = {
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
 const SSC_MAX = { speedmath: 0, quant: 14, reasoning: 21, coding: 0,  english: 1,  gk: 23 };
 
+// ── Exam Configuration ────────────────────────────────────────────────────────
+const EXAM_CONFIG = {
+  nqt: {
+    label: 'TCS NQT',
+    color: '#7F77DD',
+    icon: '🎯',
+    subjects: ['speedmath', 'quant', 'reasoning', 'coding', 'english'],
+    // For NQT, only count chapters up to p1
+    countMode: 'p1',
+    examDate: '2025-08-01',
+    totalChapters: 119,
+    links: [
+      { page: 'dashboard-nqt.html', href: 'dashboard-nqt.html', icon: '📊', label: 'NQT Dashboard' },
+      { page: 'tracker-speedmath.html', href: 'tracker-speedmath.html', icon: '⚡', label: 'Speed Math' },
+      { page: 'tracker-quant.html',     href: 'tracker-quant.html',     icon: '🔢', label: 'Quant' },
+      { page: 'tracker-reasoning.html', href: 'tracker-reasoning.html', icon: '🧠', label: 'Reasoning' },
+      { page: 'tracker-english.html',   href: 'tracker-english.html',   icon: '📝', label: 'English' },
+      { page: 'tracker-coding.html',    href: 'tracker-coding.html',    icon: '💻', label: 'NQT Coding' },
+    ]
+  },
+  ssc: {
+    label: 'SSC CGL',
+    color: '#1D9E75',
+    icon: '📋',
+    subjects: ['quant', 'reasoning', 'english', 'gk'],
+    // For SSC, count ALL chapters (p1 + p2)
+    countMode: 'all',
+    examDate: '2025-09-15',
+    totalChapters: 134,
+    links: [
+      { page: 'dashboard-ssc.html', href: 'dashboard-ssc.html', icon: '📊', label: 'SSC Dashboard' },
+      { page: 'tracker-quant.html',     href: 'tracker-quant.html',     icon: '🔢', label: 'Quant' },
+      { page: 'tracker-reasoning.html', href: 'tracker-reasoning.html', icon: '🧠', label: 'Reasoning' },
+      { page: 'tracker-english.html',   href: 'tracker-english.html',   icon: '📝', label: 'English' },
+      { page: 'tracker-gk.html',        href: 'tracker-gk.html',        icon: '🌍', label: 'General Knowledge' },
+    ]
+  }
+};
+
+// Detect current exam context from URL
+function getCurrentExam() {
+  const page = window.location.pathname.split('/').pop() || '';
+  if (page.includes('nqt')) return 'nqt';
+  if (page.includes('ssc')) return 'ssc';
+  // For tracker pages, check localStorage for last selected exam
+  return localStorage.getItem('selectedExam') || 'nqt';
+}
+
+// ── Read stats filtered by exam ───────────────────────────────────────────────
+function readExamStats(examKey) {
+  const config = EXAM_CONFIG[examKey];
+  if (!config) return readStats();
+  const results = {};
+  for (const subj of config.subjects) {
+    const cfg = KEYS[subj];
+    let done = 0, p1done = 0, p2done = 0;
+    const max = config.countMode === 'p1' ? cfg.p1 : cfg.total;
+    for (let i = 1; i <= max; i++) {
+      if (localStorage.getItem(cfg.prefix + i) === '1') {
+        done++;
+        if (i <= cfg.p1) p1done++; else p2done++;
+      }
+    }
+    results[subj] = { done, p1done, p2done, total: max, p1: Math.min(cfg.p1, max), p2: Math.max(0, max - cfg.p1) };
+  }
+  return results;
+}
+
 // ── Read all stats from localStorage ──────────────────────────────────────────
 function readStats() {
   const results = {};
@@ -58,27 +126,26 @@ function getTimelineProgress() {
 // ── Sidebar injection ─────────────────────────────────────────────────────────
 function buildNav() {
   const page = window.location.pathname.split('/').pop() || 'index.html';
-  const links = [
-    { page: 'index.html',              href: 'index.html?v=3',              icon: '📊', label: 'Dashboard' },
-    { page: 'tracker-speedmath.html',  href: 'tracker-speedmath.html?v=3',  icon: '⚡', label: 'Speed Math' },
-    { page: 'tracker-quant.html',      href: 'tracker-quant.html?v=3',      icon: '🔢', label: 'Quant' },
-    { page: 'tracker-reasoning.html',  href: 'tracker-reasoning.html?v=3',  icon: '🧠', label: 'Reasoning' },
-    { page: 'tracker-english.html',    href: 'tracker-english.html?v=3',    icon: '📝', label: 'English' },
-    { page: 'tracker-coding.html',     href: 'tracker-coding.html?v=3',     icon: '💻', label: 'NQT Coding' },
-    { page: 'tracker-gk.html',         href: 'tracker-gk.html?v=3',         icon: '🌍', label: 'General Knowledge' },
-  ];
+  
+  // Don't show sidebar on the exam selector (index.html)
+  if (page === 'index.html' || page === '') return;
 
-  const stats   = readStats();
-  const total   = 178;
+  const examKey = getCurrentExam();
+  const config  = EXAM_CONFIG[examKey] || EXAM_CONFIG.nqt;
+  const links   = config.links;
+
+  const stats   = readExamStats(examKey);
+  const total   = config.totalChapters;
   const done    = Object.values(stats).reduce((s, v) => s + v.done, 0);
   const pct     = Math.round((done / total) * 100);
-  const days    = getCountdown();
+  const examDate = new Date(config.examDate + 'T00:00:00');
+  const days    = Math.ceil((examDate - new Date()) / 86400000);
   let daysColor = '#1D9E75';
   if (days < 30) daysColor = '#EF4444';
   else if (days < 60) daysColor = '#D97706';
 
   const navLinks = links.map(l => {
-    const active = (page === l.page) || (page === '' && l.page === 'index.html');
+    const active = (page === l.page);
     return `<a href="${l.href}" class="nav-link${active ? ' active' : ''}" data-page="${l.page}">
       <span class="ni">${l.icon}</span>${l.label}
     </a>`;
@@ -87,22 +154,23 @@ function buildNav() {
   const sidebarHTML = `
   <div id="sidebar">
     <div class="sidebar-brand">
-      <h1>🎯 Arpit's Exam Hub</h1>
-      <p>NQT · SSC · One Dashboard</p>
+      <h1>${config.icon} ${config.label}</h1>
+      <p>Arpit's Exam Hub</p>
     </div>
+    <a href="index.html" class="switch-exam-btn">🔄 Switch Exam</a>
     <div class="sidebar-divider"></div>
     <div class="nav-links">${navLinks}</div>
     <div class="sidebar-bottom">
       <div class="sidebar-divider"></div>
       <div class="sidebar-progress-block">
-        <span class="spb-label">Overall Progress</span>
+        <span class="spb-label">${config.label} Progress</span>
         <div class="spb-bar-wrap">
-          <div class="spb-bar-fill" style="width:${pct}%"></div>
+          <div class="spb-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${config.color},${config.color}dd)"></div>
         </div>
-        <div class="spb-numbers"><span>${done}</span> / ${total} done · ${pct}%</div>
+        <div class="spb-numbers"><span style="color:${config.color}">${done}</span> / ${total} done · ${pct}%</div>
       </div>
       <div class="sidebar-countdown">
-        <span class="sc-label">NQT In</span>
+        <span class="sc-label">${config.label} In</span>
         <div class="sc-days" style="color:${daysColor}">${days > 0 ? days : '🎯'}</div>
         <div class="sc-sub">${days > 0 ? 'days' : 'Exam Day!'}</div>
       </div>

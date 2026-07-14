@@ -30,6 +30,13 @@ body {
 .sidebar-brand h1 { font: 700 15px/1.2 'DM Sans'; color: var(--text-primary); margin-bottom: 3px; }
 .sidebar-brand p  { font: 500 10px/1 'JetBrains Mono'; color: var(--accent-purple); text-transform: uppercase; letter-spacing: .08em; }
 .sidebar-divider  { height: 1px; background: var(--border-subtle); margin: 12px 0; }
+.switch-exam-btn {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin: 0 0 4px;
+  border-radius: var(--radius-sm); font: 500 12px/1 'DM Sans'; color: var(--text-secondary);
+  text-decoration: none; border: 1px solid var(--border-subtle); background: var(--bg-elevated);
+  transition: all .18s; cursor: pointer;
+}
+.switch-exam-btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border-medium); }
 
 .nav-links { display: flex; flex-direction: column; gap: 3px; }
 .nav-link {
