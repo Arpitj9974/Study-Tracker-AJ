@@ -205,28 +205,32 @@ function buildNav() {
 
   const sidebarHTML = `
   <div id="sidebar">
-    <div class="sidebar-brand">
-      <h1>${config.icon} ${config.label}</h1>
-      <p>Arpit's Exam Hub</p>
-    </div>
-    <a href="index.html" class="switch-exam-btn">🔄 Switch Exam</a>
-    <div class="sidebar-divider"></div>
-    <div class="nav-links">${navLinks}</div>
-    <div class="sidebar-bottom">
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <h1>${config.icon} ${config.label}</h1>
+        <p>Arpit's Exam Hub</p>
+      </div>
+      <a href="index.html" class="switch-exam-btn">🔄 Switch Exam</a>
       <div class="sidebar-divider"></div>
-      <div class="sidebar-progress-block">
-        <span class="spb-label">${config.label} Progress</span>
-        <div class="spb-bar-wrap">
-          <div class="spb-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${config.color},${config.color}dd)"></div>
+    </div>
+    <div class="sidebar-scrollable">
+      <div class="nav-links">${navLinks}</div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-progress-block">
+          <span class="spb-label">${config.label} Progress</span>
+          <div class="spb-bar-wrap">
+            <div class="spb-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${config.color},${config.color}dd)"></div>
+          </div>
+          <div class="spb-numbers"><span style="color:${config.color}">${done}</span> / ${total} done · ${pct}%</div>
         </div>
-        <div class="spb-numbers"><span style="color:${config.color}">${done}</span> / ${total} done · ${pct}%</div>
+        <div class="sidebar-countdown">
+          <span class="sc-label">${config.label} In</span>
+          <div class="sc-days" style="color:${daysColor}">${days > 0 ? days : '🎯'}</div>
+          <div class="sc-sub">${days > 0 ? 'days' : 'Exam Day!'}</div>
+        </div>
+        <button id="logout-btn" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:10px;border-radius:8px;font:600 12px/1 'DM Sans';cursor:pointer;margin-top:16px;transition:all 0.2s">Log Out</button>
       </div>
-      <div class="sidebar-countdown">
-        <span class="sc-label">${config.label} In</span>
-        <div class="sc-days" style="color:${daysColor}">${days > 0 ? days : '🎯'}</div>
-        <div class="sc-sub">${days > 0 ? 'days' : 'Exam Day!'}</div>
-      </div>
-      <button id="logout-btn" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:10px;border-radius:8px;font:600 12px/1 'DM Sans';cursor:pointer;margin-top:16px;transition:all 0.2s">Log Out</button>
     </div>
   </div>`;
 
