@@ -14,6 +14,18 @@ const SUBJECT_COLORS = {
   coding:    { primary: '#D97706', dim: '#B45309', bg: '#3B2000' },
   english:   { primary: '#1D9E75', dim: '#0F6E56', bg: '#04342C' },
   gk:        { primary: '#EC4899', dim: '#BE185D', bg: '#3D0022' },
+  // UPSC colors
+  upsc_polity:           { primary: '#3B5BDB' },
+  upsc_modern_history:   { primary: '#B04A2F' },
+  upsc_geography:        { primary: '#2B8A6E' },
+  upsc_economy:          { primary: '#B7791F' },
+  upsc_env_eco:          { primary: '#4C9A3F' },
+  upsc_ancient_medieval: { primary: '#8C6239' },
+  upsc_art_culture:      { primary: '#A64D9C' },
+  upsc_sci_tech:         { primary: '#2C7A9E' },
+  upsc_ir_security:      { primary: '#5F5AA2' },
+  upsc_ethics_gs4:       { primary: '#6B7280' },
+  upsc_csat_aptitude:    { primary: '#B34747' },
 };
 
 const KEYS = {
@@ -23,6 +35,18 @@ const KEYS = {
   coding:    { prefix: 'cdf_', total: 16, p1: 16 },
   english:   { prefix: 'en_',  total: 26, p1: 25 },
   gk:        { prefix: 'gk_', total: 23, p1: 12 },
+  // UPSC subjects
+  upsc_polity:           { prefix: 'upsc_pol_', total: 23, p1: 23 },
+  upsc_modern_history:   { prefix: 'upsc_mhi_', total: 14, p1: 14 },
+  upsc_geography:        { prefix: 'upsc_geo_', total: 16, p1: 16 },
+  upsc_economy:          { prefix: 'upsc_eco_', total: 14, p1: 14 },
+  upsc_env_eco:          { prefix: 'upsc_env_', total: 10, p1: 10 },
+  upsc_ancient_medieval: { prefix: 'upsc_anc_', total: 10, p1: 10 },
+  upsc_art_culture:      { prefix: 'upsc_art_', total: 8,  p1: 8  },
+  upsc_sci_tech:         { prefix: 'upsc_sct_', total: 8,  p1: 8  },
+  upsc_ir_security:      { prefix: 'upsc_irs_', total: 8,  p1: 8  },
+  upsc_ethics_gs4:       { prefix: 'upsc_eth_', total: 8,  p1: 8  },
+  upsc_csat_aptitude:    { prefix: 'upsc_csa_', total: 7,  p1: 7  },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -64,6 +88,33 @@ const EXAM_CONFIG = {
       { page: 'tracker-english.html',   href: 'tracker-english.html',   icon: '📝', label: 'English' },
       { page: 'tracker-gk.html',        href: 'tracker-gk.html',        icon: '🌍', label: 'General Knowledge' },
     ]
+  },
+  upsc: {
+    label: 'UPSC CSE',
+    color: '#3B5BDB',
+    icon: '🏛️',
+    subjects: [
+      'upsc_polity', 'upsc_modern_history', 'upsc_geography', 'upsc_economy',
+      'upsc_env_eco', 'upsc_ancient_medieval', 'upsc_art_culture', 'upsc_sci_tech',
+      'upsc_ir_security', 'upsc_ethics_gs4', 'upsc_csat_aptitude'
+    ],
+    countMode: 'all',
+    examDate: '2027-05-23',
+    totalChapters: 126,
+    links: [
+      { page: 'dashboard-upsc.html', href: 'dashboard-upsc.html', icon: '📊', label: 'UPSC Dashboard' },
+      { page: 'tracker-upsc.html?subj=upsc_polity',           href: 'tracker-upsc.html?subj=upsc_polity',           icon: '⚖️', label: 'Polity' },
+      { page: 'tracker-upsc.html?subj=upsc_modern_history',   href: 'tracker-upsc.html?subj=upsc_modern_history',   icon: '✊', label: 'Modern History' },
+      { page: 'tracker-upsc.html?subj=upsc_geography',        href: 'tracker-upsc.html?subj=upsc_geography',        icon: '🌍', label: 'Geography' },
+      { page: 'tracker-upsc.html?subj=upsc_economy',          href: 'tracker-upsc.html?subj=upsc_economy',          icon: '📈', label: 'Economy' },
+      { page: 'tracker-upsc.html?subj=upsc_env_eco',          href: 'tracker-upsc.html?subj=upsc_env_eco',          icon: '🌿', label: 'Environment' },
+      { page: 'tracker-upsc.html?subj=upsc_ancient_medieval', href: 'tracker-upsc.html?subj=upsc_ancient_medieval', icon: '🏺', label: 'Ancient/Medieval' },
+      { page: 'tracker-upsc.html?subj=upsc_art_culture',      href: 'tracker-upsc.html?subj=upsc_art_culture',      icon: '🎭', label: 'Art & Culture' },
+      { page: 'tracker-upsc.html?subj=upsc_sci_tech',         href: 'tracker-upsc.html?subj=upsc_sci_tech',         icon: '🔬', label: 'Sci & Tech' },
+      { page: 'tracker-upsc.html?subj=upsc_ir_security',      href: 'tracker-upsc.html?subj=upsc_ir_security',      icon: '🌐', label: 'IR & Security' },
+      { page: 'tracker-upsc.html?subj=upsc_ethics_gs4',       href: 'tracker-upsc.html?subj=upsc_ethics_gs4',       icon: '🧭', label: 'Ethics (GS-4)' },
+      { page: 'tracker-upsc.html?subj=upsc_csat_aptitude',    href: 'tracker-upsc.html?subj=upsc_csat_aptitude',    icon: '🧮', label: 'CSAT' },
+    ]
   }
 };
 
@@ -72,6 +123,7 @@ function getCurrentExam() {
   const page = window.location.pathname.split('/').pop() || '';
   if (page.includes('nqt')) return 'nqt';
   if (page.includes('ssc')) return 'ssc';
+  if (page.includes('upsc')) return 'upsc';
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }

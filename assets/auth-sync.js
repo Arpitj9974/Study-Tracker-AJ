@@ -46,7 +46,7 @@ window.addEventListener('storage', async (e) => {
   if (!currentUid) return;
   
   // We only sync keys that belong to our trackers
-  const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_'];
+  const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_'];
   const isValid = validPrefixes.some(p => e.key && e.key.startsWith(p));
   
   if (isValid) {

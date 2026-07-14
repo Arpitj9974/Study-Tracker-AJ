@@ -98,6 +98,12 @@
     const sscPct = Math.round((sscDone / EXAM_CONFIG.ssc.totalChapters) * 100);
     const sscDays = Math.ceil((new Date(EXAM_CONFIG.ssc.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // UPSC stats
+    const upscStats = readExamStats('upsc');
+    const upscDone = Object.values(upscStats).reduce((s, v) => s + v.done, 0);
+    const upscPct = Math.round((upscDone / EXAM_CONFIG.upsc.totalChapters) * 100);
+    const upscDays = Math.ceil((new Date(EXAM_CONFIG.upsc.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
@@ -125,12 +131,18 @@
         <button class="ec-enter" style="background:#1D9E75">Start SSC Prep →</button>
       </a>
 
-      <div class="exam-card disabled" style="border-top-color:var(--text-muted)">
+      <a href="dashboard-upsc.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="localStorage.setItem('selectedExam','upsc')">
         <span class="ec-icon">🏛️</span>
-        <div class="ec-name" style="color:var(--text-tertiary)">UPSC</div>
-        <div class="ec-desc" style="color:var(--text-muted)">Civil Services examination tracker — coming soon!</div>
-        <div class="ec-coming">🔒 Coming Soon</div>
-      </div>
+        <div class="ec-name">UPSC CSE</div>
+        <div class="ec-desc">Polity, History, Geography, Economy, Ethics & CSAT</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.upsc.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${upscDays < 30 ? '#EF4444' : '#3B5BDB'}">${upscDays > 0 ? upscDays : '🎯'}</div><div class="ec-stat-lbl">${upscDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.upsc.subjects.length} Subjects · ${EXAM_CONFIG.upsc.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#3B5BDB">Start UPSC Prep →</button>
+      </a>
     `;
   </script>
   <script type="module" src="assets/auth-sync.js?v=5"></script>
