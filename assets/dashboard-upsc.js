@@ -135,8 +135,7 @@ function renderUPSCSmartSuggestion(stats) {
   box.innerHTML = `<div style="color:${color};font:500 14px/1.6 'DM Sans'">${msg}</div>`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  localStorage.setItem('selectedExam', 'upsc');
+function refreshUPSCUI() {
   renderUPSCCountdown();
   const stats = readExamStats('upsc');
   renderUPSCDonut(stats);
@@ -144,4 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
   renderUPSCSubjectCards(stats);
   renderUPSCFocusBox(stats);
   renderUPSCSmartSuggestion(stats);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  localStorage.setItem('selectedExam', 'upsc');
+  refreshUPSCUI();
 });
+
+window.addEventListener('cloudDataSynced', refreshUPSCUI);
+window.addEventListener('storage', refreshUPSCUI);

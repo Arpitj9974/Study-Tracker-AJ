@@ -291,10 +291,22 @@ print(*arr)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 if (!window.storage) {
   window.storage = {
     get: async (k) => ({ value: localStorage.getItem(k) }),
-    set: async (k, v) => localStorage.setItem(k, v),
-    delete: async (k) => localStorage.removeItem(k)
+    set: async (k, v) => {
+      localStorage.setItem(k, v);
+      try { if (window.parent) window.parent.postMessage({ type: 'storageChange', key: k, value: v }, '*'); } catch(e){}
+    },
+    delete: async (k) => {
+      localStorage.removeItem(k);
+      try { if (window.parent) window.parent.postMessage({ type: 'storageChange', key: k, value: null }, '*'); } catch(e){}
+    }
   };
 }
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'cloudSynced') {
+    if (typeof loadAll === 'function') loadAll();
+    else if (typeof load === 'function') load();
+  }
+});
 var st={};
 var probs={1:0,2:10,3:8,4:8,5:6,6:8,7:6,8:8,9:10,10:6,11:5,12:6,13:6,14:6,15:5,16:5};
 var lvMap={1:1,2:1,3:1,4:1,5:1,6:2,7:2,8:2,9:2,10:3,11:3,12:3,13:4,14:4,15:4,16:4};

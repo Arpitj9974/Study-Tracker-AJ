@@ -136,8 +136,7 @@ function renderSSCSmartSuggestion(stats) {
   box.innerHTML = `<div style="color:${color};font:500 14px/1.6 'DM Sans'">${msg}</div>`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  localStorage.setItem('selectedExam', 'ssc');
+function refreshSSCUI() {
   renderSSCCountdown();
   const stats = readExamStats('ssc');
   renderSSCDonut(stats);
@@ -145,4 +144,12 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSSCSubjectCards(stats);
   renderSSCFocusBox(stats);
   renderSSCSmartSuggestion(stats);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  localStorage.setItem('selectedExam', 'ssc');
+  refreshSSCUI();
 });
+
+window.addEventListener('cloudDataSynced', refreshSSCUI);
+window.addEventListener('storage', refreshSSCUI);

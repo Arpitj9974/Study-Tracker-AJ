@@ -180,6 +180,9 @@
     localStorage.setItem('selectedExam', 'upsc');
     renderTracker();
   });
+
+  window.addEventListener('cloudDataSynced', renderTracker);
+  window.addEventListener('storage', renderTracker);
 </script>
 </body>
 </html>

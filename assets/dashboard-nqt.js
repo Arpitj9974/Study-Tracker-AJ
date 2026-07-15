@@ -130,8 +130,7 @@ function renderNQTSmartSuggestion(stats) {
   box.innerHTML = `<div style="color:${color};font:500 14px/1.6 'DM Sans'">${msg}</div>`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  localStorage.setItem('selectedExam', 'nqt');
+function refreshNQTUI() {
   renderNQTCountdown();
   const stats = readExamStats('nqt');
   renderNQTDonut(stats);
@@ -139,4 +138,12 @@ document.addEventListener('DOMContentLoaded', () => {
   renderNQTSubjectCards(stats);
   renderNQTFocusBox(stats);
   renderNQTSmartSuggestion(stats);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  localStorage.setItem('selectedExam', 'nqt');
+  refreshNQTUI();
 });
+
+window.addEventListener('cloudDataSynced', refreshNQTUI);
+window.addEventListener('storage', refreshNQTUI);

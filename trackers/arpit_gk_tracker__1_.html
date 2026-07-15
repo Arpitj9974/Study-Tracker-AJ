@@ -151,10 +151,22 @@ function applyExamFilter() {
 if (!window.storage) {
   window.storage = {
     get: async (k) => ({ value: localStorage.getItem(k) }),
-    set: async (k, v) => localStorage.setItem(k, v),
-    delete: async (k) => localStorage.removeItem(k)
+    set: async (k, v) => {
+      localStorage.setItem(k, v);
+      try { if (window.parent) window.parent.postMessage({ type: 'storageChange', key: k, value: v }, '*'); } catch(e){}
+    },
+    delete: async (k) => {
+      localStorage.removeItem(k);
+      try { if (window.parent) window.parent.postMessage({ type: 'storageChange', key: k, value: null }, '*'); } catch(e){}
+    }
   };
 }
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'cloudSynced') {
+    if (typeof loadAll === 'function') loadAll();
+    else if (typeof load === 'function') load();
+  }
+});
 var st={};
 async function load(){
   for(var i=1;i<=23;i++){

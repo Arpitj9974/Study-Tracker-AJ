@@ -418,3 +418,14 @@ function renderMiniStats(subj, containerId) {
 }
 
 document.addEventListener('DOMContentLoaded', buildNav);
+
+window.addEventListener('cloudDataSynced', () => {
+  buildNav();
+  document.querySelectorAll('iframe').forEach(frame => {
+    try { frame.contentWindow.postMessage({ type: 'cloudSynced' }, '*'); } catch(e){}
+  });
+});
+
+window.addEventListener('storage', () => {
+  buildNav();
+});

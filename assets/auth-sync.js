@@ -1,11 +1,73 @@
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { doc, updateDoc, deleteField, setDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 let currentUid = null;
+const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_'];
+
+function isValidKey(key) {
+  return key && validPrefixes.some(p => key.startsWith(p));
+}
+
+// 2-Way Sync / Cloud Hydration Function
+async function syncCloudAndLocalStorage(uid) {
+  try {
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    const cloudProgress = (userSnap.exists() && userSnap.data().progress) ? userSnap.data().progress : {};
+    
+    let localChanged = false;
+    let cloudPending = {};
+
+    // 1. Pull cloud keys into localStorage
+    for (const [key, value] of Object.entries(cloudProgress)) {
+      if (isValidKey(key)) {
+        if (localStorage.getItem(key) !== value) {
+          localStorage.setItem(key, value);
+          localChanged = true;
+        }
+      }
+    }
+
+    // 2. Push any local keys that are NOT in cloud up to Firestore
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (isValidKey(key)) {
+        const val = localStorage.getItem(key);
+        if (val === '1' && cloudProgress[key] !== '1') {
+          cloudPending[`progress.${key}`] = '1';
+        }
+      }
+    }
+
+    // If there are pending local progress items to upload
+    if (Object.keys(cloudPending).length > 0) {
+      try {
+        await updateDoc(userRef, cloudPending);
+      } catch (err) {
+        if (err.code === 'not-found') {
+          const rawDoc = {};
+          for (const [k, v] of Object.entries(cloudPending)) {
+            const cleanKey = k.replace('progress.', '');
+            rawDoc[cleanKey] = v;
+          }
+          await setDoc(userRef, { progress: rawDoc }, { merge: true });
+        }
+      }
+    }
+
+    // If localStorage was updated from Cloud, notify UI to refresh immediately
+    if (localChanged) {
+      window.dispatchEvent(new CustomEvent('cloudDataSynced'));
+      window.dispatchEvent(new Event('storage'));
+    }
+  } catch (err) {
+    console.error("Cloud hydration error:", err);
+  }
+}
 
 // Protect Routes & Watch Auth State
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUid = user.uid;
     window.currentUserEmail = user.email;
@@ -15,6 +77,9 @@ onAuthStateChanged(auth, (user) => {
     brandSubs.forEach(b => {
       b.innerHTML = `Logged in: <span style="color:var(--accent-purple);font-size:10px">${user.email}</span>`;
     });
+
+    // Automatically pull & sync cloud progress on login / session restore
+    await syncCloudAndLocalStorage(user.uid);
     
   } else {
     // Not logged in! Redirect to login if we are not already there
@@ -43,34 +108,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 100);
 });
 
+// Listen for storageChange postMessage from iframe trackers
+window.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'storageChange') {
+    const { key, value } = e.data;
+    if (value === null) {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, value);
+    }
+    // Trigger storage event to initiate cloud sync
+    window.dispatchEvent(new Event('storage'));
+  }
+});
+
 // Background Cloud Sync
-// This listens to changes from the iframe trackers and pushes them to Firestore instantly
+// Listens to local changes and pushes them to Firestore instantly
 window.addEventListener('storage', async (e) => {
   if (!currentUid) return;
-  
-  // We only sync keys that belong to our trackers
-  const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_'];
-  const isValid = validPrefixes.some(p => e.key && e.key.startsWith(p));
-  
-  if (isValid) {
+
+  // Key can be passed in storage event or we can inspect all keys
+  const keyToSync = e.key;
+  if (keyToSync && isValidKey(keyToSync)) {
     const userRef = doc(db, "users", currentUid);
+    const val = localStorage.getItem(keyToSync);
     try {
-      if (e.newValue === null) {
-        // Unchecked a box -> Delete from cloud
-        await updateDoc(userRef, {
-          [`progress.${e.key}`]: deleteField()
-        });
+      if (val === null) {
+        await updateDoc(userRef, { [`progress.${keyToSync}`]: deleteField() });
       } else {
-        // Checked a box -> Save to cloud
-        await updateDoc(userRef, {
-          [`progress.${e.key}`]: e.newValue
-        });
+        await updateDoc(userRef, { [`progress.${keyToSync}`]: val });
       }
     } catch (err) {
-      // If document doesn't exist yet, updateDoc throws an error. Use setDoc instead.
       if (err.code === 'not-found') {
-        if (e.newValue !== null) {
-          await setDoc(userRef, { progress: { [e.key]: e.newValue } }, { merge: true });
+        if (val !== null) {
+          await setDoc(userRef, { progress: { [keyToSync]: val } }, { merge: true });
         }
       } else {
         console.error("Cloud Sync Failed", err);
