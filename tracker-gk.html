@@ -32,6 +32,10 @@
 <script type="module" src="assets/auth-sync.js?v=5"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const exam = getCurrentExam();
+    const frame = document.getElementById('tracker-frame');
+    if (frame) frame.src = `trackers/arpit_gk_tracker__1_.html?exam=${exam}&v=3`;
+
     renderMiniStats('gk', 'gk-mini');
     setTimeout(() => injectPriorityData('gk'), 400);
   });

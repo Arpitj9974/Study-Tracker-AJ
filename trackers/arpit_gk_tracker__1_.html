@@ -132,6 +132,22 @@
 </div>
 
 <script>
+function applyExamFilter() {
+  const p1Header = document.querySelector('.sh-p .sht');
+  const p1Sub = document.querySelector('.sh-p div div:last-child');
+  const p2Header = document.querySelector('.sh-t .sht');
+  const p2Sub = document.querySelector('.sh-t div div:last-child');
+  const divider = document.querySelector('.div');
+
+  if (p1Header) p1Header.textContent = 'Tier 1 Priority Modules (High Weightage)';
+  if (p1Sub) p1Sub.textContent = 'Core General Awareness foundation for SSC CGL Tier 1.';
+  if (p2Header) p2Header.textContent = 'Tier 2 & Supporting GK Modules';
+  if (p2Sub) p2Sub.textContent = 'Supporting static GK & specialized topics for comprehensive scoring.';
+  if (divider) {
+    divider.innerHTML = '<div class="div-t">SSC CGL Tier 2 Preparation</div><div class="div-s">Priority modules completed · Shift to supporting static GK & revision.</div>';
+  }
+}
+
 if (!window.storage) {
   window.storage = {
     get: async (k) => ({ value: localStorage.getItem(k) }),
@@ -142,11 +158,9 @@ if (!window.storage) {
 var st={};
 async function load(){
   for(var i=1;i<=23;i++){
-    try{
-      var r=await window.storage.get('gk_'+i);
-      if(r&&r.value==='1')st[i]=true;
-    }catch(e){}
+    try{var r=await window.storage.get('gk_'+i);if(r&&r.value==='1')st[i]=true;}catch(e){}
   }
+  applyExamFilter();
   render();
 }
 function render(){

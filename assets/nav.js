@@ -362,29 +362,57 @@ window.addEventListener('message', function(evt) {
 // ── Mini stats for tracker header ─────────────────────────────────────────────
 function renderMiniStats(subj, containerId) {
   const el = document.getElementById(containerId);
-  if (!el) return;
+  if (!el || !KEYS[subj]) return;
   const cfg = KEYS[subj];
-  const col = SUBJECT_COLORS[subj];
-  let done = 0, p1done = 0, p2done = 0;
-  for (let i = 1; i <= cfg.total; i++) {
+  const col = SUBJECT_COLORS[subj] || { primary: '#7F77DD' };
+  const exam = getCurrentExam();
+  const config = EXAM_CONFIG[exam];
+  
+  const countMode = config ? config.countMode : 'all';
+  const totalCount = (countMode === 'p1' && cfg.p1) ? cfg.p1 : cfg.total;
+  
+  let done = 0;
+  for (let i = 1; i <= totalCount; i++) {
     if (localStorage.getItem(cfg.prefix + i) === '1') {
-      done++; if (i <= cfg.p1) p1done++; else p2done++;
+      done++;
     }
   }
-  const pct = Math.round((done / cfg.total) * 100);
-  el.innerHTML = `
-    <div class="th-stat">
-      <div class="th-stat-val" style="color:${col.primary}">${done}</div>
-      <div class="th-stat-lbl">Done of ${cfg.total}</div>
-    </div>
-    <div class="th-stat">
-      <div class="th-stat-val" style="color:${col.primary}">${p1done}<span style="font-size:14px;color:#5A6080"> /${cfg.p1}</span></div>
-      <div class="th-stat-lbl">Phase 1</div>
-    </div>
-    <div class="th-stat">
-      <div class="th-stat-val" style="color:${col.primary}">${pct}%</div>
-      <div class="th-stat-lbl">Complete</div>
-    </div>`;
+  const rem = totalCount - done;
+  const pct = totalCount > 0 ? Math.round((done / totalCount) * 100) : 0;
+
+  if (countMode === 'p1') {
+    el.innerHTML = `
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${col.primary}">${done}</div>
+        <div class="th-stat-lbl">Done of ${totalCount}</div>
+      </div>
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${col.primary}">${rem}</div>
+        <div class="th-stat-lbl">Remaining</div>
+      </div>
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${col.primary}">${pct}%</div>
+        <div class="th-stat-lbl">Complete</div>
+      </div>`;
+  } else {
+    let p1done = 0;
+    for (let i = 1; i <= Math.min(cfg.p1, totalCount); i++) {
+      if (localStorage.getItem(cfg.prefix + i) === '1') p1done++;
+    }
+    el.innerHTML = `
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${col.primary}">${done}</div>
+        <div class="th-stat-lbl">Done of ${totalCount}</div>
+      </div>
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${col.primary}">${p1done}<span style="font-size:14px;color:#5A6080"> /${cfg.p1}</span></div>
+        <div class="th-stat-lbl">Phase 1</div>
+      </div>
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${col.primary}">${pct}%</div>
+        <div class="th-stat-lbl">Complete</div>
+      </div>`;
+  }
 }
 
 document.addEventListener('DOMContentLoaded', buildNav);

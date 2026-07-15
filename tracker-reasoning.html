@@ -33,6 +33,19 @@
 <script type="module" src="assets/auth-sync.js?v=5"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const exam = getCurrentExam();
+    const frame = document.getElementById('tracker-frame');
+    if (frame) frame.src = `trackers/arpit_reasoning_tracker.html?exam=${exam}&v=3`;
+    
+    const badgeContainer = document.querySelector('.th-badges');
+    if (badgeContainer) {
+      if (exam === 'nqt') {
+        badgeContainer.innerHTML = `<span class="badge badge--nqt">TCS NQT · 23 Chapters</span>`;
+      } else if (exam === 'ssc') {
+        badgeContainer.innerHTML = `<span class="badge badge--ssc">SSC CGL · 44 Chapters</span>`;
+      }
+    }
+
     renderMiniStats('reasoning', 'reasoning-mini');
     setTimeout(() => injectPriorityData('reasoning'), 400);
   });

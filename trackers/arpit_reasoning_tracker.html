@@ -140,9 +140,63 @@ if (!window.storage) {
     delete: async (k) => localStorage.removeItem(k)
   };
 }
+function getExamMode() {
+  const params = new URLSearchParams(window.location.search);
+  let exam = params.get('exam');
+  if (!exam && window.parent) {
+    try {
+      if (window.parent.getCurrentExam) exam = window.parent.getCurrentExam();
+      else if (window.parent.localStorage) exam = window.parent.localStorage.getItem('selectedExam');
+    } catch(e) {}
+  }
+  if (!exam) exam = localStorage.getItem('selectedExam') || 'nqt';
+  return exam;
+}
+
+const examMode = getExamMode();
+const isNQT = (examMode === 'nqt');
+const isSSC = (examMode === 'ssc');
+
+function applyExamFilter() {
+  const p1Header = document.querySelector('.sh-p .sht');
+  const p2Header = document.querySelector('.sh-t .sht');
+  const nqtDiv = document.querySelector('.nqt-div');
+
+  if (isNQT) {
+    if (p1Header) p1Header.textContent = 'TCS NQT Core Syllabus';
+    if (nqtDiv) nqtDiv.style.display = 'none';
+    const p2Shell = document.querySelector('.sh-t');
+    if (p2Shell) p2Shell.style.display = 'none';
+    const p2Pb = document.querySelector('.sh-t + .pb');
+    if (p2Pb) p2Pb.style.display = 'none';
+
+    // Hide Phase 2 rows
+    document.querySelectorAll('.tr').forEach(function(r) {
+      const n = parseInt(r.getAttribute('data-n'));
+      if (n > 23) r.style.display = 'none';
+    });
+    // Hide Phase 2 category headers
+    const p2Cats = ['verbal & word-based', 'logic extensions', 'non-verbal visual'];
+    document.querySelectorAll('.cl').forEach(function(c) {
+      const txt = c.textContent.trim().toLowerCase();
+      if (p2Cats.some(t => txt.includes(t))) c.style.display = 'none';
+    });
+  } else if (isSSC) {
+    if (p1Header) p1Header.textContent = 'Tier 1 Foundation Modules';
+    if (p2Header) p2Header.textContent = 'Tier 2 & Advanced Modules';
+    if (nqtDiv) {
+      nqtDiv.style.display = 'block';
+      nqtDiv.innerHTML = '<div class="nd-t">SSC CGL Advanced Preparation</div><div class="nd-s">Foundation covered · Moving to Tier 2 & Advanced Topics</div>';
+    }
+    // Hide redundant "SSC only" badges in SSC mode
+    document.querySelectorAll('.badge.b-s').forEach(function(b) { b.style.display = 'none'; });
+  }
+}
+
 var rS={};
 async function loadAll(){
   for(var i=1;i<=44;i++){try{var r=await window.storage.get('rs3_'+i);if(r&&r.value==='1')rS[i]=true;}catch(e){}}
+  applyExamFilter();
   renderAll();
 }
 function renderAll(){
@@ -158,19 +212,27 @@ async function tog(el){
   upd();
 }
 function upd(){
-  var tot=44;
-  var p1m=23;
-  var p2m=tot-p1m;
-  var dn=0,p1=0,p2=0;
-  for(var i=1;i<=tot;i++){if(rS[i]){dn++;if(i<=p1m)p1++;else p2++;}}
-  document.getElementById('dn').textContent=dn;
-  document.getElementById('rm').textContent=tot-dn;
-  document.getElementById('pc').textContent=Math.round(dn/tot*100)+'%';
-  document.getElementById('r-p1c').textContent=p1+' / '+p1m;
-  document.getElementById('r-p2c').textContent=p2+' / '+p2m;
-  document.getElementById('r-p1b').style.width=p1m>0?Math.round(p1/p1m*100)+'%':'0%';
-  document.getElementById('r-p2b').style.width=p2m>0?Math.round(p2/p2m*100)+'%':'0%';
-  document.getElementById('dn').style.color=dn>0?'var(--text-primary)':'var(--text-primary)';
+  var tot = isNQT ? 23 : 44;
+  var p1m = 23;
+  var p2m = isNQT ? 0 : (tot - p1m);
+  var dn = 0, p1 = 0, p2 = 0;
+  for (var i = 1; i <= tot; i++) {
+    if (rS[i]) {
+      dn++;
+      if (i <= p1m) p1++; else p2++;
+    }
+  }
+  document.getElementById('dn').textContent = dn;
+  document.getElementById('rm').textContent = tot - dn;
+  document.getElementById('pc').textContent = Math.round(dn / tot * 100) + '%';
+  document.getElementById('r-p1c').textContent = p1 + ' / ' + p1m;
+  if (!isNQT && document.getElementById('r-p2c')) {
+    document.getElementById('r-p2c').textContent = p2 + ' / ' + p2m;
+  }
+  document.getElementById('r-p1b').style.width = p1m > 0 ? Math.round(p1 / p1m * 100) + '%' : '0%';
+  if (!isNQT && document.getElementById('r-p2b')) {
+    document.getElementById('r-p2b').style.width = p2m > 0 ? Math.round(p2 / p2m * 100) + '%' : '0%';
+  }
 }
 loadAll();
 </script>

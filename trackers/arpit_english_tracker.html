@@ -140,11 +140,59 @@ if (!window.storage) {
     delete: async (k) => localStorage.removeItem(k)
   };
 }
+function getExamMode() {
+  const params = new URLSearchParams(window.location.search);
+  let exam = params.get('exam');
+  if (!exam && window.parent) {
+    try {
+      if (window.parent.getCurrentExam) exam = window.parent.getCurrentExam();
+      else if (window.parent.localStorage) exam = window.parent.localStorage.getItem('selectedExam');
+    } catch(e) {}
+  }
+  if (!exam) exam = localStorage.getItem('selectedExam') || 'nqt';
+  return exam;
+}
+
+const examMode = getExamMode();
+const isNQT = (examMode === 'nqt');
+const isSSC = (examMode === 'ssc');
+
+function applyExamFilter() {
+  const p1Header = document.querySelector('.sh-p .sht');
+  const p2Header = document.querySelector('.sh-t .sht');
+  const nqtDiv = document.querySelector('.nqt-div');
+
+  if (isNQT) {
+    if (p1Header) p1Header.textContent = 'TCS NQT Core Syllabus';
+    if (nqtDiv) nqtDiv.style.display = 'none';
+    const p2Shell = document.querySelector('.sh-t');
+    if (p2Shell) p2Shell.style.display = 'none';
+    const p2Pb = document.querySelector('.sh-t + .pb');
+    if (p2Pb) p2Pb.style.display = 'none';
+
+    // Hide Phase 2 rows (26th chapter is SSC only)
+    document.querySelectorAll('.tr').forEach(function(r) {
+      const n = parseInt(r.getAttribute('data-n'));
+      if (n > 25) r.style.display = 'none';
+    });
+  } else if (isSSC) {
+    if (p1Header) p1Header.textContent = 'Tier 1 Foundation Modules';
+    if (p2Header) p2Header.textContent = 'Tier 2 & Advanced Modules';
+    if (nqtDiv) {
+      nqtDiv.style.display = 'block';
+      nqtDiv.innerHTML = '<div class="nd-t">SSC CGL Advanced Preparation</div><div class="nd-s">Foundation covered · Moving to Tier 2 & Advanced Topics</div>';
+    }
+    // Hide redundant "SSC only" badges in SSC mode
+    document.querySelectorAll('.badge.b-s').forEach(function(b) { b.style.display = 'none'; });
+  }
+}
+
 var st={};
 async function load(){
   for(var i=1;i<=26;i++){
     try{var r=await window.storage.get('en_'+i);if(r&&r.value==='1')st[i]=true;}catch(e){}
   }
+  applyExamFilter();
   render();
 }
 function render(){
@@ -162,16 +210,27 @@ async function tog(el){
   upd();
 }
 function upd(){
-  var tot=0,p1=0,p2=0;
-  for(var i=1;i<=26;i++){if(st[i]){tot++;if(i<=25)p1++;else p2++;}}
-  document.getElementById('dn').textContent=tot;
-  document.getElementById('rm').textContent=26-tot;
-  document.getElementById('pc').textContent=Math.round(tot/26*100)+'%';
-  document.getElementById('p1c').textContent=p1+' / 25';
-  document.getElementById('p2c').textContent=p2+' / 1';
-  document.getElementById('p1b').style.width=Math.round(p1/25*100)+'%';
-  document.getElementById('p2b').style.width=Math.round(p2/1*100)+'%';
-  document.getElementById('dn').style.color=tot>0?'#7F77DD':'var(--color-text-primary)';
+  var totalMax = isNQT ? 25 : 26;
+  var p1m = 25;
+  var p2m = isNQT ? 0 : 1;
+  var tot = 0, p1 = 0, p2 = 0;
+  for (var i = 1; i <= totalMax; i++) {
+    if (st[i]) {
+      tot++;
+      if (i <= p1m) p1++; else p2++;
+    }
+  }
+  document.getElementById('dn').textContent = tot;
+  document.getElementById('rm').textContent = totalMax - tot;
+  document.getElementById('pc').textContent = Math.round(tot / totalMax * 100) + '%';
+  document.getElementById('p1c').textContent = p1 + ' / 25';
+  if (!isNQT && document.getElementById('p2c')) {
+    document.getElementById('p2c').textContent = p2 + ' / 1';
+  }
+  document.getElementById('p1b').style.width = Math.round(p1 / 25 * 100) + '%';
+  if (!isNQT && document.getElementById('p2b')) {
+    document.getElementById('p2b').style.width = Math.round(p2 / 1 * 100) + '%';
+  }
 }
 load();
 </script>
