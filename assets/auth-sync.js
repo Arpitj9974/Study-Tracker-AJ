@@ -56,11 +56,9 @@ async function syncCloudAndLocalStorage(uid) {
       }
     }
 
-    // If localStorage was updated from Cloud, notify UI to refresh immediately
-    if (localChanged) {
-      window.dispatchEvent(new CustomEvent('cloudDataSynced'));
-      window.dispatchEvent(new Event('storage'));
-    }
+    // Always notify UI to re-render with latest synced data after cloud sync completes
+    window.dispatchEvent(new CustomEvent('cloudDataSynced'));
+    window.dispatchEvent(new Event('storage'));
   } catch (err) {
     console.error("Cloud hydration error:", err);
   }
