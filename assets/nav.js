@@ -184,6 +184,16 @@ function buildNav() {
   // Don't show sidebar on the exam selector (index.html)
   if (page === 'index.html' || page === '') return;
 
+  // Remove any existing navigation elements before re-building
+  const existingSidebar = document.getElementById('sidebar');
+  if (existingSidebar) existingSidebar.remove();
+
+  const existingMobileHeader = document.getElementById('mobile-header');
+  if (existingMobileHeader) existingMobileHeader.remove();
+
+  const existingMobileTabs = document.getElementById('mobile-tabs');
+  if (existingMobileTabs) existingMobileTabs.remove();
+
   const examKey = getCurrentExam();
   const config  = EXAM_CONFIG[examKey] || EXAM_CONFIG.nqt;
   const links   = config.links;
@@ -212,12 +222,16 @@ function buildNav() {
     </a>`;
   }).join('');
 
+  const userSub = window.currentUserEmail 
+    ? `Logged in: <span style="color:var(--accent-purple);font-size:10px">${window.currentUserEmail}</span>`
+    : `Arpit's Exam Hub`;
+
   const sidebarHTML = `
   <div id="sidebar">
     <div class="sidebar-top">
       <div class="sidebar-brand">
         <h1>${config.icon} ${config.label}</h1>
-        <p>Arpit's Exam Hub</p>
+        <p>${userSub}</p>
       </div>
       <a href="index.html" class="switch-exam-btn">🔄 Switch Exam</a>
       <div class="sidebar-divider"></div>
@@ -253,7 +267,7 @@ function buildNav() {
         <span class="mh-icon">${config.icon}</span>
         <div class="mh-brand-info">
           <div class="mh-brand-title">${config.label}</div>
-          <div class="mh-brand-sub">Arpit's Exam Hub</div>
+          <div class="mh-brand-sub">${userSub}</div>
         </div>
       </div>
       <div class="mh-actions">
