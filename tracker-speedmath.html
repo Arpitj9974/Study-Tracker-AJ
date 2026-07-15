@@ -31,6 +31,19 @@
 <script type="module" src="assets/auth-sync.js?v=5"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const exam = getCurrentExam();
+    const frame = document.getElementById('tracker-frame');
+    if (frame) frame.src = `trackers/speed_math_tracker.html?exam=${exam}&v=3`;
+    
+    const badgeContainer = document.querySelector('.th-badges');
+    if (badgeContainer) {
+      if (exam === 'ssc') {
+        badgeContainer.innerHTML = `<span class="badge badge--ssc">SSC CGL · Speed Math · 28 Items</span>`;
+      } else {
+        badgeContainer.innerHTML = `<span class="badge badge--nqt" style="background:rgba(249,115,22,0.15);color:#F97316;border-color:rgba(249,115,22,0.4)">TCS NQT · Speed Math · 28 Items</span>`;
+      }
+    }
+
     renderMiniStats('speedmath', 'speedmath-mini');
     setTimeout(() => injectPriorityData('speedmath'), 400);
   });

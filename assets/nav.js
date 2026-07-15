@@ -76,13 +76,14 @@ const EXAM_CONFIG = {
     label: 'SSC CGL',
     color: '#1D9E75',
     icon: '📋',
-    subjects: ['quant', 'reasoning', 'english', 'gk'],
-    // For SSC, count ALL chapters (p1 + p2)
+    subjects: ['speedmath', 'quant', 'reasoning', 'english', 'gk'],
+    // For SSC, count ALL chapters (p1 + p2 + speedmath)
     countMode: 'all',
     examDate: '2025-09-15',
-    totalChapters: 134,
+    totalChapters: 162,
     links: [
       { page: 'dashboard-ssc.html', href: 'dashboard-ssc.html', icon: '📊', label: 'SSC Dashboard' },
+      { page: 'tracker-speedmath.html', href: 'tracker-speedmath.html', icon: '⚡', label: 'Speed Math' },
       { page: 'tracker-quant.html',     href: 'tracker-quant.html',     icon: '🔢', label: 'Quant' },
       { page: 'tracker-reasoning.html', href: 'tracker-reasoning.html', icon: '🧠', label: 'Reasoning' },
       { page: 'tracker-english.html',   href: 'tracker-english.html',   icon: '📝', label: 'English' },

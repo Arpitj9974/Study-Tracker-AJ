@@ -1,13 +1,14 @@
 // dashboard-ssc.js — SSC CGL-specific dashboard logic
 
 const SSC_SUBJECTS = [
+  { key: 'speedmath', label: 'Speed Math',        icon: '⚡', color: SUBJECT_COLORS.speedmath.primary, link: 'tracker-speedmath.html' },
   { key: 'quant',     label: 'Quant',             icon: '🔢', color: SUBJECT_COLORS.quant.primary,     link: 'tracker-quant.html' },
   { key: 'reasoning', label: 'Reasoning',         icon: '🧠', color: SUBJECT_COLORS.reasoning.primary, link: 'tracker-reasoning.html' },
   { key: 'english',   label: 'English',           icon: '📝', color: SUBJECT_COLORS.english.primary,   link: 'tracker-english.html' },
   { key: 'gk',        label: 'General Knowledge', icon: '🌍', color: SUBJECT_COLORS.gk.primary,        link: 'tracker-gk.html' },
 ];
 
-const SSC_TOTAL = 134;
+const SSC_TOTAL = 162;
 
 function renderSSCCountdown() {
   const examDate = new Date(EXAM_CONFIG.ssc.examDate + 'T00:00:00');
