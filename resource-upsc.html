@@ -349,44 +349,45 @@
     <!-- TAB 1: MASTER STRATEGY & BLUEPRINT -->
     <div class="tab-panel active" id="tab-strategy">
       
+      <!-- SECTION 0 -->
+      <div class="doc-section" id="sec-s0">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">0</span>
+            WHAT THIS FILE IS
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s0-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-s0-content">
+          <p>The single source of truth for the Prelims-cycle strategy (integrated with Mains foundation). It defines phases, numeric exit criteria, the error-log system, weekly rituals, and the hard sit/skip decision gate. Content teaching happens elsewhere (the AI teaching + answer-evaluation prompt — separate file, built after this file is locked).</p>
+          <p style="margin-top:10px;">Not in scope for v1: deep Mains-phase planning (v2, triggered only if Prelims is cleared), Interview (v3).</p>
+          <p style="margin-top:10px;"><strong>Roles:</strong></p>
+          <ul style="margin-top:6px;">
+            <li><strong>Aspirant</strong> — executes, logs, writes answers daily.</li>
+            <li><strong>System Manager (Arpit)</strong> — maintains this file, runs weekly reviews, guards the rules, absorbs logistics load (leave planning, materials, tracker upkeep).</li>
+            <li><strong>AI Mentor (Claude)</strong> — teaches concepts depth-first, evaluates written answers daily, runs error-log analysis. Governed by the teaching prompt (separate file).</li>
+          </ul>
+        </div>
+      </div>
+
       <!-- SECTION 1 -->
       <div class="doc-section" id="sec-s1">
         <div class="sec-header">
           <div class="sec-title">
-            <span class="sec-num">01</span>
-            Design Principles (Evidence-Based, Non-Negotiable)
+            <span class="sec-num">1</span>
+            DESIGN PRINCIPLES (evidence-based, non-negotiable)
           </div>
           <button class="copy-sec-btn" onclick="copySection('sec-s1-content')">📋 Copy</button>
         </div>
         <div class="doc-body" id="sec-s1-content">
           <ul>
-            <li>
-              <strong>Time Architecture, Not Timetable:</strong> Study slots are anchored to fixed daily events (pre-work, commute, lunch, post-dinner, weekend blocks), not to clock-idealism.<br/>
-              <span class="callout" style="display:inline-block;margin-top:6px;">
-                💡 <em>Kajal Jawla Model (AIR 28 while at Wipro):</em> Commute converted to 3 hrs/day study, holidays full-time.
-              </span>
-            </li>
-            <li>
-              <strong>One Source Per Subject, Minimum 3 Revisions:</strong> No new book/course enters without an existing one being deleted. Revision is scheduled, not aspirational.<br/>
-              <span class="callout" style="display:inline-block;margin-top:6px;">
-                💡 <em>Anudeep Durishetty (AIR 1):</em> Limited sources revised repeatedly beat wide reading.
-              </span>
-            </li>
-            <li>
-              <strong>Syllabus + PYQs Are the Filter:</strong> Printed syllabus on the wall. Every topic must pass the 250-word test: <em>"Can I write 250 words on this from the syllabus?"</em> If a study activity doesn't map to a syllabus line or PYQ pattern, it is deleted.
-            </li>
-            <li>
-              <strong>Answer Writing is a Standalone Skill:</strong> Started early (daily from Week 8). Imperfect answers today beat perfect answers never. Mocks may be postponed by max 1 day; never skipped.
-            </li>
-            <li>
-              <strong>Current Affairs Compressed:</strong> One monthly compilation (Vision IAS / Forum free PDFs), processed in fixed weekly slots. No 90-minute daily newspaper ritual. Optional: 15-min daily news-app skim.
-            </li>
-            <li>
-              <strong>Depth-First (2026 Pattern Shift):</strong> Unconventional framing, interlinkages, close options. Every topic is studied with three questions: <em>Why does it matter? How does it work? What does it connect to?</em>
-            </li>
-            <li>
-              <strong>Everything Online, From Home:</strong> Full test series, evaluation, materials — all remote (Durishetty completed his entire test series online). Location is not a disadvantage.
-            </li>
+            <li>Time architecture, not timetable. Study slots are anchored to fixed daily events (pre-work, commute, lunch, post-dinner, weekend blocks), not to clock-idealism. (Kajal Jawla model — AIR 28 while at Wipro: commute converted to 3 hrs/day study, holidays full-time.)</li>
+            <li>One source per subject. Minimum 3 revisions. No new book/course enters without an existing one being deleted. Revision is scheduled, not aspirational. (Anudeep Durishetty — AIR 1: limited sources revised repeatedly beat wide reading.)</li>
+            <li>Syllabus + PYQs are the filter. Printed syllabus on the wall. Every topic must pass the 250-word test: "can I write 250 words on this from the syllabus?" If a study activity doesn't map to a syllabus line or PYQ pattern, it is deleted. (Durishetty's completeness test + Gahlaut's high-yield triage.)</li>
+            <li>Answer writing is a standalone skill, started early. Daily from Week 8. Imperfect answers today beat perfect answers never. Mocks may be postponed by max 1 day; never skipped. (Durishetty: perfectionism is the enemy.)</li>
+            <li>Current affairs are compressed. One monthly compilation (Vision IAS / Forum — free PDFs), processed in fixed weekly slots. No 90-minute daily newspaper ritual. Optional: 15-min daily news-app skim.</li>
+            <li>Depth-first, per the 2026 pattern shift. Prelims 2026 broke the rote-prep pattern: unconventional framing, interlinkages, close options, longer paper. Every topic is studied with three questions: Why does it matter? How does it work? What does it connect to? This habit is wired into the AI teaching prompt.</li>
+            <li>Everything online, from home. Full test series, evaluation, materials — all remote (Durishetty completed his entire test series online from Hyderabad). Surat is not a disadvantage.</li>
           </ul>
         </div>
       </div>
@@ -395,54 +396,49 @@
       <div class="doc-section" id="sec-s2">
         <div class="sec-header">
           <div class="sec-title">
-            <span class="sec-num">02</span>
-            Time Budget (Realistic, Not Aspirational)
+            <span class="sec-num">2</span>
+            TIME BUDGET (realistic, not aspirational)
           </div>
           <button class="copy-sec-btn" onclick="copySection('sec-s2-content')">📋 Copy</button>
         </div>
         <div class="doc-body" id="sec-s2-content">
-          <p style="margin-bottom:12px;">Fixed slot allocation matrix for working aspirants:</p>
-          
           <div class="custom-table-wrap">
             <table class="doc-table">
               <thead>
                 <tr>
                   <th>Slot</th>
                   <th>Duration</th>
-                  <th>Use Case / Target Output</th>
+                  <th>Use</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Weekday — Morning Block</strong> (Pre-work)</td>
+                  <td><strong>Weekday — morning block (pre-work)</strong></td>
                   <td><span class="code-badge">90–120 min</span></td>
-                  <td>New concepts (freshest mind, highest cognitive effort)</td>
+                  <td>New concepts (freshest mind)</td>
                 </tr>
                 <tr>
-                  <td><strong>Weekday — Micro-slots</strong> (Commute/Lunch)</td>
+                  <td><strong>Weekday — micro-slots (commute/lunch)</strong></td>
                   <td><span class="code-badge">30–60 min</span></td>
-                  <td>Anki cards / Current affairs / Quick revision</td>
+                  <td>Anki / current affairs / revision</td>
                 </tr>
                 <tr>
-                  <td><strong>Weekday — Evening Block</strong></td>
+                  <td><strong>Weekday — evening block</strong></td>
                   <td><span class="code-badge">60–90 min</span></td>
-                  <td>Answer writing practice + Daily revision</td>
+                  <td>Answer writing + revision</td>
                 </tr>
                 <tr>
-                  <td><strong>Weekend — 2 Deep Blocks/Day</strong></td>
+                  <td><strong>Weekend — 2 deep blocks/day</strong></td>
                   <td><span class="code-badge">6–8 hrs/day</span></td>
-                  <td>New heavy material, Mocks, Essay, Weekly Review</td>
+                  <td>New material, mocks, essay, weekly review</td>
                 </tr>
               </tbody>
             </table>
           </div>
-
-          <ul style="margin-top:12px;">
-            <li><strong>Weekly Target:</strong> 28–34 hrs. (Claimed 6 hrs/day = 42/wk is rejected as fantasy; working-professional toppers sustain ~4–5 hrs on workdays.)</li>
-            <li><strong>Total Budget to Prelims:</strong> ~1,300 hrs. Tight but inside the feasible band for a serious first cycle.</li>
-            <li><strong>Tracking:</strong> Logged in tracker sheet: date, slot, planned vs actual, subject, output. Weekly adherence % is a first-class metric.</li>
-            <li><strong>Leave Banking (Starts July):</strong> Hoard paid leave from July. Target: ≥5 days before Prelims (mid-May 2027). Negotiate longer pre-Mains block (Jawla took 45 days before Mains).</li>
-          </ul>
+          <p style="margin-top:12px;">Weekly target: 28–34 hrs. (Claimed 6 hrs/day = 42/wk is rejected as a planning basis; working-professional toppers sustain ~4–5 hrs on workdays. Plans built on fantasy hours collapse by week 6.)</p>
+          <p style="margin-top:8px;">Total budget: ~1,300 hrs to Prelims. Tight but inside the feasible band for a serious first cycle.</p>
+          <p style="margin-top:8px;">Tracking: Google Sheet (same design as the SSC tracker): date, slot, planned vs actual, subject, output (pages/answers/questions). Weekly adherence % is a first-class metric.</p>
+          <p style="margin-top:8px;">Leave banking (starts NOW): hoard paid leave from July 2026. Target: ≥5 days before Prelims (mid-May 2027). If she clears: negotiate a longer pre-Mains block (Jawla took 45 days before Mains). This is a July task, not a May task.</p>
         </div>
       </div>
 
@@ -450,61 +446,59 @@
       <div class="doc-section" id="sec-s3">
         <div class="sec-header">
           <div class="sec-title">
-            <span class="sec-num">03</span>
-            Phases, Exit Criteria & Decision Gate
+            <span class="sec-num">3</span>
+            PHASES & EXIT CRITERIA
           </div>
           <button class="copy-sec-btn" onclick="copySection('sec-s3-content')">📋 Copy</button>
         </div>
         <div class="doc-body" id="sec-s3-content">
-          <div style="display:flex;flex-direction:column;gap:16px;">
-            <div>
-              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P0 — Setup & Decode (Weeks 1–2, 15–28 July)</h4>
-              <ul>
-                <li>Print syllabus & annotate. Read (not solve) 10 years of Prelims PYQs + 5 years Mains papers.</li>
-                <li>Baseline diagnostic: 1 full past GS Prelims paper + 1 CSAT paper, timed, cold. Record scores.</li>
-                <li><strong>Exit Criteria:</strong> Diagnostic logged · Syllabus annotated · 14 consecutive days with ≥80% slot adherence.</li>
-                <li><strong>CSAT Gate Check:</strong> If baseline CSAT &lt; 100/200 → mandatory weekly CSAT slot activates immediately.</li>
-              </ul>
-            </div>
+          <p><strong>P0 — Setup & Decode (Weeks 1–2, 15–28 July)</strong></p>
+          <ul>
+            <li>Print syllabus; annotate. Read (not solve) 10 years of Prelims PYQs + skim 5 years of Mains papers — goal: internalize what UPSC actually asks.</li>
+            <li>Baseline diagnostic: one full past GS Prelims paper + one CSAT paper, timed, cold. Record scores. No judgment — this is the "before" photo.</li>
+            <li>Set up: tracker sheet, Anki, monthly-compilation source, error log, this file's weekly-review ritual.</li>
+            <li>Exit criteria: diagnostic done & logged · syllabus annotated · 14 consecutive days with ≥80% slot adherence.</li>
+            <li>CSAT gate check: if baseline CSAT &lt; 100/200 → a mandatory weekly CSAT slot activates from P1 and never deactivates. (CSAT kills a meaningful share of well-prepared aspirants every year. It is qualifying at 66/200; the buffer target is 110+.)</li>
+          </ul>
 
-            <div>
-              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P1 — Foundation (Weeks 3–16, ~Aug–early Nov)</h4>
-              <ul>
-                <li>Core 4 first pass: Polity (Laxmikanth), Modern History (Spectrum), Geography (NCERT 11–12 + atlas), Economy (NCERT + primary source).</li>
-                <li>Answer writing begins Week 8 (1 answer/day). Optional subject locked by Week 14.</li>
-                <li><strong>Exit Criteria:</strong> Core 4 first pass complete · PYQ accuracy ≥50% · Optional locked · ≥40 evaluated answers.</li>
-              </ul>
-            </div>
+          <p style="margin-top:14px;"><strong>P1 — Foundation (Weeks 3–16, ~Aug–early Nov)</strong></p>
+          <ul>
+            <li>Core 4 first pass: Polity (Laxmikanth), Modern History (Spectrum), Geography (NCERT 11–12 + atlas + selective GC Leong), Economy (NCERT + one chosen source). NCERT 6–12 for any subject where the diagnostic showed a floor-level gap.</li>
+            <li>Current affairs: monthly compilation from month 1, processed weekly.</li>
+            <li>Answer writing begins Week 8: 1 answer/day, evaluated by AI Mentor. Low bar, high consistency.</li>
+            <li>Optional subject: locked by Week 14 (framework in §6). This deadline is hard — the Optional is 500 marks and late selection is the classic first-attempt killer.</li>
+            <li>Exit criteria: core 4 first pass complete · topic-wise PYQ accuracy ≥50% on covered material · Optional locked · ≥40 evaluated answers · CSAT status green or remedial slot running.</li>
+          </ul>
 
-            <div>
-              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P2 — Consolidation + Mains Skills (Weeks 17–32, ~Nov–Feb)</h4>
-              <ul>
-                <li>Optional Papers 1 & 2 first pass. Remaining GS: Environment, Ancient/Medieval, Art & Culture, Sci-Tech, GS4 Ethics.</li>
-                <li>Revision R2 of Core 4. Answer writing 2/day + 1 essay per 2 weeks. Sectional Prelims tests (1/week). Application window: 13 Jan – 2 Feb 2027.</li>
-                <li><strong>Exit Criteria:</strong> Optional first pass done · ≥150 evaluated answers, ≥6 essays · Sectional accuracy ≥55% · R2 complete.</li>
-              </ul>
-            </div>
+          <p style="margin-top:14px;"><strong>P2 — Consolidation + Mains Skills (Weeks 17–32, ~Nov–Feb)</strong></p>
+          <ul>
+            <li>Optional Papers 1 & 2 first pass (this is the heaviest new load of the cycle).</li>
+            <li>Remaining GS: Environment (Shankar, selective), Ancient/Medieval + Art & Culture (NCERT + selective Singhania), Sci-Tech (current-affairs-driven), GS4 Ethics basics.</li>
+            <li>Revision R2 of core 4 (scheduled into the calendar in Week 17, not left to mood).</li>
+            <li>Answer writing: 2/day + 1 essay per 2 weeks. Sectional Prelims tests begin (1/week).</li>
+            <li>Application window: apply 13 Jan – 2 Feb 2027. ₹100. Non-negotiable, no late entry exists.</li>
+            <li>Exit criteria: Optional first pass done · ≥150 evaluated answers, ≥6 essays · sectional-test accuracy ≥55% with ≥75% attempt rate · R2 complete.</li>
+          </ul>
 
-            <div>
-              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P3 — Prelims Sprint (Weeks 33–44, ~Mar–23 May)</h4>
-              <ul>
-                <li>Full mock series: 15–20 GS full-lengths + 8–10 CSAT full-lengths timed at 9:30 AM Sunday.</li>
-                <li>Revision R3 (compressed notes + Anki only). Current affairs last 15 months consolidation.</li>
-              </ul>
-            </div>
+          <p style="margin-top:14px;"><strong>P3 — Prelims Sprint (Weeks 33–44, ~Mar–23 May)</strong></p>
+          <ul>
+            <li>Full mock series: 15–20 GS full-lengths + 8–10 CSAT full-lengths, all timed, all at exam hour (9:30 AM Sunday), all error-logged.</li>
+            <li>Revision R3 (compressed notes + Anki only — no source books).</li>
+            <li>Current affairs consolidation: last 15 months.</li>
+            <li>Answer writing drops to maintenance (3/week) — Prelims takes priority now.</li>
+            <li>Final 1–2 weeks: banked leave, full-time mode.</li>
+          </ul>
 
-            <!-- DECISION GATE -->
-            <div class="callout red">
-              <h4 style="color:var(--accent-red);font-size:14px;margin-bottom:6px;">🛑 DECISION GATE — Week ~40 (Mid-April 2027) — The Option C Criterion</h4>
-              <p>SIT in Prelims 2027 ONLY if BOTH conditions hold:</p>
-              <ol style="margin-top:6px;">
-                <li><strong>Average net score of last 5 full GS mocks</strong> ≥ Published expected-cutoff benchmark + 5 marks.</li>
-                <li><strong>CSAT mock average</strong> ≥ 110/200.</li>
-              </ol>
-              <p style="margin-top:8px;font-size:12px;color:var(--text-tertiary);">
-                <em>If either fails → do NOT appear. No attempt is burned (attempts count only upon physical appearance). Roll into CSE 2028 with 12 months head start, locked Optional, and 150+ written answers. This outcome is a strategic success.</em>
-              </p>
-            </div>
+          <div class="callout red" style="margin-top:16px;">
+            <p><strong>DECISION GATE — Week ~40 (mid-April 2027) — the Option C criterion</strong></p>
+            <p style="margin-top:6px;">Written now so it cannot be renegotiated in a May panic:</p>
+            <p style="margin-top:6px;">SIT in Prelims 2027 only if BOTH hold:</p>
+            <ol style="margin-top:6px;">
+              <li>Average net score of the last 5 full-length GS mocks ≥ the test series' published expected-cutoff benchmark + 5 marks, AND</li>
+              <li>CSAT mock average ≥ 110/200.</li>
+            </ol>
+            <p style="margin-top:8px;">If either fails → do NOT appear. No attempt is burned (an attempt counts only on physically appearing). Roll into CSE 2028 with a 12-month head start, a locked Optional, 150+ written answers, and a full error-log dataset. This outcome is a strategic success, not a failure.</p>
+            <p style="margin-top:6px;">Sunk-cost feelings in May are anticipated, pre-acknowledged, and overruled by this paragraph.</p>
           </div>
         </div>
       </div>
@@ -513,52 +507,162 @@
       <div class="doc-section" id="sec-s4">
         <div class="sec-header">
           <div class="sec-title">
-            <span class="sec-num">04</span>
-            Error Log System (Adapted from SSC C/K/R/T)
+            <span class="sec-num">4</span>
+            ERROR LOG SYSTEM (adapted from SSC C/K/R/T)
           </div>
           <button class="copy-sec-btn" onclick="copySection('sec-s4-content')">📋 Copy</button>
         </div>
         <div class="doc-body" id="sec-s4-content">
-          <p style="margin-bottom:12px;">Every wrong/blank mock & PYQ question gets assigned one diagnostic code:</p>
-
+          <p style="margin-bottom:12px;">Every wrong/blank mock & PYQ question gets one code:</p>
           <div class="custom-table-wrap">
             <table class="doc-table">
               <thead>
                 <tr>
                   <th>Code</th>
                   <th>Meaning</th>
-                  <th>Fix Routed To</th>
+                  <th>Fix routed to</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><span class="code-badge">K</span></td>
-                  <td><strong>Knowledge Gap</strong> — never studied it</td>
-                  <td>Source reading list addition</td>
+                  <td>Knowledge gap — never studied it</td>
+                  <td>Source reading list</td>
                 </tr>
                 <tr>
                   <td><span class="code-badge">R</span></td>
-                  <td><strong>Retention Failure</strong> — studied, forgot</td>
-                  <td>Anki deck + Scheduled revision queue</td>
+                  <td>Retention — studied, forgot</td>
+                  <td>Anki + revision schedule</td>
                 </tr>
                 <tr>
                   <td><span class="code-badge">E</span></td>
-                  <td><strong>Elimination Failure</strong> — narrowed to 2, picked wrong</td>
-                  <td>Option-analysis drill & elimination practice</td>
+                  <td>Elimination failure — narrowed to 2, chose wrong</td>
+                  <td>AI Mentor drill: option-analysis practice</td>
                 </tr>
                 <tr>
                   <td><span class="code-badge">Q</span></td>
-                  <td><strong>Question Trap</strong> — misread stem/qualifier ("not correct", "only")</td>
-                  <td>Slow-read protocol on flagged qualifiers</td>
+                  <td>Question trap — misread stem/qualifier ("not correct", "only", "1 and 2")</td>
+                  <td>Slow-read protocol on flagged words</td>
                 </tr>
                 <tr>
                   <td><span class="code-badge">T</span></td>
-                  <td><strong>Time Pressure</strong> — guessed/blanked due to clock</td>
-                  <td>Pacing drills & attempt-order strategy</td>
+                  <td>Time pressure — guessed/blanked due to clock</td>
+                  <td>Attempt-order strategy + pacing drills</td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <p style="margin-top:12px;">Weekly ritual (Sunday, 45 min, with System Manager): adherence %, error-code distribution, one process fix for the dominant code, next week's plan. The distribution — not the mock score — is the primary steering signal until P3.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div class="doc-section" id="sec-s5">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">5</span>
+            SOURCE LIST (closed set — additions require a deletion)
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s5-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-s5-content">
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Area</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Polity</strong></td>
+                  <td>Laxmikanth</td>
+                </tr>
+                <tr>
+                  <td><strong>Modern History</strong></td>
+                  <td>Spectrum (Rajiv Ahir)</td>
+                </tr>
+                <tr>
+                  <td><strong>Ancient/Medieval + Art & Culture</strong></td>
+                  <td>NCERTs + Nitin Singhania (selective)</td>
+                </tr>
+                <tr>
+                  <td><strong>Geography</strong></td>
+                  <td>NCERT 11–12, school atlas, GC Leong (selective)</td>
+                </tr>
+                <tr>
+                  <td><strong>Economy</strong></td>
+                  <td>NCERT + ONE of (Ramesh Singh selective / a single online notes set)</td>
+                </tr>
+                <tr>
+                  <td><strong>Environment</strong></td>
+                  <td>Shankar IAS (selective) + current affairs</td>
+                </tr>
+                <tr>
+                  <td><strong>Sci-Tech</strong></td>
+                  <td>Current-affairs-driven + NCERT basics</td>
+                </tr>
+                <tr>
+                  <td><strong>Current affairs</strong></td>
+                  <td>ONE monthly compilation (Vision IAS or Forum, free PDF)</td>
+                </tr>
+                <tr>
+                  <td><strong>CSAT</strong></td>
+                  <td>10 yrs PYQs + one practice book</td>
+                </tr>
+                <tr>
+                  <td><strong>PYQs</strong></td>
+                  <td>10 yrs Prelims (solve), 5 yrs Mains (decode)</td>
+                </tr>
+                <tr>
+                  <td><strong>Answer writing</strong></td>
+                  <td>Anudeep Durishetty's free blog posts + notes (anudeepdurishetty.in)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div class="doc-section" id="sec-s6">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">6</span>
+            OPTIONAL SELECTION FRAMEWORK (decision due Week 14)
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s6-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-s6-content">
+          <p>Score each shortlisted subject 1–5 on:</p>
+          <ul>
+            <li>GS overlap (saves the scarcest resource: time)</li>
+            <li>Genuine interest (she reads it on a tired Tuesday night or she doesn't)</li>
+            <li>Material & online-guidance availability (test series, topper notes, evaluators)</li>
+            <li>Syllabus size vs her 30 hrs/week</li>
+            <li>Background fit (graduation subject, if it maps)</li>
+          </ul>
+          <p style="margin-top:12px;">Default shortlist for a working aspirant with GS-overlap priority: Sociology, PSIR, Anthropology, Geography — replace/extend using her graduation background and a 2-week sampling sprint (read the syllabus + 1 PYQ paper + one topper's notes for each candidate). Then commit permanently. Optional-switching mid-cycle is a documented rank-killer and is banned by this file.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div class="doc-section" id="sec-s7">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">7</span>
+            PSYCHOLOGY & SUPPORT SYSTEM (summary — full doc separate, per SSC model)
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s7-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-s7-content">
+          <ul>
+            <li>Consistency over intensity. Practical daily targets, never impossible ones (Bandana Pokhriyal — cleared while a Central Excise Inspector). Rule: never two zero-days in a row.</li>
+            <li>Support load-sharing is load-bearing, not optional. Jawla's household load was absorbed by family for years. The System Manager's job includes protecting her study slots from family/social claims.</li>
+            <li>Attempt framing: toppers' attempt counts range from 1 (Gahlaut) to 5 (Jawla, Durishetty). The Decision Gate exists so no attempt is ever spent unarmed.</li>
+            <li>The 2026-pattern anxiety is an advantage: the exam now punishes the rote-heavy full-timer model and rewards limited-source conceptual depth — the only model a working aspirant can run anyway.</li>
+          </ul>
         </div>
       </div>
 
