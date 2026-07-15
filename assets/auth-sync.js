@@ -10,9 +10,11 @@ onAuthStateChanged(auth, (user) => {
     currentUid = user.uid;
     window.currentUserEmail = user.email;
     
-    // Inject user email into the sidebar if it exists
-    const brand = document.querySelector('.sidebar-brand p');
-    if (brand) brand.innerHTML = `Logged in as: <br><span style="color:var(--accent-purple);font-size:10px">${user.email}</span>`;
+    // Inject user email into sidebar and mobile header if present
+    const brandSubs = document.querySelectorAll('.sidebar-brand p, .mh-brand-sub');
+    brandSubs.forEach(b => {
+      b.innerHTML = `Logged in: <span style="color:var(--accent-purple);font-size:10px">${user.email}</span>`;
+    });
     
   } else {
     // Not logged in! Redirect to login if we are not already there
@@ -22,17 +24,18 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Bind Logout Button (injected by nav.js)
-// Use mutation observer or just wait a bit since nav.js runs on DOMContentLoaded
+// Bind Logout Buttons (injected by nav.js)
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
+    const logoutBtns = document.querySelectorAll('#logout-btn, .logout-btn-trigger');
+    if (logoutBtns.length > 0) {
       import("https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js").then((m) => {
-        logoutBtn.addEventListener('click', () => {
-          m.signOut(auth).then(() => {
-            localStorage.clear();
-            window.location.href = 'login.html';
+        logoutBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            m.signOut(auth).then(() => {
+              localStorage.clear();
+              window.location.href = 'login.html';
+            });
           });
         });
       });

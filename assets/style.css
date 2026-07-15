@@ -202,10 +202,99 @@ main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
   letter-spacing: -0.01em;
 }
 
+/* ── MOBILE HEADER (Top Bar with Progress, Countdown & Actions) ── */
+#mobile-header {
+  display: none;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-medium);
+  padding: 14px 16px;
+  flex-direction: column;
+  gap: 12px;
+}
+.mh-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.mh-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mh-icon {
+  font-size: 20px;
+}
+.mh-brand-title {
+  font: 700 15px/1.2 'DM Sans', sans-serif;
+  color: var(--text-primary);
+}
+.mh-brand-sub {
+  font: 500 10px/1 'JetBrains Mono', monospace;
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.mh-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mh-btn {
+  padding: 6px 10px !important;
+  font: 600 11px/1 'DM Sans', sans-serif !important;
+  border-radius: var(--radius-sm) !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.mh-btn.switch-exam-btn {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+.mh-btn.logout-btn {
+  background: rgba(239, 68, 68, 0.12);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  cursor: pointer;
+}
+.mh-bottom {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-elevated);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+.mh-progress {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mh-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 14px;
+}
+.mh-cd-val {
+  font: 700 16px/1 'JetBrains Mono', monospace;
+}
+.mh-cd-lbl {
+  font: 400 9px/1 'DM Sans', sans-serif;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
 @media (max-width: 768px) {
   body { flex-direction: column; height: auto; overflow: auto; overflow-x: hidden; }
   #sidebar { display: none; }
   #mobile-tabs { display: flex; }
+  #mobile-header { display: flex; }
   main { padding-bottom: 72px; overflow-y: visible; overflow-x: hidden; }
   
   .page-content {

@@ -243,6 +243,43 @@ function buildNav() {
 
   document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
 
+  // Mobile top header card (Progress, Countdown, Switch Exam, Log Out)
+  const mobileHeaderHTML = `
+  <div id="mobile-header">
+    <div class="mh-top">
+      <div class="mh-brand">
+        <span class="mh-icon">${config.icon}</span>
+        <div class="mh-brand-info">
+          <div class="mh-brand-title">${config.label}</div>
+          <div class="mh-brand-sub">Arpit's Exam Hub</div>
+        </div>
+      </div>
+      <div class="mh-actions">
+        <a href="index.html" class="switch-exam-btn mh-btn">🔄 Switch</a>
+        <button class="logout-btn-trigger mh-btn logout-btn">Log Out</button>
+      </div>
+    </div>
+    <div class="mh-bottom">
+      <div class="mh-progress">
+        <div class="spb-bar-wrap">
+          <div class="spb-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${config.color},${config.color}dd)"></div>
+        </div>
+        <div class="spb-numbers"><span style="color:${config.color}">${done}</span> / ${total} done · ${pct}%</div>
+      </div>
+      <div class="mh-countdown">
+        <span class="mh-cd-val" style="color:${daysColor}">${days > 0 ? days + 'd' : '🎯'}</span>
+        <span class="mh-cd-lbl">${days > 0 ? 'days left' : 'Exam!'}</span>
+      </div>
+    </div>
+  </div>`;
+
+  const mainElem = document.querySelector('main');
+  if (mainElem) {
+    mainElem.insertAdjacentHTML('afterbegin', mobileHeaderHTML);
+  } else {
+    document.body.insertAdjacentHTML('afterbegin', mobileHeaderHTML);
+  }
+
   // Mobile bottom tabs - slide system
   const mobTabs = links.map(l => {
     const active = isActive(l);
