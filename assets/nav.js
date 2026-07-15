@@ -196,8 +196,15 @@ function buildNav() {
   if (days < 30) daysColor = '#EF4444';
   else if (days < 60) daysColor = '#D97706';
 
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const fullPath    = currentPage + window.location.search;
+
+  const isActive = (l) => {
+    return fullPath === l.href || currentPage === l.href || fullPath === l.page || currentPage === l.page;
+  };
+
   const navLinks = links.map(l => {
-    const active = (page === l.page);
+    const active = isActive(l);
     return `<a href="${l.href}" class="nav-link${active ? ' active' : ''}" data-page="${l.page}">
       <span class="ni">${l.icon}</span>${l.label}
     </a>`;
@@ -236,15 +243,24 @@ function buildNav() {
 
   document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
 
-  // Mobile bottom tabs
+  // Mobile bottom tabs - slide system
   const mobTabs = links.map(l => {
-    const active = page === l.page;
+    const active = isActive(l);
     return `<a href="${l.href}" class="mob-tab${active ? ' active' : ''}">
-      <span class="mt-icon">${l.icon}</span>${l.label.split(' ')[0]}
+      <span class="mt-icon">${l.icon}</span>
+      <span class="mt-label">${l.label}</span>
     </a>`;
   }).join('');
   document.body.insertAdjacentHTML('beforeend',
     `<nav id="mobile-tabs">${mobTabs}</nav>`);
+
+  // Auto-scroll active tab into view
+  setTimeout(() => {
+    const activeTab = document.querySelector('#mobile-tabs .mob-tab.active');
+    if (activeTab) {
+      activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, 100);
 }
 
 // ── CSS variable injection into iframes ───────────────────────────────────────
