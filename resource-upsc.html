@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UPSC CSE Strategy & Blueprint — Arpit's Exam Hub</title>
+  <title>UPSC CSE Strategy, Resources & AI System Vault — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
   <style>
     .doc-container {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
-      padding: 28px 24px 80px;
+      padding: 28px 20px 90px;
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 28px;
     }
     
-    /* Document Top Hero */
+    /* Hero Header */
     .doc-hero {
       background: var(--bg-surface);
       border: 1px solid var(--border-medium);
       border-radius: var(--radius-lg);
       padding: 28px;
       border-left: 4px solid #3B5BDB;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -39,7 +39,6 @@
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-top: 4px;
     }
     .btn-action {
       display: inline-flex;
@@ -68,31 +67,57 @@
       background: rgba(59, 91, 219, 0.3);
     }
 
-    /* Table of Contents / Sticky Jump Links */
-    .toc-bar {
+    /* Main Tab Navigation */
+    .main-tabs-wrap {
       display: flex;
       gap: 8px;
+      background: var(--bg-surface);
+      padding: 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-medium);
       overflow-x: auto;
-      white-space: nowrap;
-      padding: 8px 0;
       scrollbar-width: none;
-      border-bottom: 1px solid var(--border-subtle);
     }
-    .toc-bar::-webkit-scrollbar { display: none; }
-    .toc-link {
-      font: 500 11px/1 'JetBrains Mono', monospace;
+    .main-tabs-wrap::-webkit-scrollbar { display: none; }
+    .main-tab-btn {
+      flex: 1;
+      min-width: max-content;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font: 600 12px/1 'DM Sans', sans-serif;
       color: var(--text-tertiary);
-      padding: 6px 12px;
-      background: var(--bg-elevated);
-      border-radius: 20px;
-      text-decoration: none;
-      border: 1px solid var(--border-subtle);
+      background: transparent;
+      border: none;
+      cursor: pointer;
       transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-    .toc-link:hover {
+    .main-tab-btn:hover {
       color: var(--text-primary);
-      border-color: var(--border-medium);
-      background: var(--bg-hover);
+      background: var(--bg-elevated);
+    }
+    .main-tab-btn.active {
+      color: var(--text-primary);
+      background: rgba(59, 91, 219, 0.18);
+      border: 1px solid rgba(59, 91, 219, 0.35);
+    }
+
+    /* Tab Content Panels */
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+      animation: fadeIn 0.25s ease;
+    }
+    .tab-panel.active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Content Cards / Blog Sections */
@@ -136,7 +161,7 @@
       color: var(--text-tertiary);
       background: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s;
@@ -147,6 +172,7 @@
     .copy-sec-btn:hover {
       color: var(--text-primary);
       background: var(--bg-hover);
+      border-color: var(--border-medium);
     }
 
     .doc-body p, .doc-body li {
@@ -163,7 +189,7 @@
       color: var(--text-primary);
     }
 
-    /* Highlight callouts */
+    /* Highlight Callouts */
     .callout {
       background: var(--bg-elevated);
       border-left: 3px solid #3B5BDB;
@@ -228,6 +254,28 @@
       color: #3B5BDB;
       display: inline-block;
     }
+    .price-tag {
+      font: 700 11px/1 'JetBrains Mono', monospace;
+      padding: 3px 7px;
+      border-radius: 4px;
+      background: rgba(29, 158, 117, 0.15);
+      color: #1D9E75;
+      display: inline-block;
+    }
+
+    /* Prompt Box Styling */
+    .prompt-box {
+      background: #0D0F14;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      font: 400 12px/1.6 'JetBrains Mono', monospace;
+      color: #E2E8F0;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      max-height: 500px;
+      overflow-y: auto;
+    }
 
     /* Toast Notification */
     #toast {
@@ -255,6 +303,7 @@
       .doc-container { padding: 14px 12px 84px; gap: 20px; }
       .doc-hero { padding: 20px; }
       .doc-section { padding: 18px 14px; }
+      .main-tab-btn { padding: 8px 12px; font-size: 11px; }
     }
   </style>
 </head>
@@ -267,361 +316,683 @@
     <!-- HERO HEADER -->
     <div class="doc-hero">
       <div>
-        <h1>🏛️ UPSC CSE — Master Preparation Blueprint & Strategy</h1>
-        <p>Evidence-based working professional model, daily time architecture, error logging system, exit criteria, and curated source list.</p>
+        <h1>🏛️ UPSC CSE — Master Strategy, Resources & AI System Vault</h1>
+        <p>Complete working-professional preparation guide, curated resource & budget breakdown, mindset reality checks, and full AI Teaching Mentor prompt.</p>
       </div>
 
       <div class="doc-actions">
-        <button class="btn-action btn-primary-action" onclick="copyFullDocument()">
-          📋 Copy Full Document (Markdown)
+        <button class="btn-action btn-primary-action" onclick="copyActiveTabContent()">
+          📋 Copy Current View (Text)
         </button>
         <button class="btn-action" onclick="window.print()">
-          🖨️ Print / Export PDF
+          🖨️ Print / Save PDF
         </button>
       </div>
-
-      <!-- TOC Jump Bar -->
-      <div class="toc-bar">
-        <a href="#sec-1" class="toc-link">1. Principles</a>
-        <a href="#sec-2" class="toc-link">2. Time Budget</a>
-        <a href="#sec-3" class="toc-link">3. Phases & Gate</a>
-        <a href="#sec-4" class="toc-link">4. Error Log</a>
-        <a href="#sec-5" class="toc-link">5. Sources</a>
-        <a href="#sec-6" class="toc-link">6. Optional Selection</a>
-        <a href="#sec-7" class="toc-link">7. Support System</a>
-      </div>
     </div>
 
-    <!-- SECTION 1 -->
-    <div class="doc-section" id="sec-1">
-      <div class="sec-header">
-        <div class="sec-title">
-          <span class="sec-num">01</span>
-          Design Principles (Evidence-Based, Non-Negotiable)
-        </div>
-        <button class="copy-sec-btn" onclick="copySection('sec-1-content')">📋 Copy</button>
-      </div>
-      <div class="doc-body" id="sec-1-content">
-        <ul>
-          <li>
-            <strong>Time Architecture, Not Timetable:</strong> Study slots are anchored to fixed daily events (pre-work, commute, lunch, post-dinner, weekend blocks), not to clock-idealism.<br/>
-            <span class="callout" style="display:inline-block;margin-top:6px;">
-              💡 <em>Kajal Jawla Model (AIR 28 while at Wipro):</em> Commute converted to 3 hrs/day study, holidays full-time.
-            </span>
-          </li>
-          <li>
-            <strong>One Source Per Subject, Minimum 3 Revisions:</strong> No new book/course enters without an existing one being deleted. Revision is scheduled, not aspirational.<br/>
-            <span class="callout" style="display:inline-block;margin-top:6px;">
-              💡 <em>Anudeep Durishetty (AIR 1):</em> Limited sources revised repeatedly beat wide reading.
-            </span>
-          </li>
-          <li>
-            <strong>Syllabus + PYQs Are the Filter:</strong> Printed syllabus on the wall. Every topic must pass the 250-word test: <em>"Can I write 250 words on this from the syllabus?"</em> If a study activity doesn't map to a syllabus line or PYQ pattern, it is deleted.
-          </li>
-          <li>
-            <strong>Answer Writing is a Standalone Skill:</strong> Started early (daily from Week 8). Imperfect answers today beat perfect answers never. Mocks may be postponed by max 1 day; never skipped.
-          </li>
-          <li>
-            <strong>Current Affairs Compressed:</strong> One monthly compilation (Vision IAS / Forum free PDFs), processed in fixed weekly slots. No 90-minute daily newspaper ritual. Optional: 15-min daily news-app skim.
-          </li>
-          <li>
-            <strong>Depth-First (2026 Pattern Shift):</strong> Unconventional framing, interlinkages, close options. Every topic is studied with three questions: <em>Why does it matter? How does it work? What does it connect to?</em>
-          </li>
-          <li>
-            <strong>Everything Online, From Home:</strong> Full test series, evaluation, materials — all remote (Durishetty completed his entire test series online). Location is not a disadvantage.
-          </li>
-        </ul>
-      </div>
+    <!-- MAIN SUB-TAB SWITCHER -->
+    <div class="main-tabs-wrap">
+      <button class="main-tab-btn active" onclick="switchTab('tab-strategy', this)">
+        🎯 Master Strategy & Blueprint
+      </button>
+      <button class="main-tab-btn" onclick="switchTab('tab-resources', this)">
+        🛒 Resource List & Budget
+      </button>
+      <button class="main-tab-btn" onclick="switchTab('tab-mindset', this)">
+        💡 6 Mindset Realities
+      </button>
+      <button class="main-tab-btn" onclick="switchTab('tab-prompt', this)">
+        🤖 AI Mentor System Prompt
+      </button>
     </div>
 
-    <!-- SECTION 2 -->
-    <div class="doc-section" id="sec-2">
-      <div class="sec-header">
-        <div class="sec-title">
-          <span class="sec-num">02</span>
-          Time Budget (Realistic, Not Aspirational)
+    <!-- TAB 1: MASTER STRATEGY & BLUEPRINT -->
+    <div class="tab-panel active" id="tab-strategy">
+      
+      <!-- SECTION 1 -->
+      <div class="doc-section" id="sec-s1">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">01</span>
+            Design Principles (Evidence-Based, Non-Negotiable)
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s1-content')">📋 Copy</button>
         </div>
-        <button class="copy-sec-btn" onclick="copySection('sec-2-content')">📋 Copy</button>
+        <div class="doc-body" id="sec-s1-content">
+          <ul>
+            <li>
+              <strong>Time Architecture, Not Timetable:</strong> Study slots are anchored to fixed daily events (pre-work, commute, lunch, post-dinner, weekend blocks), not to clock-idealism.<br/>
+              <span class="callout" style="display:inline-block;margin-top:6px;">
+                💡 <em>Kajal Jawla Model (AIR 28 while at Wipro):</em> Commute converted to 3 hrs/day study, holidays full-time.
+              </span>
+            </li>
+            <li>
+              <strong>One Source Per Subject, Minimum 3 Revisions:</strong> No new book/course enters without an existing one being deleted. Revision is scheduled, not aspirational.<br/>
+              <span class="callout" style="display:inline-block;margin-top:6px;">
+                💡 <em>Anudeep Durishetty (AIR 1):</em> Limited sources revised repeatedly beat wide reading.
+              </span>
+            </li>
+            <li>
+              <strong>Syllabus + PYQs Are the Filter:</strong> Printed syllabus on the wall. Every topic must pass the 250-word test: <em>"Can I write 250 words on this from the syllabus?"</em> If a study activity doesn't map to a syllabus line or PYQ pattern, it is deleted.
+            </li>
+            <li>
+              <strong>Answer Writing is a Standalone Skill:</strong> Started early (daily from Week 8). Imperfect answers today beat perfect answers never. Mocks may be postponed by max 1 day; never skipped.
+            </li>
+            <li>
+              <strong>Current Affairs Compressed:</strong> One monthly compilation (Vision IAS / Forum free PDFs), processed in fixed weekly slots. No 90-minute daily newspaper ritual. Optional: 15-min daily news-app skim.
+            </li>
+            <li>
+              <strong>Depth-First (2026 Pattern Shift):</strong> Unconventional framing, interlinkages, close options. Every topic is studied with three questions: <em>Why does it matter? How does it work? What does it connect to?</em>
+            </li>
+            <li>
+              <strong>Everything Online, From Home:</strong> Full test series, evaluation, materials — all remote (Durishetty completed his entire test series online). Location is not a disadvantage.
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="doc-body" id="sec-2-content">
-        <p style="margin-bottom:12px;">Fixed slot allocation matrix for working aspirants:</p>
-        
-        <div class="custom-table-wrap">
-          <table class="doc-table">
-            <thead>
-              <tr>
-                <th>Slot</th>
-                <th>Duration</th>
-                <th>Use Case / Target Output</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Weekday — Morning Block</strong> (Pre-work)</td>
-                <td><span class="code-badge">90–120 min</span></td>
-                <td>New concepts (freshest mind, highest cognitive effort)</td>
-              </tr>
-              <tr>
-                <td><strong>Weekday — Micro-slots</strong> (Commute/Lunch)</td>
-                <td><span class="code-badge">30–60 min</span></td>
-                <td>Anki cards / Current affairs / Quick revision</td>
-              </tr>
-              <tr>
-                <td><strong>Weekday — Evening Block</strong></td>
-                <td><span class="code-badge">60–90 min</span></td>
-                <td>Answer writing practice + Daily revision</td>
-              </tr>
-              <tr>
-                <td><strong>Weekend — 2 Deep Blocks/Day</strong></td>
-                <td><span class="code-badge">6–8 hrs/day</span></td>
-                <td>New heavy material, Mocks, Essay, Weekly Review</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        <ul style="margin-top:12px;">
-          <li><strong>Weekly Target:</strong> 28–34 hrs. (Claimed 6 hrs/day = 42/wk is rejected as fantasy; working-professional toppers sustain ~4–5 hrs on workdays.)</li>
-          <li><strong>Total Budget to Prelims:</strong> ~1,300 hrs. Tight but inside the feasible band for a serious first cycle.</li>
-          <li><strong>Tracking:</strong> Logged in tracker sheet: date, slot, planned vs actual, subject, output (pages/answers/questions). Weekly adherence % is a first-class metric.</li>
-          <li><strong>Leave Banking (Starts July):</strong> Hoard paid leave from July. Target: ≥5 days before Prelims (mid-May 2027). Negotiate longer pre-Mains block (Jawla took 45 days before Mains).</li>
-        </ul>
+      <!-- SECTION 2 -->
+      <div class="doc-section" id="sec-s2">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">02</span>
+            Time Budget (Realistic, Not Aspirational)
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s2-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-s2-content">
+          <p style="margin-bottom:12px;">Fixed slot allocation matrix for working aspirants:</p>
+          
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Slot</th>
+                  <th>Duration</th>
+                  <th>Use Case / Target Output</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Weekday — Morning Block</strong> (Pre-work)</td>
+                  <td><span class="code-badge">90–120 min</span></td>
+                  <td>New concepts (freshest mind, highest cognitive effort)</td>
+                </tr>
+                <tr>
+                  <td><strong>Weekday — Micro-slots</strong> (Commute/Lunch)</td>
+                  <td><span class="code-badge">30–60 min</span></td>
+                  <td>Anki cards / Current affairs / Quick revision</td>
+                </tr>
+                <tr>
+                  <td><strong>Weekday — Evening Block</strong></td>
+                  <td><span class="code-badge">60–90 min</span></td>
+                  <td>Answer writing practice + Daily revision</td>
+                </tr>
+                <tr>
+                  <td><strong>Weekend — 2 Deep Blocks/Day</strong></td>
+                  <td><span class="code-badge">6–8 hrs/day</span></td>
+                  <td>New heavy material, Mocks, Essay, Weekly Review</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ul style="margin-top:12px;">
+            <li><strong>Weekly Target:</strong> 28–34 hrs. (Claimed 6 hrs/day = 42/wk is rejected as fantasy; working-professional toppers sustain ~4–5 hrs on workdays.)</li>
+            <li><strong>Total Budget to Prelims:</strong> ~1,300 hrs. Tight but inside the feasible band for a serious first cycle.</li>
+            <li><strong>Tracking:</strong> Logged in tracker sheet: date, slot, planned vs actual, subject, output. Weekly adherence % is a first-class metric.</li>
+            <li><strong>Leave Banking (Starts July):</strong> Hoard paid leave from July. Target: ≥5 days before Prelims (mid-May 2027). Negotiate longer pre-Mains block (Jawla took 45 days before Mains).</li>
+          </ul>
+        </div>
       </div>
+
+      <!-- SECTION 3 -->
+      <div class="doc-section" id="sec-s3">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">03</span>
+            Phases, Exit Criteria & Decision Gate
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s3-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-s3-content">
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P0 — Setup & Decode (Weeks 1–2, 15–28 July)</h4>
+              <ul>
+                <li>Print syllabus & annotate. Read (not solve) 10 years of Prelims PYQs + 5 years Mains papers.</li>
+                <li>Baseline diagnostic: 1 full past GS Prelims paper + 1 CSAT paper, timed, cold. Record scores.</li>
+                <li><strong>Exit Criteria:</strong> Diagnostic logged · Syllabus annotated · 14 consecutive days with ≥80% slot adherence.</li>
+                <li><strong>CSAT Gate Check:</strong> If baseline CSAT &lt; 100/200 → mandatory weekly CSAT slot activates immediately.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P1 — Foundation (Weeks 3–16, ~Aug–early Nov)</h4>
+              <ul>
+                <li>Core 4 first pass: Polity (Laxmikanth), Modern History (Spectrum), Geography (NCERT 11–12 + atlas), Economy (NCERT + primary source).</li>
+                <li>Answer writing begins Week 8 (1 answer/day). Optional subject locked by Week 14.</li>
+                <li><strong>Exit Criteria:</strong> Core 4 first pass complete · PYQ accuracy ≥50% · Optional locked · ≥40 evaluated answers.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P2 — Consolidation + Mains Skills (Weeks 17–32, ~Nov–Feb)</h4>
+              <ul>
+                <li>Optional Papers 1 & 2 first pass. Remaining GS: Environment, Ancient/Medieval, Art & Culture, Sci-Tech, GS4 Ethics.</li>
+                <li>Revision R2 of Core 4. Answer writing 2/day + 1 essay per 2 weeks. Sectional Prelims tests (1/week). Application window: 13 Jan – 2 Feb 2027.</li>
+                <li><strong>Exit Criteria:</strong> Optional first pass done · ≥150 evaluated answers, ≥6 essays · Sectional accuracy ≥55% · R2 complete.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P3 — Prelims Sprint (Weeks 33–44, ~Mar–23 May)</h4>
+              <ul>
+                <li>Full mock series: 15–20 GS full-lengths + 8–10 CSAT full-lengths timed at 9:30 AM Sunday.</li>
+                <li>Revision R3 (compressed notes + Anki only). Current affairs last 15 months consolidation.</li>
+              </ul>
+            </div>
+
+            <!-- DECISION GATE -->
+            <div class="callout red">
+              <h4 style="color:var(--accent-red);font-size:14px;margin-bottom:6px;">🛑 DECISION GATE — Week ~40 (Mid-April 2027) — The Option C Criterion</h4>
+              <p>SIT in Prelims 2027 ONLY if BOTH conditions hold:</p>
+              <ol style="margin-top:6px;">
+                <li><strong>Average net score of last 5 full GS mocks</strong> ≥ Published expected-cutoff benchmark + 5 marks.</li>
+                <li><strong>CSAT mock average</strong> ≥ 110/200.</li>
+              </ol>
+              <p style="margin-top:8px;font-size:12px;color:var(--text-tertiary);">
+                <em>If either fails → do NOT appear. No attempt is burned (attempts count only upon physical appearance). Roll into CSE 2028 with 12 months head start, locked Optional, and 150+ written answers. This outcome is a strategic success.</em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div class="doc-section" id="sec-s4">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">04</span>
+            Error Log System (Adapted from SSC C/K/R/T)
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-s4-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-s4-content">
+          <p style="margin-bottom:12px;">Every wrong/blank mock & PYQ question gets assigned one diagnostic code:</p>
+
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Meaning</th>
+                  <th>Fix Routed To</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="code-badge">K</span></td>
+                  <td><strong>Knowledge Gap</strong> — never studied it</td>
+                  <td>Source reading list addition</td>
+                </tr>
+                <tr>
+                  <td><span class="code-badge">R</span></td>
+                  <td><strong>Retention Failure</strong> — studied, forgot</td>
+                  <td>Anki deck + Scheduled revision queue</td>
+                </tr>
+                <tr>
+                  <td><span class="code-badge">E</span></td>
+                  <td><strong>Elimination Failure</strong> — narrowed to 2, picked wrong</td>
+                  <td>Option-analysis drill & elimination practice</td>
+                </tr>
+                <tr>
+                  <td><span class="code-badge">Q</span></td>
+                  <td><strong>Question Trap</strong> — misread stem/qualifier ("not correct", "only")</td>
+                  <td>Slow-read protocol on flagged qualifiers</td>
+                </tr>
+                <tr>
+                  <td><span class="code-badge">T</span></td>
+                  <td><strong>Time Pressure</strong> — guessed/blanked due to clock</td>
+                  <td>Pacing drills & attempt-order strategy</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- SECTION 3 -->
-    <div class="doc-section" id="sec-3">
-      <div class="sec-header">
-        <div class="sec-title">
-          <span class="sec-num">03</span>
-          Phases, Exit Criteria & Decision Gate
+    <!-- TAB 2: RESOURCE LIST & BUDGET -->
+    <div class="tab-panel" id="tab-resources">
+      
+      <!-- MONTH 1 PURCHASES -->
+      <div class="doc-section" id="sec-r0">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">0.0</span>
+            The Only 3 Purchases for Month 1 (~₹1,500–1,800)
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-r0-content')">📋 Copy</button>
         </div>
-        <button class="copy-sec-btn" onclick="copySection('sec-3-content')">📋 Copy</button>
+        <div class="doc-body" id="sec-r0-content">
+          <p style="margin-bottom:12px;">Do not buy anything else yet. Buying 12 books in week 1 is a motivation-purchase that becomes a guilt-pile.</p>
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Approx. Price</th>
+                  <th>Why Now</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Indian Polity</strong> — M. Laxmikanth</td>
+                  <td><span class="price-tag">₹800</span></td>
+                  <td>P1 core book, used for 44 weeks continuously</td>
+                </tr>
+                <tr>
+                  <td><strong>A Brief History of Modern India</strong> — Spectrum (Rajiv Ahir)</td>
+                  <td><span class="price-tag">₹400</span></td>
+                  <td>P1 core book for Modern History</td>
+                </tr>
+                <tr>
+                  <td><strong>School Atlas</strong> (Oxford / Orient BlackSwan)</td>
+                  <td><span class="price-tag">₹350</span></td>
+                  <td>Geography + map habit, daily essential use</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="doc-body" id="sec-3-content">
-        
-        <div style="display:flex;flex-direction:column;gap:16px;">
-          <div>
-            <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P0 — Setup & Decode (Weeks 1–2, 15–28 July)</h4>
-            <ul>
-              <li>Print syllabus & annotate. Read (not solve) 10 years of Prelims PYQs + 5 years Mains papers.</li>
-              <li>Baseline diagnostic: 1 full past GS Prelims paper + 1 CSAT paper, timed, cold. Record scores.</li>
-              <li><strong>Exit Criteria:</strong> Diagnostic logged · Syllabus annotated · 14 consecutive days with ≥80% slot adherence.</li>
-              <li><strong>CSAT Gate Check:</strong> If baseline CSAT &lt; 100/200 → mandatory weekly CSAT slot activates immediately.</li>
-            </ul>
+
+      <!-- FOUNDATION 100% FREE -->
+      <div class="doc-section" id="sec-r1">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">1.0</span>
+            Foundation — 100% Free Resources
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-r1-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-r1-content">
+          <ul>
+            <li><strong>NCERT Official PDFs (ncert.nic.in):</strong>
+              <ul style="margin-top:6px;">
+                <li><strong>History:</strong> Class 6–8 (basics), Class 11 (Themes in World History — selective), Class 12 (Themes in Indian History I–III). Old NCERTs (RS Sharma — Ancient, Satish Chandra — Medieval) circulate free online.</li>
+                <li><strong>Geography:</strong> Class 11 (Fundamentals of Physical Geography, India Physical Environment), Class 12 (Human Geography, India People & Economy).</li>
+                <li><strong>Polity:</strong> Class 9–10 basics, Class 11 (Indian Constitution at Work).</li>
+                <li><strong>Economy:</strong> Class 9–10 basics, Class 11 (Indian Economic Development), Class 12 (Intro Macroeconomics).</li>
+                <li><strong>Science:</strong> Class 6–10 (only where diagnostic shows gaps).</li>
+                <li><strong>Society (GS1):</strong> Class 11–12 Sociology (selective).</li>
+              </ul>
+            </li>
+            <li><strong>Official PYQs (upsc.gov.in):</strong> Free, official, single most important resource. 10 years Prelims (GS + CSAT), 5 years Mains.</li>
+            <li><strong>Official Syllabus:</strong> Inside official notification PDF on upsc.gov.in. Print it and pin to wall.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PRELIMS GS MATRIX TABLE -->
+      <div class="doc-section" id="sec-r2">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">2.0</span>
+            Prelims GS — Stage Resources Matrix
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-r2-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-r2-content">
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Subject Need</th>
+                  <th>FREE Option</th>
+                  <th>PAID (Only If Needed)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Polity</strong></td>
+                  <td>NCERT + PYQs</td>
+                  <td>Laxmikanth <span class="price-tag">₹800</span> (buy — no free substitute)</td>
+                </tr>
+                <tr>
+                  <td><strong>Modern History</strong></td>
+                  <td>NCERT Class 12</td>
+                  <td>Spectrum <span class="price-tag">₹400</span> (buy)</td>
+                </tr>
+                <tr>
+                  <td><strong>Ancient/Medieval + Art & Culture</strong></td>
+                  <td>NCERTs + free CCRT website material</td>
+                  <td>Nitin Singhania <span class="price-tag">₹650</span> — buy ONLY in P2, selective</td>
+                </tr>
+                <tr>
+                  <td><strong>Geography</strong></td>
+                  <td>NCERTs + atlas + free YouTube map lectures</td>
+                  <td>GC Leong <span class="price-tag">₹450</span> — optional, selective climatology only</td>
+                </tr>
+                <tr>
+                  <td><strong>Economy</strong></td>
+                  <td>NCERTs + Mrunal.org free articles + Economic Survey summary (indiabudget.gov.in)</td>
+                  <td>Ramesh Singh <span class="price-tag">₹900</span> — SKIP unless reference needed; free covers it</td>
+                </tr>
+                <tr>
+                  <td><strong>Environment</strong></td>
+                  <td>Shankar IAS has no equal free substitute</td>
+                  <td>Shankar IAS Environment <span class="price-tag">₹550</span> — buy in P2</td>
+                </tr>
+                <tr>
+                  <td><strong>Sci-Tech</strong></td>
+                  <td>PIB (pib.gov.in) + monthly magazine sci-tech section — free</td>
+                  <td>None needed</td>
+                </tr>
+                <tr>
+                  <td><strong>Topic-wise Solved PYQs</strong></td>
+                  <td>Official papers (free) but unsolved</td>
+                  <td>Disha/MTG 10-yr topic-wise solved <span class="price-tag">₹450</span> — worth buying in P1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAINS & CSAT TABLES -->
+      <div class="doc-section" id="sec-r3">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">3.0 & 5.0</span>
+            CSAT & Mains Stage Resources
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-r3-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-r3-content">
+          <h4 style="color:var(--text-primary);margin-bottom:8px;">CSAT Strategy</h4>
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Need</th>
+                  <th>FREE Option</th>
+                  <th>PAID (If Diagnostic &lt; 100/200)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Diagnosis + Practice</strong></td>
+                  <td>Official CSAT PYQs 2011–2025 (upsc.gov.in) + Free YouTube playlists</td>
+                  <td>TMH CSAT Manual or Arihant CSAT <span class="price-tag">₹600</span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <div>
-            <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P1 — Foundation (Weeks 3–16, ~Aug–early Nov)</h4>
-            <ul>
-              <li>Core 4 first pass: Polity (Laxmikanth), Modern History (Spectrum), Geography (NCERT 11–12 + atlas), Economy (NCERT + primary source).</li>
-              <li>Answer writing begins Week 8 (1 answer/day). Optional subject locked by Week 14.</li>
-              <li><strong>Exit Criteria:</strong> Core 4 first pass complete · PYQ accuracy ≥50% · Optional locked · ≥40 evaluated answers.</li>
-            </ul>
+          <h4 style="color:var(--text-primary);margin-top:16px;margin-bottom:8px;">Mains Stage Resources</h4>
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Need</th>
+                  <th>FREE Option</th>
+                  <th>PAID</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Answer Writing Method</strong></td>
+                  <td>Anudeep Durishetty's blog + free GS notes (anudeepdurishetty.in)</td>
+                  <td>His book "Fundamentals of Essay & Answer Writing" <span class="price-tag">₹400</span> (in P2)</td>
+                </tr>
+                <tr>
+                  <td><strong>Daily Practice</strong></td>
+                  <td>InsightsIAS "Secure" initiative + AI Mentor EVAL Mode</td>
+                  <td>Included in built AI mentor</td>
+                </tr>
+                <tr>
+                  <td><strong>Toppers' Answer Copies</strong></td>
+                  <td>Free on InsightsIAS / ForumIAS topper copy pages</td>
+                  <td>None needed</td>
+                </tr>
+                <tr>
+                  <td><strong>GS4 Ethics</strong></td>
+                  <td>Free topper ethics notes + PYQ case studies</td>
+                  <td>Lexicon <span class="price-tag">₹400</span> (in P2 if notes feel thin)</td>
+                </tr>
+                <tr>
+                  <td><strong>GS2/GS3 Depth</strong></td>
+                  <td>2nd ARC report summaries, PRS India, Economic Survey chapters</td>
+                  <td>None needed</td>
+                </tr>
+                <tr>
+                  <td><strong>Essay</strong></td>
+                  <td>Anudeep's free essay posts + Insights weekly challenge</td>
+                  <td>Covered by his book above</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOTAL BUDGET & BANNED LIST -->
+      <div class="doc-section" id="sec-r9">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">9.0 & 10.0</span>
+            Total Financial Budget & Banned Resource List
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-r9-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-r9-content">
+          <div class="custom-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Spend Breakdown</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Month 1 (Now)</strong></td>
+                  <td><span class="price-tag">~₹1,550</span> (Laxmikanth, Spectrum, Atlas)</td>
+                </tr>
+                <tr>
+                  <td><strong>P1–P2 (As Needed)</strong></td>
+                  <td><span class="price-tag">~₹2,500</span> (Singhania selective, Shankar, solved PYQs, Anudeep's book, Lexicon)</td>
+                </tr>
+                <tr>
+                  <td><strong>Optional Books (Week 14+)</strong></td>
+                  <td><span class="price-tag">~₹3,000</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Test Series (Jan 2027)</strong></td>
+                  <td><span class="price-tag">~₹7,000</span> (One full online test series)</td>
+                </tr>
+                <tr>
+                  <td><strong>TOTAL CYCLE BUDGET</strong></td>
+                  <td><span class="price-tag" style="background:rgba(59,91,219,0.2);color:#3B5BDB">~₹14,000 Total to Prelims</span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <div>
-            <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P2 — Consolidation + Mains Skills (Weeks 17–32, ~Nov–Feb)</h4>
+          <div class="callout red" style="margin-top:16px;">
+            <h4 style="color:var(--accent-red);font-size:14px;margin-bottom:6px;">🚫 BANNED LIST (Time & Money Wasters)</h4>
             <ul>
-              <li>Optional Papers 1 & 2 first pass. Remaining GS: Environment, Ancient/Medieval, Art & Culture, Sci-Tech, GS4 Ethics.</li>
-              <li>Revision R2 of Core 4. Answer writing 2/day + 1 essay per 2 weeks. Sectional Prelims tests (1/week). Application window: 13 Jan – 2 Feb 2027.</li>
-              <li><strong>Exit Criteria:</strong> Optional first pass done · ≥150 evaluated answers, ≥6 essays · Sectional accuracy ≥55% · R2 complete.</li>
+              <li><strong>Coaching Classes (₹1.5–2 Lakhs):</strong> Incompatible with a job. Working toppers use self-study + test series.</li>
+              <li><strong>Hoarding:</strong> More than ONE monthly magazine, more than ONE test series, more than ONE source per subject.</li>
+              <li><strong>Telegram Content Dumps:</strong> 40-GB topper-note dumps and "complete UPSC in 100 hrs" marathons.</li>
+              <li><strong>Media Noise:</strong> India Year Book cover-to-cover or daily 2-hour video analysis marathons.</li>
             </ul>
           </div>
+        </div>
+      </div>
 
-          <div>
-            <h4 style="color:var(--text-primary);font-size:14px;margin-bottom:6px;">P3 — Prelims Sprint (Weeks 33–44, ~Mar–23 May)</h4>
-            <ul>
-              <li>Full mock series: 15–20 GS full-lengths + 8–10 CSAT full-lengths timed at 9:30 AM Sunday.</li>
-              <li>Revision R3 (compressed notes + Anki only). Current affairs last 15 months consolidation.</li>
-            </ul>
+    </div>
+
+    <!-- TAB 3: 6 MINDSET & HIDDEN REALITIES -->
+    <div class="tab-panel" id="tab-mindset">
+      
+      <div class="doc-section" id="sec-m1">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">01</span>
+            Your Starter Kit — Start Small On Purpose
           </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-m1-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-m1-content">
+          <p>For your first month you need exactly three physical things: Laxmikanth (Polity), Spectrum (Modern History), and a school atlas. That's it. Everything else in your resource list has a scheduled time to enter.</p>
+          <p style="margin-top:8px;">Why so little? Because there is a trap that catches almost every new aspirant: in week one, full of motivation, you buy ten books and join five Telegram channels. By week six, the unread pile stares at you every evening and turns into guilt, and guilt turns into avoidance. Motivation spent on shopping is motivation stolen from studying.</p>
+          <div class="callout amber" style="margin-top:12px;">
+            Rule: A resource enters your life only when your plan says it's time, or when a test shows a gap it fills. One book, read three times, beats three books read once.
+          </div>
+        </div>
+      </div>
 
-          <!-- DECISION GATE -->
+      <div class="doc-section" id="sec-m2">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">02</span>
+            Train Your Writing Hand — The Gap Nobody Warns You About
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-m2-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-m2-content">
+          <p>Mains exam requires writing <strong>~4,000 handwritten words per day, for five days in a row</strong>. Handwriting stamina is a physical muscle. If discovered in the exam hall, your hand will cramp, speed will collapse, and knowledge will never reach paper.</p>
+          <p style="margin-top:8px;">The fix: From Week 8, every practice answer MUST be written BY HAND on paper, photographed, and uploaded to your AI Mentor for evaluation. Never type practice answers. Find a pen model you love early and stick to it.</p>
+        </div>
+      </div>
+
+      <div class="doc-section" id="sec-m3">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">03</span>
+            The Money Plan — Why You Are NOT Joining Coaching
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-m3-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-m3-content">
+          <p>Total cost of your preparation: ~₹14,000. Coaching costs ₹1.5–2 Lakhs and requires 3-hour fixed-time classes that destroy a working professional's schedule.</p>
+          <ul>
+            <li>Working professional toppers (Wipro engineer in office cab, online test series takers) relied on self-study + test series.</li>
+            <li>Coaching sells a feeling of safety, not marks. Actual marks come from reading source books, writing answers, and analyzing mock errors.</li>
+            <li>The ONE thing worth paying for is the full-length online test series before Prelims (~₹7,000).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="doc-section" id="sec-m4">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">04</span>
+            One Human, and the Content Swamp
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-m4-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-m4-content">
+          <p>Find ONE senior aspirant or topper for an occasional sanity check once a month ("is this normal in month 4?"). Do not follow a crowd.</p>
           <div class="callout red">
-            <h4 style="color:var(--accent-red);font-size:14px;margin-bottom:6px;">🛑 DECISION GATE — Week ~40 (Mid-April 2027) — The Option C Criterion</h4>
-            <p>SIT in Prelims 2027 ONLY if BOTH conditions hold:</p>
-            <ol style="margin-top:6px;">
-              <li><strong>Average net score of last 5 full GS mocks</strong> ≥ Published expected-cutoff benchmark + 5 marks.</li>
-              <li><strong>CSAT mock average</strong> ≥ 110/200.</li>
-            </ol>
-            <p style="margin-top:8px;font-size:12px;color:var(--text-tertiary);">
-              <em>If either fails → do NOT appear. No attempt is burned (attempts count only upon physical appearance). Roll into CSE 2028 with 12 months head start, locked Optional, and 150+ written answers. This outcome is a strategic success.</em>
-            </p>
+            <strong>Warning:</strong> Avoid the UPSC content swamp — thousands of YouTube channels, 40GB Telegram dumps, and daily 2-hour analysis videos. Hard rule: ONE monthly magazine, ONE test series, ONE senior contact, and your closed book list. Zero hoarding.
           </div>
         </div>
-
       </div>
+
+      <div class="doc-section" id="sec-m5">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">05</span>
+            Sleep and Your Body — Strategy, Not a Luxury
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-m5-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-m5-content">
+          <p>Memory consolidation happens during sleep. Cutting sleep to study is borrowing marks at 100% interest.</p>
+          <ul>
+            <li><strong>7 Hours of Sleep:</strong> Never two short-sleep nights in a row.</li>
+            <li><strong>Daily Movement:</strong> 20-minute daily walk is non-negotiable for a body sitting 12+ hours.</li>
+            <li><strong>Scheduled Rest Slot:</strong> One scheduled half-day rest per week for full recovery.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="doc-section" id="sec-m6">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">06</span>
+            Your "Why" — One Paragraph, Written by You Alone
+          </div>
+          <button class="copy-sec-btn" onclick="copySection('sec-m6-content')">📋 Copy</button>
+        </div>
+        <div class="doc-body" id="sec-m6-content">
+          <p>Sit alone and write one honest paragraph on why YOU want this. On a cold November morning at 5:30 AM, a borrowed dream will not get you out of bed. Your own words will. Real internal drive is the only fuel that lasts 44 weeks.</p>
+        </div>
+      </div>
+
     </div>
 
-    <!-- SECTION 4 -->
-    <div class="doc-section" id="sec-4">
-      <div class="sec-header">
-        <div class="sec-title">
-          <span class="sec-num">04</span>
-          Error Log System (Adapted from SSC C/K/R/T)
+    <!-- TAB 4: AI MENTOR SYSTEM PROMPT -->
+    <div class="tab-panel" id="tab-prompt">
+      
+      <div class="doc-section" id="sec-prompt">
+        <div class="sec-header">
+          <div class="sec-title">
+            <span class="sec-num">AI</span>
+            UPSC CSE Mentor System Prompt (Complete Code)
+          </div>
+          <button class="copy-sec-btn" onclick="copyPromptText()">🤖 Copy Prompt Text</button>
         </div>
-        <button class="copy-sec-btn" onclick="copySection('sec-4-content')">📋 Copy</button>
-      </div>
-      <div class="doc-body" id="sec-4-content">
-        <p style="margin-bottom:12px;">Every wrong/blank mock & PYQ question gets assigned one diagnostic code:</p>
+        <div class="doc-body">
+          <p style="margin-bottom:12px;">Copy and paste this system prompt into ChatGPT, Claude Project, or Custom GPT instructions to configure your 24/7 personal UPSC Teaching Mentor:</p>
+          
+          <pre class="prompt-box" id="ai-prompt-text">You are Mentor, a personal UPSC CSE teacher for one aspirant. She is a working professional preparing ~4 hrs on weekdays and more on weekends, targeting Prelims on 23 May 2027 under the strategy defined in UPSC_Strategy_v1.md (in your project knowledge — it governs everything you do). She is intelligent but new to UPSC. Your job is to make every study minute count, because she has fewer minutes than full-time aspirants.
 
-        <div class="custom-table-wrap">
-          <table class="doc-table">
-            <thead>
-              <tr>
-                <th>Code</th>
-                <th>Meaning</th>
-                <th>Fix Routed To</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="code-badge">K</span></td>
-                <td><strong>Knowledge Gap</strong> — never studied it</td>
-                <td>Source reading list addition</td>
-              </tr>
-              <tr>
-                <td><span class="code-badge">R</span></td>
-                <td><strong>Retention Failure</strong> — studied, forgot</td>
-                <td>Anki deck + Scheduled revision queue</td>
-              </tr>
-              <tr>
-                <td><span class="code-badge">E</span></td>
-                <td><strong>Elimination Failure</strong> — narrowed to 2, picked wrong</td>
-                <td>Option-analysis drill & elimination practice</td>
-              </tr>
-              <tr>
-                <td><span class="code-badge">Q</span></td>
-                <td><strong>Question Trap</strong> — misread stem/qualifier ("not correct", "only")</td>
-                <td>Slow-read protocol on flagged qualifiers</td>
-              </tr>
-              <tr>
-                <td><span class="code-badge">T</span></td>
-                <td><strong>Time Pressure</strong> — guessed/blanked due to clock</td>
-                <td>Pacing drills & attempt-order strategy</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+YOUR CHARACTER
+- Warm, direct, and honest. Praise only real progress. Never fake encouragement.
+- Simple, clear English. Short sentences. One idea at a time. No jargon without explaining it first.
+- You are a teacher, not a content dump. You ask before you tell. You make HER think.
+- Sessions fit her life: default 25–40 minutes of material. Always ask "quick session or deep session?" if unclear.
 
-        <p style="margin-top:12px;"><strong>Weekly Ritual:</strong> Sunday review of adherence %, error-code distribution, and process fix for dominant code.</p>
-      </div>
-    </div>
+THE FIVE TEACHING LAWS (never break these)
+LAW 1 — Depth-first, always. UPSC Prelims 2026 broke the old pattern: it now punishes rote memory and rewards understanding and connections. So for EVERY topic you teach, you must cover three questions: Why does this matter? How does it actually work? What does it connect to? (other subjects, current events, possible Mains angles). Never teach a bare fact without its "why/how/connect."
 
-    <!-- SECTION 5 -->
-    <div class="doc-section" id="sec-5">
-      <div class="sec-header">
-        <div class="sec-title">
-          <span class="sec-num">05</span>
-          Standard Source List (Closed Set)
-        </div>
-        <button class="copy-sec-btn" onclick="copySection('sec-5-content')">📋 Copy</button>
-      </div>
-      <div class="doc-body" id="sec-5-content">
-        <p style="margin-bottom:12px;">Closed set. Any addition requires deleting an existing item:</p>
+LAW 2 — Active recall before new input. Start every session by asking her 3 quick questions from the previous session. If she fails 2 of 3, revise before teaching anything new. Teaching new material on a weak base is forbidden.
 
-        <div class="custom-table-wrap">
-          <table class="doc-table">
-            <thead>
-              <tr>
-                <th>Subject Area</th>
-                <th>Standard Source Materials</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Polity</strong></td>
-                <td>Indian Polity by M. Laxmikanth</td>
-              </tr>
-              <tr>
-                <td><strong>Modern History</strong></td>
-                <td>A Brief History of Modern India by Spectrum (Rajiv Ahir)</td>
-              </tr>
-              <tr>
-                <td><strong>Ancient/Medieval + Art & Culture</strong></td>
-                <td>NCERTs Class 11 Fine Arts + Nitin Singhania (Selective)</td>
-              </tr>
-              <tr>
-                <td><strong>Geography</strong></td>
-                <td>NCERTs 11–12 + School Atlas + GC Leong (Selective)</td>
-              </tr>
-              <tr>
-                <td><strong>Economy</strong></td>
-                <td>NCERT Class 11-12 + Ramesh Singh (Selective) or online standard notes</td>
-              </tr>
-              <tr>
-                <td><strong>Environment</strong></td>
-                <td>Shankar IAS Environment (Selective) + Current Affairs</td>
-              </tr>
-              <tr>
-                <td><strong>Sci-Tech</strong></td>
-                <td>Current-affairs-driven + NCERT basics</td>
-              </tr>
-              <tr>
-                <td><strong>Current Affairs</strong></td>
-                <td>ONE monthly compilation (Vision IAS or Forum IAS, free PDF)</td>
-              </tr>
-              <tr>
-                <td><strong>CSAT</strong></td>
-                <td>10 Years PYQs + 1 Practice Book</td>
-              </tr>
-              <tr>
-                <td><strong>PYQs</strong></td>
-                <td>10 Years Prelims (Solve) + 5 Years Mains (Decode)</td>
-              </tr>
-              <tr>
-                <td><strong>Answer Writing</strong></td>
-                <td>Anudeep Durishetty's free blog posts & strategy (anudeepdurishetty.in)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+LAW 3 — PYQ-anchored. After teaching any topic, show or construct 1–2 UPSC-style Prelims MCQs on it (with realistic close options and trap qualifiers like "only", "not correct", "1 and 2"). She answers. You then explain the elimination logic option by option — not just the right answer.
 
-    <!-- SECTION 6 -->
-    <div class="doc-section" id="sec-6">
-      <div class="sec-header">
-        <div class="sec-title">
-          <span class="sec-num">06</span>
-          Optional Selection Framework (Decision Due Week 14)
-        </div>
-        <button class="copy-sec-btn" onclick="copySection('sec-6-content')">📋 Copy</button>
-      </div>
-      <div class="doc-body" id="sec-6-content">
-        <p style="margin-bottom:10px;">Score each shortlisted subject 1–5 on:</p>
-        <ul>
-          <li><strong>GS Overlap:</strong> Saves scarcest resource: time.</li>
-          <li><strong>Genuine Interest:</strong> Reading it on a tired Tuesday night.</li>
-          <li><strong>Material Availability:</strong> Test series, topper notes, evaluators.</li>
-          <li><strong>Syllabus Size:</strong> Relative to 30 hrs/week constraints.</li>
-          <li><strong>Background Fit:</strong> Graduation subject mapping.</li>
-        </ul>
-        <div class="callout" style="margin-top:12px;">
-          <strong>Default Shortlist:</strong> Sociology, PSIR, Anthropology, Geography.<br/>
-          Run a 2-week sampling sprint. Then commit permanently. Optional-switching mid-cycle is banned.
-        </div>
-      </div>
-    </div>
+LAW 4 — Syllabus-mapped. Every session begins by naming exactly which syllabus line you are covering. If she asks for something outside the syllabus, tell her plainly: "Not in the syllabus. Skipping it saves you marks." Then redirect.
 
-    <!-- SECTION 7 -->
-    <div class="doc-section" id="sec-7">
-      <div class="sec-header">
-        <div class="sec-title">
-          <span class="sec-num">07</span>
-          Psychology & Support System
+LAW 5 — Honesty about facts. If you are not certain of a specific fact, date, article number, or figure, say "verify this in [her source book] — I'm not fully certain." A confident wrong fact from you can cost her a mark in the real exam. Her source books (Laxmikanth, Spectrum, NCERTs — listed in the strategy file §5) are the final authority, not you.
+
+SESSION MODES (she starts a message with the mode word)
+- TEACH [topic] — Teach one topic depth-first. Structure: (1) name syllabus line, (2) hook — why it matters, (3) core concept with analogy, (4) how/why/connect layer, (5) 1–2 PYQ-style MCQs, (6) 3-line summary to note down. Then STOP.
+- REVISE [topic/subject] — Rapid-fire active recall: 8–10 questions one at a time. End with error breakdown (K/R/E/Q/T codes).
+- PYQ [topic/subject] — Drill mode. Give real-pattern UPSC MCQs one at a time with full elimination walkthrough.
+- EVAL — She pastes a Mains answer. Score /10 realistically, check if answered what was asked, structure check, missing elements, and exactly TWO fixes.
+- ESSAY — Evaluate essay coherence, multi-dimensionality, language flow. Score /125 realistically.
+- CSAT [area] — Teach/drill comprehension, reasoning, or numeracy with time-efficiency focus.
+- CA — Current affairs session linking news items directly to static syllabus topics.
+- LOG — Weekly error-log review identifying dominant failure patterns and prescribing ONE process fix.
+- PLAN — Tell her what to do based on available time today ("I have 45 minutes").
+
+STANDING BEHAVIORS
+- Every session ends with: (a) 3 takeaway lines for notes, (b) 1 practice question for tomorrow's recall, (c) nothing else.
+- Interlinking habit: connect topics across subjects.
+- Trap training: highlight how UPSC twists topics into qualifiers and absolute words ("always", "all", "only").
+- Protect her time & morale: refuse low-yield requests, convert bad mock scores into error-code data.
+
+OUT OF SCOPE
+- No coaching recommendations, no material shopping, no strategy rewrites.
+- Never write a full model answer BEFORE she attempts.</pre>
         </div>
-        <button class="copy-sec-btn" onclick="copySection('sec-7-content')">📋 Copy</button>
       </div>
-      <div class="doc-body" id="sec-7-content">
-        <ul>
-          <li><strong>Consistency Over Intensity:</strong> Practical daily targets. Rule: Never two zero-days in a row.</li>
-          <li><strong>Support Load-Sharing:</strong> Household load must be protected. System Manager protects study slots from social/family claims.</li>
-          <li><strong>Attempt Framing:</strong> Toppers' attempt counts range from 1 to 5. The Decision Gate ensures no attempt is spent unarmed.</li>
-          <li><strong>2026 Pattern Advantage:</strong> Exam rewards conceptual depth over rote memorization — playing directly into the working aspirant model.</li>
-        </ul>
-      </div>
+
     </div>
 
   </div>
@@ -634,6 +1005,34 @@
 <script src="assets/nav.js?v=5"></script>
 <script type="module" src="assets/auth-sync.js?v=5"></script>
 <script>
+  function switchTab(panelId, btnEl) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+    
+    const panel = document.getElementById(panelId);
+    if (panel) panel.classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+
+    window.location.hash = panelId;
+  }
+
+  // Handle hash deep linking on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      const targetPanel = document.getElementById(hash);
+      if (targetPanel) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+        targetPanel.classList.add('active');
+        
+        const btnIndex = ['tab-strategy', 'tab-resources', 'tab-mindset', 'tab-prompt'].indexOf(hash);
+        const btns = document.querySelectorAll('.main-tab-btn');
+        if (btnIndex >= 0 && btns[btnIndex]) btns[btnIndex].classList.add('active');
+      }
+    }
+  });
+
   function showToast(msg) {
     const toast = document.getElementById('toast');
     if (!toast) return;
@@ -669,13 +1068,16 @@
     copyTextToClipboard(el.innerText);
   }
 
-  function copyFullDocument() {
-    const sections = document.querySelectorAll('.doc-section');
-    let fullText = "UPSC CSE MASTER STRATEGY & BLUEPRINT\n===================================\n\n";
-    sections.forEach(sec => {
-      fullText += sec.innerText + "\n\n-----------------------------------\n\n";
-    });
-    copyTextToClipboard(fullText);
+  function copyPromptText() {
+    const el = document.getElementById('ai-prompt-text');
+    if (el) copyTextToClipboard(el.innerText);
+  }
+
+  function copyActiveTabContent() {
+    const activePanel = document.querySelector('.tab-panel.active');
+    if (activePanel) {
+      copyTextToClipboard(activePanel.innerText);
+    }
   }
 </script>
 </body>
