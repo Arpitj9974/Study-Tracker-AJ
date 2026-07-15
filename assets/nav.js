@@ -104,6 +104,7 @@ const EXAM_CONFIG = {
     totalChapters: 126,
     links: [
       { page: 'dashboard-upsc.html', href: 'dashboard-upsc.html', icon: '📊', label: 'UPSC Dashboard' },
+      { page: 'resource-upsc.html',  href: 'resource-upsc.html',  icon: '📚', label: 'Strategy & Vault' },
       { page: 'tracker-upsc.html?subj=upsc_polity',           href: 'tracker-upsc.html?subj=upsc_polity',           icon: '⚖️', label: 'Polity' },
       { page: 'tracker-upsc.html?subj=upsc_modern_history',   href: 'tracker-upsc.html?subj=upsc_modern_history',   icon: '✊', label: 'Modern History' },
       { page: 'tracker-upsc.html?subj=upsc_geography',        href: 'tracker-upsc.html?subj=upsc_geography',        icon: '🌍', label: 'Geography' },
