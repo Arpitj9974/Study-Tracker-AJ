@@ -26,6 +26,13 @@ const SUBJECT_COLORS = {
   upsc_ir_security:      { primary: '#5F5AA2' },
   upsc_ethics_gs4:       { primary: '#6B7280' },
   upsc_csat_aptitude:    { primary: '#B34747' },
+  // IBPS PO colors
+  ibps_qnt: { primary: '#B7791F' },
+  ibps_rea: { primary: '#5F5AA2' },
+  ibps_eng: { primary: '#B04A2F' },
+  ibps_dia: { primary: '#2C7A9E' },
+  ibps_gab: { primary: '#2B8A6E' },
+  ibps_dsc: { primary: '#A64D9C' },
 };
 
 const KEYS = {
@@ -47,6 +54,13 @@ const KEYS = {
   upsc_ir_security:      { prefix: 'upsc_irs_', total: 8,  p1: 8  },
   upsc_ethics_gs4:       { prefix: 'upsc_eth_', total: 8,  p1: 8  },
   upsc_csat_aptitude:    { prefix: 'upsc_csa_', total: 7,  p1: 7  },
+  // IBPS PO subjects
+  ibps_qnt: { prefix: 'ibps_qnt_', total: 16, p1: 16 },
+  ibps_rea: { prefix: 'ibps_rea_', total: 15, p1: 15 },
+  ibps_eng: { prefix: 'ibps_eng_', total: 12, p1: 12 },
+  ibps_dia: { prefix: 'ibps_dia_', total: 8,  p1: 8  },
+  ibps_gab: { prefix: 'ibps_gab_', total: 13, p1: 13 },
+  ibps_dsc: { prefix: 'ibps_dsc_', total: 4,  p1: 4  },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -117,6 +131,24 @@ const EXAM_CONFIG = {
       { page: 'tracker-upsc.html?subj=upsc_ethics_gs4',       href: 'tracker-upsc.html?subj=upsc_ethics_gs4',       icon: '🧭', label: 'Ethics (GS-4)' },
       { page: 'tracker-upsc.html?subj=upsc_csat_aptitude',    href: 'tracker-upsc.html?subj=upsc_csat_aptitude',    icon: '🧮', label: 'CSAT' },
     ]
+  },
+  ibps_po: {
+    label: 'IBPS PO',
+    color: '#B7791F',
+    icon: '🏦',
+    subjects: ['ibps_qnt', 'ibps_rea', 'ibps_eng', 'ibps_dia', 'ibps_gab', 'ibps_dsc'],
+    countMode: 'all',
+    examDate: '2026-08-22',
+    totalChapters: 68,
+    links: [
+      { page: 'dashboard-ibps.html', href: 'dashboard-ibps.html', icon: '📊', label: 'IBPS Dashboard' },
+      { page: 'tracker-ibps.html?subj=ibps_qnt', href: 'tracker-ibps.html?subj=ibps_qnt', icon: '🔢', label: 'Quant Aptitude' },
+      { page: 'tracker-ibps.html?subj=ibps_rea', href: 'tracker-ibps.html?subj=ibps_rea', icon: '🧩', label: 'Reasoning Ability' },
+      { page: 'tracker-ibps.html?subj=ibps_eng', href: 'tracker-ibps.html?subj=ibps_eng', icon: '📖', label: 'English Language' },
+      { page: 'tracker-ibps.html?subj=ibps_dia', href: 'tracker-ibps.html?subj=ibps_dia', icon: '📊', label: 'Data Analysis & DI' },
+      { page: 'tracker-ibps.html?subj=ibps_gab', href: 'tracker-ibps.html?subj=ibps_gab', icon: '🏦', label: 'Banking & GA' },
+      { page: 'tracker-ibps.html?subj=ibps_dsc', href: 'tracker-ibps.html?subj=ibps_dsc', icon: '✍️', label: 'Descriptive English' }
+    ]
   }
 };
 
@@ -126,6 +158,7 @@ function getCurrentExam() {
   if (page.includes('nqt')) return 'nqt';
   if (page.includes('ssc')) return 'ssc';
   if (page.includes('upsc')) return 'upsc';
+  if (page.includes('ibps')) return 'ibps_po';
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }

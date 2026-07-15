@@ -104,6 +104,12 @@
     const upscPct = Math.round((upscDone / EXAM_CONFIG.upsc.totalChapters) * 100);
     const upscDays = Math.ceil((new Date(EXAM_CONFIG.upsc.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // IBPS PO stats
+    const ibpsStats = readExamStats('ibps_po');
+    const ibpsDone = Object.values(ibpsStats).reduce((s, v) => s + v.done, 0);
+    const ibpsPct = Math.round((ibpsDone / EXAM_CONFIG.ibps_po.totalChapters) * 100);
+    const ibpsDays = Math.ceil((new Date(EXAM_CONFIG.ibps_po.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
@@ -142,6 +148,19 @@
         </div>
         <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.upsc.subjects.length} Subjects · ${EXAM_CONFIG.upsc.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#3B5BDB">Start UPSC Prep →</button>
+      </a>
+
+      <a href="dashboard-ibps.html" class="exam-card" style="--card-glow:rgba(183,121,31,0.12);--card-border:rgba(183,121,31,0.4);border-top-color:#B7791F" onclick="localStorage.setItem('selectedExam','ibps_po')">
+        <span class="ec-icon">🏦</span>
+        <div class="ec-name">IBPS PO</div>
+        <div class="ec-desc">Quant, Reasoning, English, DI, Banking & Descriptive</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#B7791F">${ibpsPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#B7791F">${ibpsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ibps_po.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${ibpsDays < 30 ? '#EF4444' : '#B7791F'}">${ibpsDays > 0 ? ibpsDays : '🎯'}</div><div class="ec-stat-lbl">${ibpsDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(183,121,31,0.15);color:#B7791F;border:1px solid rgba(183,121,31,0.3)">${EXAM_CONFIG.ibps_po.subjects.length} Subjects · ${EXAM_CONFIG.ibps_po.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#B7791F">Start IBPS Prep →</button>
       </a>
     `;
   </script>
