@@ -33,6 +33,10 @@ const SUBJECT_COLORS = {
   ibps_dia: { primary: '#2C7A9E' },
   ibps_gab: { primary: '#2B8A6E' },
   ibps_dsc: { primary: '#A64D9C' },
+  // JEE colors
+  jee_phy: { primary: '#3B5BDB' },
+  jee_che: { primary: '#2B8A6E' },
+  jee_mat: { primary: '#B7791F' },
 };
 
 const KEYS = {
@@ -61,6 +65,10 @@ const KEYS = {
   ibps_dia: { prefix: 'ibps_dia_', total: 8,  p1: 8  },
   ibps_gab: { prefix: 'ibps_gab_', total: 13, p1: 13 },
   ibps_dsc: { prefix: 'ibps_dsc_', total: 4,  p1: 4  },
+  // JEE subjects
+  jee_phy: { prefix: 'jee_phy_', total: 20, p1: 20 },
+  jee_che: { prefix: 'jee_che_', total: 21, p1: 21 },
+  jee_mat: { prefix: 'jee_mat_', total: 15, p1: 15 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -73,7 +81,6 @@ const EXAM_CONFIG = {
     color: '#7F77DD',
     icon: '🎯',
     subjects: ['speedmath', 'quant', 'reasoning', 'coding', 'english'],
-    // For NQT, only count chapters up to p1
     countMode: 'p1',
     examDate: '2025-08-01',
     totalChapters: 119,
@@ -91,7 +98,6 @@ const EXAM_CONFIG = {
     color: '#1D9E75',
     icon: '📋',
     subjects: ['speedmath', 'quant', 'reasoning', 'english', 'gk'],
-    // For SSC, count ALL chapters (p1 + p2 + speedmath)
     countMode: 'all',
     examDate: '2025-09-15',
     totalChapters: 162,
@@ -149,6 +155,21 @@ const EXAM_CONFIG = {
       { page: 'tracker-ibps.html?subj=ibps_gab', href: 'tracker-ibps.html?subj=ibps_gab', icon: '🏦', label: 'Banking & GA' },
       { page: 'tracker-ibps.html?subj=ibps_dsc', href: 'tracker-ibps.html?subj=ibps_dsc', icon: '✍️', label: 'Descriptive English' }
     ]
+  },
+  jee: {
+    label: 'JEE Main & Adv',
+    color: '#3B5BDB',
+    icon: '⚛️',
+    subjects: ['jee_phy', 'jee_che', 'jee_mat'],
+    countMode: 'all',
+    examDate: '2027-01-24',
+    totalChapters: 56,
+    links: [
+      { page: 'dashboard-jee.html', href: 'dashboard-jee.html', icon: '📊', label: 'JEE Dashboard' },
+      { page: 'tracker-jee.html?subj=jee_phy', href: 'tracker-jee.html?subj=jee_phy', icon: '⚛️', label: 'Physics' },
+      { page: 'tracker-jee.html?subj=jee_che', href: 'tracker-jee.html?subj=jee_che', icon: '🧪', label: 'Chemistry' },
+      { page: 'tracker-jee.html?subj=jee_mat', href: 'tracker-jee.html?subj=jee_mat', icon: '📐', label: 'Mathematics' }
+    ]
   }
 };
 
@@ -159,6 +180,7 @@ function getCurrentExam() {
   if (page.includes('ssc')) return 'ssc';
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) return 'ibps_po';
+  if (page.includes('jee')) return 'jee';
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }

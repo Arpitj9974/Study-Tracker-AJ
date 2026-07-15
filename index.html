@@ -110,6 +110,12 @@
     const ibpsPct = Math.round((ibpsDone / EXAM_CONFIG.ibps_po.totalChapters) * 100);
     const ibpsDays = Math.ceil((new Date(EXAM_CONFIG.ibps_po.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // JEE stats
+    const jeeStats = readExamStats('jee');
+    const jeeDone = Object.values(jeeStats).reduce((s, v) => s + v.done, 0);
+    const jeePct = Math.round((jeeDone / EXAM_CONFIG.jee.totalChapters) * 100);
+    const jeeDays = Math.ceil((new Date(EXAM_CONFIG.jee.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
@@ -161,6 +167,19 @@
         </div>
         <span class="ec-badge" style="background:rgba(183,121,31,0.15);color:#B7791F;border:1px solid rgba(183,121,31,0.3)">${EXAM_CONFIG.ibps_po.subjects.length} Subjects · ${EXAM_CONFIG.ibps_po.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#B7791F">Start IBPS Prep →</button>
+      </a>
+
+      <a href="dashboard-jee.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="localStorage.setItem('selectedExam','jee')">
+        <span class="ec-icon">⚛️</span>
+        <div class="ec-name">JEE Main & Adv</div>
+        <div class="ec-desc">Physics, Chemistry & Mathematics (PCM)</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${jeePct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${jeeDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.jee.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${jeeDays < 30 ? '#EF4444' : '#3B5BDB'}">${jeeDays > 0 ? jeeDays : '🎯'}</div><div class="ec-stat-lbl">${jeeDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.jee.subjects.length} Subjects · ${EXAM_CONFIG.jee.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#3B5BDB">Start JEE Prep →</button>
       </a>
     `;
   </script>
