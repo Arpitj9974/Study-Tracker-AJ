@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase-config.js";
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { doc, getDoc, updateDoc, setDoc, deleteField, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 let currentUid = null;
 const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_', 'cds_', 'cafnd_', 'cain_', 'cafin_', 'ntpc_ga_', 'ntpc_reas_', 'ntpc_math_', 'rrbd_reas_', 'rrbd_sci_', 'rrbd_math_', 'rrbd_ga_', 'chsl_eng_', 'chsl_reason_', 'chsl_math_', 'chsl_ga_', 'chsl_comp_', 'mts_ga_', 'mts_eng_', 'mts_math_', 'mts_reason_', 'ugcnet_ta_', 'ugcnet_ra_', 'ugcnet_lr_', 'ugcnet_di_', 'ugcnet_com_', 'ugcnet_rc_', 'ugcnet_ict_', 'ugcnet_env_', 'ugcnet_he_', 'iclk_qa_', 'iclk_ra_', 'iclk_gfa_', 'iclk_eng_', 'iclk_comp_', 'nda_gat_', 'nda_ma_', 'xat_dm_', 'xat_valr_', 'xat_qadi_', 'xat_gk_', 'clat_legal_', 'clat_ca_', 'clat_eng_', 'clat_lr_', 'clat_qt_', 'cuet_ug_lang_', 'cuet_ug_gat_', 'cuet_ug_phy_', 'cuet_ug_chem_', 'cuet_ug_bio_', 'cuet_ug_math_', 'cuet_ug_eco_', 'cuet_ug_bst_', 'cuet_ug_acc_', 'cuet_ug_his_', 'cuet_ug_pol_', 'cuet_ug_geo_', 'cuet_ug_psy_', 'cuet_ug_cs_', 'cpg_qa_', 'cpg_lr_', 'cpg_gk_', 'cpg_eng_', 'cpg_comp_'];
@@ -79,6 +79,19 @@ async function syncCloudAndLocalStorage(uid) {
       });
     }
 
+    if (userData.targetExamDate) {
+      localStorage.setItem('targetExamDate', userData.targetExamDate);
+    } else {
+      localStorage.removeItem('targetExamDate');
+    }
+    
+    if (userData.currentStreak) {
+      localStorage.setItem('currentStreak', userData.currentStreak.toString());
+    }
+    if (userData.lastStudyDate) {
+      localStorage.setItem('lastStudyDate', userData.lastStudyDate);
+    }
+
     let localChanged = false;
     let cloudPending = {};
 
@@ -97,8 +110,8 @@ async function syncCloudAndLocalStorage(uid) {
       const key = localStorage.key(i);
       if (isValidKey(key)) {
         const val = localStorage.getItem(key);
-        if (val === '1' && cloudProgress[key] !== '1') {
-          cloudPending[`progress.${key}`] = '1';
+        if (val !== null && val !== cloudProgress[key]) {
+          cloudPending[`progress.${key}`] = val;
         }
       }
     }
@@ -137,6 +150,52 @@ window.isAdmin = function(email) {
   if (!target) return false;
   return ADMIN_EMAILS.includes(target.trim().toLowerCase());
 };
+
+window.fetchLeaderboardStats = async function(myTotalDone) {
+  const cacheKey = 'leaderboard_stats';
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      const data = JSON.parse(cached);
+      if (Date.now() - data.timestamp < 2 * 60 * 60 * 1000) {
+        return calculatePercentileFromData(data.scores, myTotalDone);
+      }
+    } catch(e) {}
+  }
+
+  try {
+    const snap = await getDocs(collection(db, "users"));
+    const scores = [];
+    snap.forEach(doc => {
+      const d = doc.data();
+      if (d.progress) {
+        const count = Object.values(d.progress).filter(v => parseInt(v) > 0).length;
+        scores.push(count);
+      } else {
+        scores.push(0);
+      }
+    });
+    scores.sort((a,b) => a-b);
+    
+    localStorage.setItem(cacheKey, JSON.stringify({
+      timestamp: Date.now(),
+      scores: scores
+    }));
+    
+    return calculatePercentileFromData(scores, myTotalDone);
+  } catch(e) {
+    console.error("Failed to fetch leaderboard", e);
+    return null;
+  }
+}
+
+function calculatePercentileFromData(scores, myTotalDone) {
+  if (!scores || scores.length === 0) return 100;
+  const belowOrEqual = scores.filter(s => s <= myTotalDone).length;
+  let pct = Math.round((belowOrEqual / scores.length) * 100);
+  if (pct > 99 && myTotalDone < scores[scores.length - 1]) pct = 99; // Cap at 99th unless they are truly the absolute highest
+  return pct;
+}
 
 // Protect Routes & Watch Auth State
 onAuthStateChanged(auth, async (user) => {
@@ -234,6 +293,45 @@ window.addEventListener('message', (e) => {
       localStorage.removeItem(key);
     } else {
       localStorage.setItem(key, value);
+      
+      // Update streak
+      const todayStr = new Date().toDateString();
+      const lastStudyDate = localStorage.getItem('lastStudyDate');
+      
+      if (lastStudyDate !== todayStr) {
+        let currentStreak = parseInt(localStorage.getItem('currentStreak') || '0', 10);
+        
+        if (lastStudyDate) {
+          const lastDate = new Date(lastStudyDate);
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          
+          if (lastDate.toDateString() === yesterday.toDateString()) {
+            currentStreak += 1; // Studied yesterday, increment streak
+          } else {
+            currentStreak = 1; // Missed a day, reset streak
+          }
+        } else {
+          currentStreak = 1; // First time studying
+        }
+        
+        localStorage.setItem('currentStreak', currentStreak.toString());
+        localStorage.setItem('lastStudyDate', todayStr);
+        
+        // Sync streak to Firestore
+        if (currentUid) {
+          const userRef = doc(db, "users", currentUid);
+          updateDoc(userRef, {
+            currentStreak: currentStreak,
+            lastStudyDate: todayStr
+          }).catch(e => console.error('Error saving streak', e));
+        }
+
+        // Re-build nav to show updated streak
+        if (typeof buildNav === 'function') {
+          buildNav();
+        }
+      }
     }
     // Trigger storage event to initiate cloud sync
     window.dispatchEvent(new Event('storage'));

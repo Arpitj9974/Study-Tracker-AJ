@@ -66,7 +66,7 @@ function getTimeAgo(isoStr) {
 
 function countUserCompletedChapters(progressObj) {
   if (!progressObj || typeof progressObj !== 'object') return 0;
-  return Object.values(progressObj).filter(v => v === '1').length;
+  return Object.values(progressObj).filter(v => parseInt(v) > 0).length;
 }
 
 async function loadAdminData() {

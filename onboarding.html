@@ -61,16 +61,22 @@
           <input type="tel" id="ob-mobile" placeholder="Optional">
         </div>
       </div>
-      <div class="input-group">
-        <label>Current Status <span style="color:#EF4444">*</span></label>
-        <select id="ob-status" required>
-          <option value="" disabled selected>Select your status...</option>
-          <option value="School">School Student</option>
-          <option value="Graduation">Undergraduate / College</option>
-          <option value="Job">Working Professional (Job)</option>
-          <option value="Dropper">Dropper / Full-time Aspirant</option>
-          <option value="Other">Other</option>
-        </select>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+        <div class="input-group">
+          <label>Current Status <span style="color:#EF4444">*</span></label>
+          <select id="ob-status" required>
+            <option value="" disabled selected>Select your status...</option>
+            <option value="School">School Student</option>
+            <option value="Graduation">Undergraduate / College</option>
+            <option value="Job">Working Professional (Job)</option>
+            <option value="Dropper">Dropper / Full-time Aspirant</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Target Exam Date <span style="color:#EF4444">*</span></label>
+          <input type="date" id="ob-target-date" required>
+        </div>
       </div>
       
       <button type="submit" class="btn" id="ob-btn">Complete Profile & Continue</button>

@@ -702,6 +702,14 @@ const EXAM_CONFIG = {
   }
 };
 
+// Override all exam dates globally if the user has set a custom Target Exam Date
+const customTargetDate = localStorage.getItem('targetExamDate');
+if (customTargetDate && customTargetDate.trim() !== '') {
+  Object.keys(EXAM_CONFIG).forEach(key => {
+    EXAM_CONFIG[key].examDate = customTargetDate;
+  });
+}
+
 // Detect current exam context from URL
 function getCurrentExam() {
   const page = window.location.pathname.split('/').pop() || '';
@@ -847,12 +855,29 @@ function buildNav() {
   const isAdminUser = window.isAdmin && window.isAdmin(window.currentUserEmail);
   const adminBtnHTML = isAdminUser ? `<a href="admin.html" class="switch-exam-btn" style="background:rgba(245,158,11,0.15);color:#F59E0B;border-color:rgba(245,158,11,0.3);margin-top:6px;display:inline-block">🛡️ Admin Panel</a>` : ``;
 
+  const streak = parseInt(localStorage.getItem('currentStreak') || '0', 10);
+  const streakHTML = streak > 0 ? `<div style="font-size:12px; font-weight:700; color:#F97316; margin-top:4px; display:flex; align-items:center; gap:4px; background:rgba(249,115,22,0.15); padding:4px 8px; border-radius:6px; width:fit-content; border:1px solid rgba(249,115,22,0.3)">🔥 ${streak} Day Streak</div>` : '';
+
+  const remainingChapters = total - done;
+  const remainingWeeks = days / 7;
+  let pacingHtml = '';
+  if (customTargetDate && remainingChapters > 0 && days > 0) {
+    const chaptersPerWeek = Math.ceil(remainingChapters / remainingWeeks);
+    pacingHtml = `
+      <div style="background:var(--bg-elevated); border:1px solid var(--border-subtle); padding:10px; border-radius:10px; margin-bottom:16px; text-align:center">
+        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">🎯 Required Pacing</div>
+        <div style="font:700 14px 'DM Sans';color:#10B981">${chaptersPerWeek} chapters / week</div>
+      </div>
+    `;
+  }
+
   const sidebarHTML = `
   <div id="sidebar">
     <div class="sidebar-top">
       <div class="sidebar-brand">
         <h1>${config.icon} ${config.label}</h1>
         <p>${userSub}</p>
+        ${streakHTML}
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <a href="index.html?select=true" class="switch-exam-btn">🔄 Switch Exam</a>
@@ -864,6 +889,7 @@ function buildNav() {
       <div class="nav-links">${navLinks}</div>
       <div class="sidebar-bottom">
         <div class="sidebar-divider"></div>
+        ${pacingHtml}
         <div class="sidebar-progress-block">
           <span class="spb-label">${config.label} Progress</span>
           <div class="spb-bar-wrap">
@@ -875,6 +901,10 @@ function buildNav() {
           <span class="sc-label">${config.label} In</span>
           <div class="sc-days" style="color:${daysColor}">${days > 0 ? days : '🎯'}</div>
           <div class="sc-sub">${days > 0 ? 'days' : 'Exam Day!'}</div>
+        </div>
+        <div id="leaderboard-percentile" style="background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:10px; margin-top:16px; text-align:center; display:none">
+          <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">🏆 Your Rank</div>
+          <div style="font:700 16px 'DM Sans';color:#3B82F6">Top <span id="percentile-val">--</span>%</div>
         </div>
         <button id="logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:10px;border-radius:8px;font:600 12px/1 'DM Sans';cursor:pointer;margin-top:16px;transition:all 0.2s">Log Out</button>
       </div>
@@ -892,6 +922,7 @@ function buildNav() {
         <div class="mh-brand-info">
           <div class="mh-brand-title">${config.label}</div>
           <div class="mh-brand-sub">${userSub}</div>
+          ${streakHTML}
         </div>
       </div>
       <div class="mh-actions">
@@ -919,6 +950,19 @@ function buildNav() {
     mainElem.insertAdjacentHTML('afterbegin', mobileHeaderHTML);
   } else {
     document.body.insertAdjacentHTML('afterbegin', mobileHeaderHTML);
+  }
+
+  // Fetch and update percentile dynamically
+  if (window.fetchLeaderboardStats) {
+    window.fetchLeaderboardStats(done).then(pct => {
+      if (pct !== null) {
+        const pWidget = document.getElementById('leaderboard-percentile');
+        if (pWidget) {
+          pWidget.style.display = 'block';
+          document.getElementById('percentile-val').textContent = (100 - pct).toString();
+        }
+      }
+    });
   }
 
   // Mobile bottom tabs - slide system

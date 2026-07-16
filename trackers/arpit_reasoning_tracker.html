@@ -25,6 +25,8 @@
 .tr.done .ck{background:var(--accent-purple, #7F77DD);border-color:var(--accent-purple, #7F77DD);color:white}
 .tr.done.ssc .ck{background:var(--accent-green, #1D9E75);border-color:var(--accent-green, #1D9E75);color:white}
 .tr.done.opt .ck{background:var(--accent-amber, #D97706);border-color:var(--accent-amber, #D97706);color:white}
+.tr.revised .ck{background:#F59E0B !important;border-color:#F59E0B !important;color:white}
+.tr.mock .ck{background:#EC4899 !important;border-color:#EC4899 !important;color:white}
 .tnum{font-size:12px;font-weight:500;color:var(--text-tertiary, #5A6080);font-family:var(--font-mono, 'JetBrains Mono', monospace);min-width:20px;flex-shrink:0}
 .tn{font-size:13px;color:var(--text-primary, #F0F2FF);flex:1;line-height:1.4}
 .badge{font-size:9px;padding:2px 6px;border-radius:4px;flex-shrink:0;font-weight:600;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
@@ -212,16 +214,43 @@ async function loadAll(){
   renderAll();
 }
 function renderAll(){
-  document.querySelectorAll('.tr').forEach(function(r){var n=parseInt(r.getAttribute('data-n'));if(rS[n])r.classList.add('done');else r.classList.remove('done');});
+  document.querySelectorAll('.tr').forEach(function(r){
+    var n=parseInt(r.getAttribute('data-n'));
+    r.classList.remove('done', 'revised', 'mock');
+    var ck = r.querySelector('.ck');
+    if (ck) ck.textContent = '✓';
+    
+    if(qS[n] === 3) {
+      r.classList.add('done', 'mock');
+      if(ck) ck.textContent = '🏆';
+    } else if (qS[n] === 2) {
+      r.classList.add('done', 'revised');
+      if(ck) ck.textContent = '⭐';
+    } else if (qS[n] === 1 || qS[n] === true) {
+      r.classList.add('done');
+      if(ck) ck.textContent = '✓';
+    }
+  });
   upd();
 }
 async function tog(el){
   var n=parseInt(el.getAttribute('data-n'));
-  rS[n]=!rS[n];
-  if(rS[n])el.classList.add('done');else el.classList.remove('done');
+  if (!qS[n] || qS[n] === true) qS[n] = 1;
+  else if (qS[n] === 1) qS[n] = 2;
+  else if (qS[n] === 2) qS[n] = 3;
+  else qS[n] = 0;
+  
   var k='rs3_'+n;
-  try{if(rS[n])await window.storage.set(k,'1');else await window.storage.delete(k);}catch(e){}
-  upd();
+  try{
+    if(qS[n] > 0) await window.storage.set(k, qS[n].toString());
+    else await window.storage.delete(k);
+  }catch(e){}
+  
+  if (window.parent && window.parent.postMessage) {
+    window.parent.postMessage({type:'storageChange', key: k, value: qS[n] > 0 ? qS[n].toString() : null}, '*');
+  }
+  
+  renderAll();
 }
 function upd(){
   var tot = isNQT ? 23 : 44;

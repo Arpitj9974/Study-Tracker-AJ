@@ -10,6 +10,7 @@ const obName = document.getElementById('ob-name');
 const obAge = document.getElementById('ob-age');
 const obMobile = document.getElementById('ob-mobile');
 const obStatus = document.getElementById('ob-status');
+const obTargetDate = document.getElementById('ob-target-date');
 const obBtn = document.getElementById('ob-btn');
 const obError = document.getElementById('ob-error');
 
@@ -62,6 +63,7 @@ obForm.addEventListener('submit', async (e) => {
     age: parseInt(obAge.value, 10),
     mobile: obMobile.value.trim() || null,
     status: obStatus.value,
+    targetExamDate: obTargetDate.value,
     onboardingComplete: true
   };
   
