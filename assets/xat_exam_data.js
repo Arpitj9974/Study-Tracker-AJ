@@ -275,6 +275,11 @@ const XAT_PRIORITY_DATA = {
  * QA overlap — different marking, different strategy, different progress.
  * ========================================================================= */
 
+if (typeof window !== "undefined") {
+  window.EXAM_CONFIG_XAT = EXAM_CONFIG_XAT;
+  window.XAT_PRIORITY_DATA = XAT_PRIORITY_DATA;
+}
+
 if (typeof module !== "undefined" && module.exports) {
   module.exports = { EXAM_CONFIG_XAT, XAT_PRIORITY_DATA };
 }

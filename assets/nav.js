@@ -932,6 +932,13 @@ function renderMiniStats(subj, containerId) {
   }
 }
 
+if (typeof window !== 'undefined') {
+  window.EXAM_CONFIG = EXAM_CONFIG;
+  window.KEYS = KEYS;
+  window.readExamStats = readExamStats;
+  window.getCurrentExam = getCurrentExam;
+}
+
 document.addEventListener('DOMContentLoaded', buildNav);
 
 window.addEventListener('cloudDataSynced', () => {
