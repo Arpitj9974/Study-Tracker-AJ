@@ -2,24 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SSC Subject Tracker — Arpit's Exam Hub</title>
+  <title>CUET UG Subject Tracker — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="assets/ssc_chsl_exam_data.js"></script>
-  <script src="assets/ssc_mts_exam_data.js"></script>
+  <script src="assets/cuet_ug_exam_data.js"></script>
   <style>
     .cat-group { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:12px; margin-bottom:20px; overflow:hidden; }
     .cat-header { background:var(--bg-surface); padding:14px 20px; font:700 15px/1.2 'DM Sans'; color:var(--text-primary); border-bottom:1px solid var(--border-medium); display:flex; align-items:center; justify-content:space-between; }
-    .ch-item { padding:14px 20px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; gap:16px; transition:background .15s; }
+    .ch-item { padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; gap:16px; transition:background .15s; }
     .ch-item:last-child { border-bottom:none; }
     .ch-item:hover { background:rgba(255,255,255,0.02); }
-    .ch-title { font:500 14px/1.4 'DM Sans'; color:var(--text-primary); }
+    .ch-title { font:600 15px/1.4 'DM Sans'; color:var(--text-primary); }
     .ch-meta { display:flex; align-items:center; gap:10px; font:400 12px/1 'JetBrains Mono'; color:var(--text-tertiary); margin-top:4px; }
     .p-badge { font:600 10px/1 'JetBrains Mono'; text-transform:uppercase; padding:3px 8px; border-radius:12px; }
     .p-VERY-HIGH { background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid rgba(239,68,68,0.3); }
     .p-HIGH { background:rgba(245,158,11,0.15); color:#F59E0B; border:1px solid rgba(245,158,11,0.3); }
     .p-MEDIUM { background:rgba(59,91,219,0.15); color:#3B5BDB; border:1px solid rgba(59,91,219,0.3); }
     .p-LOW { background:rgba(107,114,128,0.15); color:#9CA3AF; border:1px solid rgba(107,114,128,0.3); }
-    .check-btn { width:24px; height:24px; border-radius:6px; border:2px solid var(--border-medium); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+    .check-btn { width:24px; height:24px; border-radius:6px; border:2px solid var(--border-medium); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0; }
     .check-btn.checked { background:var(--accent-green, #10B981); border-color:var(--accent-green, #10B981); color:white; }
   </style>
 </head>
@@ -33,14 +32,14 @@
     <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--bg-elevated);padding:16px 20px;border-radius:12px;border:1px solid var(--border-medium)">
       <div>
         <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);display:flex;align-items:center;gap:10px">
-          <span id="subj-icon">📚</span> <span id="subj-name">Loading Subject...</span>
+          <span id="subj-icon">🎓</span> <span id="subj-name">Loading Subject...</span>
         </div>
         <div style="font:400 13px/1.4 'DM Sans';color:var(--text-secondary);margin-top:4px" id="subj-exam-label">
-          SSC Exam Prep
+          CUET UG 2027 Subject Tracker
         </div>
       </div>
-      <div style="display:flex;gap:8px" id="ssc-exam-tabs">
-        <a href="dashboard-ssc.html" class="btn-tab" id="dash-link">📊 SSC Dashboard</a>
+      <div style="display:flex;gap:8px">
+        <a href="dashboard-cuet-ug.html" class="btn-tab">📊 CUET UG Dashboard</a>
       </div>
     </div>
 
@@ -48,10 +47,10 @@
     <div style="background:var(--bg-elevated);border:1px solid var(--border-medium);border-radius:12px;padding:20px;margin-bottom:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <div style="font:600 13px/1 'JetBrains Mono';color:var(--text-secondary)" id="subj-progress-text">0 / 0 completed</div>
-        <div style="font:700 16px/1 'JetBrains Mono';color:var(--accent-purple)" id="subj-pct-text">0%</div>
+        <div style="font:700 16px/1 'JetBrains Mono';color:#3B82F6" id="subj-pct-text">0%</div>
       </div>
       <div style="width:100%;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden">
-        <div id="subj-bar-fill" style="width:0%;height:100%;background:var(--accent-purple);transition:width .3s ease"></div>
+        <div id="subj-bar-fill" style="width:0%;height:100%;background:#3B82F6;transition:width .3s ease"></div>
       </div>
     </div>
 
@@ -70,15 +69,12 @@
 <script>
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const examType = params.get('exam') === 'mts' ? 'mts' : 'chsl';
-  const subjKey  = params.get('subj');
+  const subjKey = params.get('subj');
 
-  const configData = examType === 'mts' ? EXAM_CONFIG_MTS : EXAM_CONFIG_CHSL;
-  const priorityData = examType === 'mts' ? MTS_PRIORITY_DATA : CHSL_PRIORITY_DATA;
+  const configData = EXAM_CONFIG_CUETUG;
+  const priorityData = CUETUG_PRIORITY_DATA;
 
-  // Set exam context in localStorage
-  localStorage.setItem('selectedExam', examType === 'mts' ? 'ssc_mts' : 'ssc_chsl');
-  document.getElementById('dash-link').href = `dashboard-ssc.html?exam=${examType}`;
+  localStorage.setItem('selectedExam', 'cuet_ug');
 
   const subject = configData.subjects.find(s => s.key === subjKey) || configData.subjects[0];
 
@@ -94,7 +90,7 @@
   // Group by category
   const grouped = {};
   chapters.forEach(ch => {
-    const cat = ch.category || 'General Chapters';
+    const cat = ch.category || 'General Modules';
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push(ch);
   });
@@ -115,12 +111,12 @@
 
         return `
           <div class="ch-item">
-            <div style="flex:1">
+            <div>
               <div class="ch-title">${ch.name}</div>
               <div class="ch-meta">
                 <span class="p-badge p-${ch.priority}">${ch.priority}</span>
                 <span>⏱️ ${ch.days}</span>
-                <span>📊 ${ch.prelimsWeight}</span>
+                <span>📊 ${ch.sectionWeight || ch.prelimsWeight || 'NTA Syllabus'}</span>
               </div>
             </div>
             <button class="check-btn${isDone ? ' checked' : ''}" onclick="toggleChapter('${ch.key}')">
@@ -157,7 +153,6 @@
     } else {
       localStorage.setItem(key, '1');
     }
-    window.dispatchEvent(new CustomEvent('storageChange', { detail: { key, value: localStorage.getItem(key) } }));
     window.dispatchEvent(new Event('storage'));
     renderChecklist();
   };

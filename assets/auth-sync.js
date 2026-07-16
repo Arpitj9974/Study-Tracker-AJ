@@ -3,7 +3,7 @@ import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 let currentUid = null;
-const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_', 'cds_', 'cafnd_', 'cain_', 'cafin_', 'ntpc_ga_', 'ntpc_reas_', 'ntpc_math_', 'rrbd_reas_', 'rrbd_sci_', 'rrbd_math_', 'rrbd_ga_', 'chsl_eng_', 'chsl_reason_', 'chsl_math_', 'chsl_ga_', 'chsl_comp_', 'mts_ga_', 'mts_eng_', 'mts_math_', 'mts_reason_', 'ugcnet_ta_', 'ugcnet_ra_', 'ugcnet_lr_', 'ugcnet_di_', 'ugcnet_com_', 'ugcnet_rc_', 'ugcnet_ict_', 'ugcnet_env_', 'ugcnet_he_', 'iclk_qa_', 'iclk_ra_', 'iclk_gfa_', 'iclk_eng_', 'iclk_comp_', 'nda_gat_', 'nda_ma_', 'xat_dm_', 'xat_valr_', 'xat_qadi_', 'xat_gk_', 'clat_legal_', 'clat_ca_', 'clat_eng_', 'clat_lr_', 'clat_qt_'];
+const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_', 'cds_', 'cafnd_', 'cain_', 'cafin_', 'ntpc_ga_', 'ntpc_reas_', 'ntpc_math_', 'rrbd_reas_', 'rrbd_sci_', 'rrbd_math_', 'rrbd_ga_', 'chsl_eng_', 'chsl_reason_', 'chsl_math_', 'chsl_ga_', 'chsl_comp_', 'mts_ga_', 'mts_eng_', 'mts_math_', 'mts_reason_', 'ugcnet_ta_', 'ugcnet_ra_', 'ugcnet_lr_', 'ugcnet_di_', 'ugcnet_com_', 'ugcnet_rc_', 'ugcnet_ict_', 'ugcnet_env_', 'ugcnet_he_', 'iclk_qa_', 'iclk_ra_', 'iclk_gfa_', 'iclk_eng_', 'iclk_comp_', 'nda_gat_', 'nda_ma_', 'xat_dm_', 'xat_valr_', 'xat_qadi_', 'xat_gk_', 'clat_legal_', 'clat_ca_', 'clat_eng_', 'clat_lr_', 'clat_qt_', 'cuet_ug_lang_', 'cuet_ug_gat_', 'cuet_ug_phy_', 'cuet_ug_chem_', 'cuet_ug_bio_', 'cuet_ug_math_', 'cuet_ug_eco_', 'cuet_ug_bst_', 'cuet_ug_acc_', 'cuet_ug_his_', 'cuet_ug_pol_', 'cuet_ug_geo_', 'cuet_ug_psy_', 'cuet_ug_cs_', 'cpg_qa_', 'cpg_lr_', 'cpg_gk_', 'cpg_eng_', 'cpg_comp_'];
 
 function isValidKey(key) {
   return key && validPrefixes.some(p => key.startsWith(p));
@@ -27,6 +27,8 @@ function getDashboardUrl(examKey) {
     cmat: 'dashboard-cmat.html',
     xat: 'dashboard-xat.html',
     clat_ug: 'dashboard-clat.html',
+    cuet_ug: 'dashboard-cuet-ug.html',
+    cuet_pg_general: 'dashboard-cuet-pg.html',
     cds: 'dashboard-cds.html',
     ca_foundation: 'dashboard-ca.html?level=foundation',
     ca_inter: 'dashboard-ca.html?level=inter',

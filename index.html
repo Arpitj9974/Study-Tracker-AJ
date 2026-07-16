@@ -12,6 +12,8 @@
   <script src="assets/nda_exam_data.js"></script>
   <script src="assets/xat_exam_data.js"></script>
   <script src="assets/clat_ug_exam_data.js"></script>
+  <script src="assets/cuet_ug_exam_data.js"></script>
+  <script src="assets/cuet_pg_general_exam_data.js"></script>
   <style>
     body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
     .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
@@ -88,7 +90,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=16"></script>
+  <script src="assets/nav.js?v=17"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -218,6 +220,18 @@
     const clatDone = Object.values(clatStats).reduce((s, v) => s + v.done, 0);
     const clatPct = Math.round((clatDone / EXAM_CONFIG.clat_ug.totalChapters) * 100);
     const clatDays = Math.ceil((new Date(EXAM_CONFIG.clat_ug.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // CUET UG stats
+    const cuetugStats = readExamStats('cuet_ug');
+    const cuetugDone = Object.values(cuetugStats).reduce((s, v) => s + v.done, 0);
+    const cuetugPct = Math.round((cuetugDone / EXAM_CONFIG.cuet_ug.totalChapters) * 100);
+    const cuetugDays = Math.ceil((new Date(EXAM_CONFIG.cuet_ug.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // CUET PG General stats
+    const cuetpgStats = readExamStats('cuet_pg_general');
+    const cuetpgDone = Object.values(cuetpgStats).reduce((s, v) => s + v.done, 0);
+    const cuetpgPct = Math.round((cuetpgDone / EXAM_CONFIG.cuet_pg_general.totalChapters) * 100);
+    const cuetpgDays = Math.ceil((new Date(EXAM_CONFIG.cuet_pg_general.examDate + 'T00:00:00') - new Date()) / 86400000);
 
     grid.innerHTML = `
       <!-- Corporate Placement & Aptitude -->
@@ -499,6 +513,37 @@
         <button class="ec-enter" style="background:#7B241C">Start CLAT Prep →</button>
       </a>
 
+      <!-- Central & State University Entrance (CUET) Section Header -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#3B82F6;display:flex;align-items:center;gap:10px">
+        <span>🎓</span> Central & State University Entrance (CUET UG & PG)
+      </div>
+
+      <a href="dashboard-cuet-ug.html" class="exam-card" style="--card-glow:rgba(59,130,246,0.12);--card-border:rgba(59,130,246,0.4);border-top-color:#3B82F6" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_ug');else localStorage.setItem('selectedExam','cuet_ug')">
+        <span class="ec-icon">🎓</span>
+        <div class="ec-name">CUET UG</div>
+        <div class="ec-desc">Languages, General Aptitude & 23 NCERT Domain Subjects</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B82F6">${cuetugPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B82F6">${cuetugDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cuet_ug.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cuetugDays < 30 ? '#EF4444' : '#3B82F6'}">${cuetugDays > 0 ? cuetugDays : '🎯'}</div><div class="ec-stat-lbl">${cuetugDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(59,130,246,0.15);color:#3B82F6;border:1px solid rgba(59,130,246,0.3)">14 Subject Modules · 143 Chapters</span>
+        <button class="ec-enter" style="background:#3B82F6">Start CUET UG Prep →</button>
+      </a>
+
+      <a href="dashboard-cuet-pg.html" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_pg_general');else localStorage.setItem('selectedExam','cuet_pg_general')">
+        <span class="ec-icon">🏛️</span>
+        <div class="ec-name">CUET PG (COQP11)</div>
+        <div class="ec-desc">General Paper for MBA, DU LLB, MA Social Work & Policy</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cuetpgPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cuetpgDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cuet_pg_general.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cuetpgDays < 30 ? '#EF4444' : '#059669'}">${cuetpgDays > 0 ? cuetpgDays : '🎯'}</div><div class="ec-stat-lbl">${cuetpgDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(5,150,105,0.15);color:#059669;border:1px solid rgba(5,150,105,0.3)">5 Sections · 56 Chapters</span>
+        <button class="ec-enter" style="background:#059669">Start CUET PG Prep →</button>
+      </a>
+
       <!-- Chartered Accountancy (CA) Section Header -->
       <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#C0392B;display:flex;align-items:center;gap:10px">
         <span>🎓</span> Chartered Accountancy (CA — ICAI)
@@ -544,6 +589,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=16"></script>
+  <script type="module" src="assets/auth-sync.js?v=17"></script>
 </body>
 </html>

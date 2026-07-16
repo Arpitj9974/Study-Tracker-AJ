@@ -125,6 +125,27 @@ const SUBJECT_COLORS = {
   clat_eng:   { primary: '#117A65' },
   clat_lr:    { primary: '#6C3483' },
   clat_qt:    { primary: '#B9770E' },
+  // CUET UG colors
+  cuet_ug_lang: { primary: '#3B82F6' },
+  cuet_ug_gat:  { primary: '#8B5CF6' },
+  cuet_ug_phy:  { primary: '#F59E0B' },
+  cuet_ug_chem: { primary: '#10B981' },
+  cuet_ug_bio:  { primary: '#06B6D4' },
+  cuet_ug_math: { primary: '#EF4444' },
+  cuet_ug_eco:  { primary: '#F97316' },
+  cuet_ug_bst:  { primary: '#6366F1' },
+  cuet_ug_acc:  { primary: '#EC4899' },
+  cuet_ug_his:  { primary: '#92400E' },
+  cuet_ug_pol:  { primary: '#1D4ED8' },
+  cuet_ug_geo:  { primary: '#15803D' },
+  cuet_ug_psy:  { primary: '#7C3AED' },
+  cuet_ug_cs:   { primary: '#0369A1' },
+  // CUET PG General colors
+  cpg_qa:   { primary: '#059669' },
+  cpg_lr:   { primary: '#DC2626' },
+  cpg_gk:   { primary: '#0891B2' },
+  cpg_eng:  { primary: '#4F46E5' },
+  cpg_comp: { primary: '#7C3AED' },
 };
 
 const KEYS = {
@@ -245,6 +266,27 @@ const KEYS = {
   clat_eng:   { prefix: 'clat_eng_',   total: 8,  p1: 8  },
   clat_lr:    { prefix: 'clat_lr_',    total: 10, p1: 10 },
   clat_qt:    { prefix: 'clat_qt_',    total: 10, p1: 10 },
+  // CUET UG subjects
+  cuet_ug_lang: { prefix: 'cuet_ug_lang_', total: 5,  p1: 5  },
+  cuet_ug_gat:  { prefix: 'cuet_ug_gat_',  total: 6,  p1: 6  },
+  cuet_ug_phy:  { prefix: 'cuet_ug_phy_',  total: 13, p1: 13 },
+  cuet_ug_chem: { prefix: 'cuet_ug_chem_', total: 16, p1: 16 },
+  cuet_ug_bio:  { prefix: 'cuet_ug_bio_',  total: 10, p1: 10 },
+  cuet_ug_math: { prefix: 'cuet_ug_math_', total: 13, p1: 13 },
+  cuet_ug_eco:  { prefix: 'cuet_ug_eco_',  total: 10, p1: 10 },
+  cuet_ug_bst:  { prefix: 'cuet_ug_bst_',  total: 8,  p1: 8  },
+  cuet_ug_acc:  { prefix: 'cuet_ug_acc_',  total: 8,  p1: 8  },
+  cuet_ug_his:  { prefix: 'cuet_ug_his_',  total: 15, p1: 15 },
+  cuet_ug_pol:  { prefix: 'cuet_ug_pol_',  total: 10, p1: 10 },
+  cuet_ug_geo:  { prefix: 'cuet_ug_geo_',  total: 12, p1: 12 },
+  cuet_ug_psy:  { prefix: 'cuet_ug_psy_',  total: 8,  p1: 8  },
+  cuet_ug_cs:   { prefix: 'cuet_ug_cs_',   total: 9,  p1: 9  },
+  // CUET PG General subjects
+  cpg_qa:   { prefix: 'cpg_qa_',   total: 14, p1: 14 },
+  cpg_lr:   { prefix: 'cpg_lr_',   total: 12, p1: 12 },
+  cpg_gk:   { prefix: 'cpg_gk_',   total: 13, p1: 13 },
+  cpg_eng:  { prefix: 'cpg_eng_',  total: 10, p1: 10 },
+  cpg_comp: { prefix: 'cpg_comp_', total: 7,  p1: 7  },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -614,6 +656,49 @@ const EXAM_CONFIG = {
       { page: 'tracker-clat.html?subj=clat_lr',    href: 'tracker-clat.html?subj=clat_lr',    icon: '🧩', label: 'Logical Reasoning' },
       { page: 'tracker-clat.html?subj=clat_qt',    href: 'tracker-clat.html?subj=clat_qt',    icon: '🔢', label: 'Quantitative Techniques' }
     ]
+  },
+  cuet_ug: {
+    label: 'CUET UG',
+    color: '#3B82F6',
+    icon: '🎓',
+    subjects: ['cuet_ug_lang', 'cuet_ug_gat', 'cuet_ug_phy', 'cuet_ug_chem', 'cuet_ug_bio', 'cuet_ug_math', 'cuet_ug_eco', 'cuet_ug_bst', 'cuet_ug_acc', 'cuet_ug_his', 'cuet_ug_pol', 'cuet_ug_geo', 'cuet_ug_psy', 'cuet_ug_cs'],
+    countMode: 'all',
+    examDate: '2027-05-15',
+    totalChapters: 143,
+    links: [
+      { page: 'dashboard-cuet-ug.html', href: 'dashboard-cuet-ug.html', icon: '📊', label: 'CUET UG Dashboard' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_lang', href: 'tracker-cuet-ug.html?subj=cuet_ug_lang', icon: '📝', label: 'Language (English/Hindi)' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_gat',  href: 'tracker-cuet-ug.html?subj=cuet_ug_gat',  icon: '🧠', label: 'General Aptitude (GAT)' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_phy',  href: 'tracker-cuet-ug.html?subj=cuet_ug_phy',  icon: '⚡', label: 'Physics' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_chem', href: 'tracker-cuet-ug.html?subj=cuet_ug_chem', icon: '🧪', label: 'Chemistry' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_bio',  href: 'tracker-cuet-ug.html?subj=cuet_ug_bio',  icon: '🧬', label: 'Biology' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_math', href: 'tracker-cuet-ug.html?subj=cuet_ug_math', icon: '📐', label: 'Mathematics' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_eco',  href: 'tracker-cuet-ug.html?subj=cuet_ug_eco',  icon: '📊', label: 'Economics' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_bst',  href: 'tracker-cuet-ug.html?subj=cuet_ug_bst',  icon: '💼', label: 'Business Studies' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_acc',  href: 'tracker-cuet-ug.html?subj=cuet_ug_acc',  icon: '🧾', label: 'Accountancy' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_his',  href: 'tracker-cuet-ug.html?subj=cuet_ug_his',  icon: '🏛️', label: 'History' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_pol',  href: 'tracker-cuet-ug.html?subj=cuet_ug_pol',  icon: '⚖️', label: 'Political Science' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_geo',  href: 'tracker-cuet-ug.html?subj=cuet_ug_geo',  icon: '🗺️', label: 'Geography' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_psy',  href: 'tracker-cuet-ug.html?subj=cuet_ug_psy',  icon: '🧩', label: 'Psychology' },
+      { page: 'tracker-cuet-ug.html?subj=cuet_ug_cs',   href: 'tracker-cuet-ug.html?subj=cuet_ug_cs',   icon: '💻', label: 'Computer Science' }
+    ]
+  },
+  cuet_pg_general: {
+    label: 'CUET PG General',
+    color: '#059669',
+    icon: '🏛️',
+    subjects: ['cpg_qa', 'cpg_lr', 'cpg_gk', 'cpg_eng', 'cpg_comp'],
+    countMode: 'all',
+    examDate: '2027-03-20',
+    totalChapters: 56,
+    links: [
+      { page: 'dashboard-cuet-pg.html', href: 'dashboard-cuet-pg.html', icon: '📊', label: 'CUET PG Dashboard' },
+      { page: 'tracker-cuet-pg.html?subj=cpg_qa',   href: 'tracker-cuet-pg.html?subj=cpg_qa',   icon: '🔢', label: 'Quantitative Aptitude' },
+      { page: 'tracker-cuet-pg.html?subj=cpg_lr',   href: 'tracker-cuet-pg.html?subj=cpg_lr',   icon: '🧠', label: 'Logical Reasoning' },
+      { page: 'tracker-cuet-pg.html?subj=cpg_gk',   href: 'tracker-cuet-pg.html?subj=cpg_gk',   icon: '🌐', label: 'GK & Current Affairs' },
+      { page: 'tracker-cuet-pg.html?subj=cpg_eng',  href: 'tracker-cuet-pg.html?subj=cpg_eng',  icon: '📚', label: 'English Comprehension' },
+      { page: 'tracker-cuet-pg.html?subj=cpg_comp', href: 'tracker-cuet-pg.html?subj=cpg_comp', icon: '💻', label: 'Computer Basics' }
+    ]
   }
 };
 
@@ -632,6 +717,8 @@ function getCurrentExam() {
   if (page.includes('nda')) return 'nda';
   if (page.includes('xat')) return 'xat';
   if (page.includes('clat')) return 'clat_ug';
+  if (page.includes('cuet-pg') || page.includes('cuet_pg')) return 'cuet_pg_general';
+  if (page.includes('cuet')) return 'cuet_ug';
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) {
     const params = new URLSearchParams(window.location.search);
