@@ -122,8 +122,11 @@ async function syncCloudAndLocalStorage(uid) {
     // Always notify UI to re-render with latest synced data after cloud sync completes
     window.dispatchEvent(new CustomEvent('cloudDataSynced'));
     window.dispatchEvent(new Event('storage'));
+    
+    return userData;
   } catch (err) {
     console.error("Cloud hydration error:", err);
+    return null;
   }
 }
 
@@ -160,11 +163,22 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     // Automatically pull & sync cloud progress on login / session restore
-    await syncCloudAndLocalStorage(user.uid);
+    const userData = await syncCloudAndLocalStorage(user.uid);
     
     const page = window.location.pathname.split('/').pop() || 'index.html';
     const params = new URLSearchParams(window.location.search);
     const isSelectMode = params.get('select') === 'true';
+
+    // -------------------------------------------------------------
+    // ONBOARDING GUARD
+    // -------------------------------------------------------------
+    if (page !== 'onboarding.html' && page !== 'login.html') {
+      const isComplete = userData && userData.onboardingComplete;
+      if (!isComplete) {
+        window.location.href = 'onboarding.html';
+        return;
+      }
+    }
 
     // Route Protection for Admin Panel
     if (page === 'admin.html') {

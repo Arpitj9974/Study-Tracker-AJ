@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Complete Profile — Arpit's Exam Hub</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+    .auth-card { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:var(--radius-lg); padding:40px 32px; width:100%; max-width:480px; box-shadow:0 12px 40px rgba(0,0,0,0.5); text-align:center; }
+    .brand-icon { font-size:40px; margin-bottom:12px; }
+    .brand-title { font:700 24px/1.2 'DM Sans'; color:var(--text-primary); margin-bottom:6px; }
+    .brand-sub { font:500 12px/1.5 'JetBrains Mono'; color:var(--accent-purple); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:32px; }
+    
+    .auth-form { display:flex; flex-direction:column; gap:16px; text-align:left; }
+    .input-group { display:flex; flex-direction:column; gap:6px; }
+    .input-group label { font:500 12px/1 'DM Sans'; color:var(--text-secondary); }
+    .input-group input, .input-group select { background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:8px; padding:12px 16px; font:400 14px/1 'DM Sans'; color:var(--text-primary); outline:none; transition:border-color 0.2s; }
+    .input-group input:focus, .input-group select:focus { border-color:var(--accent-purple); }
+    .input-group input:disabled { opacity:0.6; cursor:not-allowed; }
+    
+    .btn { background:var(--accent-purple); color:white; border:none; border-radius:8px; padding:14px; font:600 14px/1 'DM Sans'; cursor:pointer; transition:background 0.2s; margin-top:8px; }
+    .btn:hover { background:#6A62C5; }
+    .btn:disabled { opacity:0.6; cursor:not-allowed; }
+    
+    .error-msg { color:var(--accent-red,#EF4444); font:500 12px/1.4 'DM Sans'; text-align:center; min-height:16px; margin-top:10px; }
+    
+    /* Loading overlay */
+    .loading-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:var(--bg-dark); z-index:100; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--text-primary); }
+    .spinner { border:4px solid rgba(255,255,255,0.1); border-left-color:var(--accent-purple); border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite; margin-bottom:16px; }
+    @keyframes spin { 100% { transform:rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font:500 14px 'DM Sans'">Verifying Session...</div>
+  </div>
+
+  <div class="auth-card" id="onboarding-view" style="display:none">
+    <div class="brand-icon">👋</div>
+    <div class="brand-title">Welcome to the Hub!</div>
+    <div class="brand-sub">Let's set up your profile</div>
+    
+    <form class="auth-form" id="onboarding-form">
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" id="ob-email" disabled>
+      </div>
+      <div class="input-group">
+        <label>Full Name <span style="color:#EF4444">*</span></label>
+        <input type="text" id="ob-name" required placeholder="John Doe">
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+        <div class="input-group">
+          <label>Age <span style="color:#EF4444">*</span></label>
+          <input type="number" id="ob-age" required min="10" max="99" placeholder="e.g. 21">
+        </div>
+        <div class="input-group">
+          <label>Mobile Number</label>
+          <input type="tel" id="ob-mobile" placeholder="Optional">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Current Status <span style="color:#EF4444">*</span></label>
+        <select id="ob-status" required>
+          <option value="" disabled selected>Select your status...</option>
+          <option value="School">School Student</option>
+          <option value="Graduation">Undergraduate / College</option>
+          <option value="Job">Working Professional (Job)</option>
+          <option value="Dropper">Dropper / Full-time Aspirant</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn" id="ob-btn">Complete Profile & Continue</button>
+      <div class="error-msg" id="ob-error"></div>
+    </form>
+  </div>
+
+  <script type="module" src="assets/onboarding.js"></script>
+</body>
+</html>

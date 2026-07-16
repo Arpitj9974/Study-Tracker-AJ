@@ -99,6 +99,10 @@ async function loadAdminData() {
       cachedUsers.push({
         uid: docSnap.id,
         email: data.email || 'Anonymous Student',
+        name: data.name || 'Not Provided',
+        age: data.age || '--',
+        mobile: data.mobile || 'Not Provided',
+        status: data.status || 'Unknown',
         createdAt: data.createdAt || null,
         lastLogin: data.lastLogin || null,
         lastActive: data.lastActive || data.lastLogin || null,
@@ -176,7 +180,6 @@ function renderMetrics() {
   const dayMs = 86400000;
   let active24h = 0;
   let active7d = 0;
-  let totalChapters = 0;
   const examCounts = {};
 
   cachedUsers.forEach(u => {
@@ -184,16 +187,12 @@ function renderMetrics() {
     if (now - actTime <= dayMs) active24h++;
     if (now - actTime <= 7 * dayMs) active7d++;
 
-    const doneCount = countUserCompletedChapters(u.progress);
-    totalChapters += doneCount;
-
     const ex = u.selectedExam || 'nqt';
     examCounts[ex] = (examCounts[ex] || 0) + 1;
   });
 
   document.getElementById('kpi-active-users').textContent = active24h;
   document.getElementById('kpi-active-sub').textContent = `${active7d} active in last 7 days`;
-  document.getElementById('kpi-total-done').textContent = totalChapters.toLocaleString();
 
   // Find top choice exam
   let topExam = 'N/A';
@@ -278,7 +277,16 @@ function renderUserTable() {
         <td>
           <div class="user-email">
             <span class="status-dot ${dotClass}" title="${dotClass === 'dot-active' ? 'Active in last 24h' : (dotClass === 'dot-recent' ? 'Active in last 7 days' : 'Inactive')}"></span>
-            <span>${u.email}</span>
+            <div style="display:flex; flex-direction:column;">
+              <span style="font-weight:600;color:var(--text-primary);margin-bottom:2px">${u.name}</span>
+              <span style="font-size:11px;color:var(--text-secondary)">${u.email}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="display:flex; flex-direction:column;">
+            <span style="color:var(--text-primary);margin-bottom:2px">${u.status}</span>
+            <span style="font-size:11px;color:var(--text-tertiary)">Age: ${u.age}</span>
           </div>
         </td>
         <td>
@@ -288,7 +296,6 @@ function renderUserTable() {
           <span style="font:600 14px 'JetBrains Mono';color:#10B981">${doneCount}</span> chapters
         </td>
         <td>${getTimeAgo(u.lastActive)}</td>
-        <td>${formatDate(u.createdAt)}</td>
         <td><span style="font:600 13px 'JetBrains Mono'">${u.loginCount}</span></td>
         <td>
           <button class="btn-inspect" data-uid="${u.uid}">🔍 Inspect</button>
@@ -310,8 +317,14 @@ function openUserModal(uid) {
   const u = cachedUsers.find(x => x.uid === uid);
   if (!u) return;
 
+  document.getElementById('modal-user-name').textContent = u.name || 'Not Provided';
   document.getElementById('modal-user-email').textContent = u.email;
   document.getElementById('modal-user-uid').textContent = `UID: ${u.uid}`;
+  
+  document.getElementById('modal-status').textContent = u.status || 'Unknown';
+  document.getElementById('modal-age').textContent = u.age || '--';
+  document.getElementById('modal-mobile').textContent = u.mobile || 'Not Provided';
+  
   document.getElementById('modal-created').textContent = formatDate(u.createdAt);
   document.getElementById('modal-last-login').textContent = formatDate(u.lastLogin);
   document.getElementById('modal-logins').textContent = u.loginCount;

@@ -116,8 +116,7 @@
       </div>
     </div>
 
-    <!-- KPI Cards Grid -->
-    <div class="kpi-grid">
+    <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr);">
       <div class="kpi-card">
         <div class="kpi-icon">👥</div>
         <div class="kpi-label">Total Users</div>
@@ -129,12 +128,6 @@
         <div class="kpi-label">Active Users</div>
         <div class="kpi-val" id="kpi-active-users">--</div>
         <div class="kpi-sub" id="kpi-active-sub">Last 24h & 7d active</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">📚</div>
-        <div class="kpi-label">Chapters Finished</div>
-        <div class="kpi-val" id="kpi-total-done">--</div>
-        <div class="kpi-sub">Cumulative across all users</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-icon">🏆</div>
@@ -163,11 +156,11 @@
       <table class="admin-table">
         <thead>
           <tr>
-            <th>User Email</th>
+            <th>User Info (Name & Email)</th>
+            <th>Demographics (Status / Age)</th>
             <th>Selected Exam</th>
             <th>Chapters Done</th>
             <th>Last Active</th>
-            <th>Registered</th>
             <th>Logins</th>
             <th>Actions</th>
           </tr>
@@ -187,10 +180,15 @@
 <div class="modal-overlay" id="user-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="window.closeUserModal()">✕</button>
-    <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);margin-bottom:6px" id="modal-user-email">User Details</div>
+    <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);margin-bottom:2px" id="modal-user-name">User Details</div>
+    <div style="font:400 13px/1.4 'DM Sans';color:var(--text-secondary);margin-bottom:6px" id="modal-user-email">email@example.com</div>
     <div style="font:400 12px/1 'JetBrains Mono';color:var(--text-tertiary);margin-bottom:20px" id="modal-user-uid">UID: --</div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px;background:rgba(0,0,0,0.2);padding:16px;border-radius:10px;border:1px solid var(--border-medium)">
+      <div><div style="font-size:11px;color:var(--text-tertiary)">Current Status</div><div style="font:600 14px 'DM Sans';color:var(--text-primary)" id="modal-status">--</div></div>
+      <div><div style="font-size:11px;color:var(--text-tertiary)">Age</div><div style="font:600 14px 'DM Sans';color:var(--text-primary)" id="modal-age">--</div></div>
+      <div><div style="font-size:11px;color:var(--text-tertiary)">Mobile Number</div><div style="font:600 14px 'JetBrains Mono';color:var(--text-primary)" id="modal-mobile">--</div></div>
+      
       <div><div style="font-size:11px;color:var(--text-tertiary)">Registration Date</div><div style="font:600 13px 'JetBrains Mono';color:var(--text-primary)" id="modal-created">--</div></div>
       <div><div style="font-size:11px;color:var(--text-tertiary)">Last Login</div><div style="font:600 13px 'JetBrains Mono';color:var(--text-primary)" id="modal-last-login">--</div></div>
       <div><div style="font-size:11px;color:var(--text-tertiary)">Total Login Count</div><div style="font:600 13px 'JetBrains Mono';color:#F59E0B" id="modal-logins">--</div></div>
