@@ -199,9 +199,9 @@
     const clerkDays = Math.ceil((new Date(EXAM_CONFIG.ibps_clerk.examDate + 'T00:00:00') - new Date()) / 86400000);
 
     grid.innerHTML = `
-      <!-- Placement & National Level Exams -->
+      <!-- Corporate Placement & Aptitude -->
       <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
-        <span>🏛️</span> Placement & Competitive Banking Exams
+        <span>🎯</span> Corporate Placement & IT Aptitude
       </div>
 
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="if(window.setSelectedExam)window.setSelectedExam('nqt');else localStorage.setItem('selectedExam','nqt')">
@@ -216,6 +216,11 @@
         <span class="ec-badge" style="background:rgba(127,119,221,0.15);color:#7F77DD;border:1px solid rgba(127,119,221,0.3)">${EXAM_CONFIG.nqt.subjects.length} Subjects · ${EXAM_CONFIG.nqt.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#7F77DD">Start NQT Prep →</button>
       </a>
+
+      <!-- Banking Recruitment Examinations (IBPS) Section -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#B7791F;display:flex;align-items:center;gap:10px">
+        <span>🏦</span> Banking Recruitment Examinations (IBPS)
+      </div>
 
       <a href="dashboard-ibps.html" class="exam-card" style="--card-glow:rgba(183,121,31,0.12);--card-border:rgba(183,121,31,0.4);border-top-color:#B7791F" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_po');else localStorage.setItem('selectedExam','ibps_po')">
         <span class="ec-icon">🏦</span>
