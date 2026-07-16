@@ -1,5 +1,6 @@
 import { db, auth } from "./firebase-config.js";
 import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 let cachedUsers = [];
 
