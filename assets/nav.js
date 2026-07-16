@@ -95,6 +95,16 @@ const SUBJECT_COLORS = {
   mts_eng:    { primary: '#8E44AD' },
   mts_math:   { primary: '#27AE60' },
   mts_reason: { primary: '#2980B9' },
+  // UGC NET colors
+  ugcnet_p1_teaching:      { primary: '#4F46E5' },
+  ugcnet_p1_research:      { primary: '#0891B2' },
+  ugcnet_p1_reasoning:     { primary: '#7C3AED' },
+  ugcnet_p1_di:            { primary: '#059669' },
+  ugcnet_p1_communication: { primary: '#D97706' },
+  ugcnet_p1_comprehension: { primary: '#BE185D' },
+  ugcnet_p1_ict:           { primary: '#0284C7' },
+  ugcnet_p1_environment:   { primary: '#16A34A' },
+  ugcnet_p1_highered:      { primary: '#B45309' },
 };
 
 const KEYS = {
@@ -185,6 +195,16 @@ const KEYS = {
   mts_eng:    { prefix: 'mts_eng_',    total: 10, p1: 10 },
   mts_math:   { prefix: 'mts_math_',   total: 12, p1: 12 },
   mts_reason: { prefix: 'mts_reason_', total: 11, p1: 11 },
+  // UGC NET Paper 1 subjects
+  ugcnet_p1_teaching:      { prefix: 'ugcnet_ta_',  total: 1, p1: 1 },
+  ugcnet_p1_research:      { prefix: 'ugcnet_ra_',  total: 1, p1: 1 },
+  ugcnet_p1_reasoning:     { prefix: 'ugcnet_lr_',  total: 2, p1: 2 },
+  ugcnet_p1_di:            { prefix: 'ugcnet_di_',  total: 1, p1: 1 },
+  ugcnet_p1_communication: { prefix: 'ugcnet_com_', total: 1, p1: 1 },
+  ugcnet_p1_comprehension: { prefix: 'ugcnet_rc_',  total: 1, p1: 1 },
+  ugcnet_p1_ict:           { prefix: 'ugcnet_ict_', total: 1, p1: 1 },
+  ugcnet_p1_environment:   { prefix: 'ugcnet_env_', total: 1, p1: 1 },
+  ugcnet_p1_highered:      { prefix: 'ugcnet_he_',  total: 1, p1: 1 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -465,6 +485,31 @@ const EXAM_CONFIG = {
       { page: 'tracker-ssc.html?exam=mts&subj=mts_math',   href: 'tracker-ssc.html?exam=mts&subj=mts_math',   icon: '🔢', label: 'Numerical Ability' },
       { page: 'tracker-ssc.html?exam=mts&subj=mts_reason', href: 'tracker-ssc.html?exam=mts&subj=mts_reason', icon: '🧠', label: 'Reasoning Ability' }
     ]
+  },
+  ugcnet: {
+    label: 'UGC NET',
+    color: '#4F46E5',
+    icon: '🎓',
+    subjects: [
+      'ugcnet_p1_teaching', 'ugcnet_p1_research', 'ugcnet_p1_reasoning', 'ugcnet_p1_di',
+      'ugcnet_p1_communication', 'ugcnet_p1_comprehension', 'ugcnet_p1_ict',
+      'ugcnet_p1_environment', 'ugcnet_p1_highered'
+    ],
+    countMode: 'all',
+    examDate: '2026-12-31',
+    totalChapters: 10,
+    links: [
+      { page: 'dashboard-ugcnet.html', href: 'dashboard-ugcnet.html', icon: '📊', label: 'UGC NET Dashboard' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_teaching',      href: 'tracker-ugcnet.html?subj=ugcnet_p1_teaching',      icon: '🎓', label: 'Teaching Aptitude' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_research',      href: 'tracker-ugcnet.html?subj=ugcnet_p1_research',      icon: '🔬', label: 'Research Aptitude' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_reasoning',     href: 'tracker-ugcnet.html?subj=ugcnet_p1_reasoning',     icon: '🧮', label: 'Logical & Math Reasoning' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_di',            href: 'tracker-ugcnet.html?subj=ugcnet_p1_di',            icon: '📊', label: 'Data Interpretation' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_communication', href: 'tracker-ugcnet.html?subj=ugcnet_p1_communication', icon: '💬', label: 'Communication' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_comprehension', href: 'tracker-ugcnet.html?subj=ugcnet_p1_comprehension', icon: '📖', label: 'Reading Comprehension' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_ict',           href: 'tracker-ugcnet.html?subj=ugcnet_p1_ict',           icon: '💻', label: 'ICT' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_environment',   href: 'tracker-ugcnet.html?subj=ugcnet_p1_environment',   icon: '🌿', label: 'Environment' },
+      { page: 'tracker-ugcnet.html?subj=ugcnet_p1_highered',      href: 'tracker-ugcnet.html?subj=ugcnet_p1_highered',      icon: '🏛️', label: 'Higher Education' }
+    ]
   }
 };
 
@@ -479,6 +524,7 @@ function getCurrentExam() {
     if (ex === 'mts') return 'ssc_mts';
     return 'ssc';
   }
+  if (page.includes('ugcnet')) return 'ugcnet';
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) return 'ibps_po';
   if (page.includes('jee')) return 'jee';

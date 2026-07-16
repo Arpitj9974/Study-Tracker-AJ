@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="assets/style.css"/>
   <script src="assets/ssc_chsl_exam_data.js"></script>
   <script src="assets/ssc_mts_exam_data.js"></script>
+  <script src="assets/ugcnet_exam_data.js"></script>
   <style>
     body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
     .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
@@ -83,7 +84,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=10"></script>
+  <script src="assets/nav.js?v=11"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -184,6 +185,12 @@
     const mtsPct = Math.round((mtsDone / EXAM_CONFIG.ssc_mts.totalChapters) * 100);
     const mtsDays = Math.ceil((new Date(EXAM_CONFIG.ssc_mts.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // UGC NET stats
+    const ugcnetStats = readExamStats('ugcnet');
+    const ugcnetDone = Object.values(ugcnetStats).reduce((s, v) => s + v.done, 0);
+    const ugcnetPct = Math.round((ugcnetDone / EXAM_CONFIG.ugcnet.totalChapters) * 100);
+    const ugcnetDays = Math.ceil((new Date(EXAM_CONFIG.ugcnet.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <!-- Placement & National Level Exams -->
       <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
@@ -245,6 +252,24 @@
         </div>
         <span class="ec-badge" style="background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)">${EXAM_CONFIG.cds.subjects.length} Subjects · ${EXAM_CONFIG.cds.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
+      </a>
+
+      <!-- UGC NET Section -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#4F46E5;display:flex;align-items:center;gap:10px">
+        <span>🎓</span> University Grants Commission (UGC NET)
+      </div>
+
+      <a href="dashboard-ugcnet.html" class="exam-card" style="--card-glow:rgba(79,70,229,0.12);--card-border:rgba(79,70,229,0.4);border-top-color:#4F46E5" onclick="if(window.setSelectedExam)window.setSelectedExam('ugcnet');else localStorage.setItem('selectedExam','ugcnet')">
+        <span class="ec-icon">🎓</span>
+        <div class="ec-name">UGC NET</div>
+        <div class="ec-desc">Paper 1 Teaching & Research Aptitude + Paper 2 Subject</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#4F46E5">${ugcnetPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#4F46E5">${ugcnetDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ugcnet.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${ugcnetDays < 30 ? '#EF4444' : '#4F46E5'}">${ugcnetDays > 0 ? ugcnetDays : '🎯'}</div><div class="ec-stat-lbl">${ugcnetDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(79,70,229,0.15);color:#4F46E5;border:1px solid rgba(79,70,229,0.3)">9 Units · 10 Paper 1 Modules</span>
+        <button class="ec-enter" style="background:#4F46E5">Start UGC NET Prep →</button>
       </a>
 
       <!-- Staff Selection Commission (SSC) Section -->
@@ -429,6 +454,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=10"></script>
+  <script type="module" src="assets/auth-sync.js?v=11"></script>
 </body>
 </html>
