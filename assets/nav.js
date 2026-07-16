@@ -42,6 +42,10 @@ const SUBJECT_COLORS = {
   neet_zoo: { primary: '#B04A2F' },
   neet_che: { primary: '#7C3AED' },
   neet_phy: { primary: '#3B5BDB' },
+  // CAT colors
+  cat_qa:   { primary: '#E67E22' },
+  cat_dilr: { primary: '#27AE60' },
+  cat_varc: { primary: '#2E86C1' },
 };
 
 const KEYS = {
@@ -79,6 +83,10 @@ const KEYS = {
   neet_zoo: { prefix: 'neet_zoo_', total: 15, p1: 15 },
   neet_che: { prefix: 'neet_che_', total: 20, p1: 20 },
   neet_phy: { prefix: 'neet_phy_', total: 19, p1: 19 },
+  // CAT subjects
+  cat_qa:   { prefix: 'cat_qa_',   total: 25, p1: 25 },
+  cat_dilr: { prefix: 'cat_dilr_', total: 10, p1: 10 },
+  cat_varc: { prefix: 'cat_varc_', total: 7,  p1: 7  },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -196,6 +204,21 @@ const EXAM_CONFIG = {
       { page: 'tracker-neet.html?subj=neet_che', href: 'tracker-neet.html?subj=neet_che', icon: '🧪', label: 'Chemistry' },
       { page: 'tracker-neet.html?subj=neet_phy', href: 'tracker-neet.html?subj=neet_phy', icon: '⚛️', label: 'Physics' }
     ]
+  },
+  cat: {
+    label: 'CAT (MBA)',
+    color: '#E67E22',
+    icon: '📈',
+    subjects: ['cat_qa', 'cat_dilr', 'cat_varc'],
+    countMode: 'all',
+    examDate: '2026-11-29',
+    totalChapters: 42,
+    links: [
+      { page: 'dashboard-cat.html', href: 'dashboard-cat.html', icon: '📊', label: 'CAT Dashboard' },
+      { page: 'tracker-cat.html?subj=cat_qa', href: 'tracker-cat.html?subj=cat_qa', icon: '🔢', label: 'Quantitative Ability' },
+      { page: 'tracker-cat.html?subj=cat_dilr', href: 'tracker-cat.html?subj=cat_dilr', icon: '🧩', label: 'DILR' },
+      { page: 'tracker-cat.html?subj=cat_varc', href: 'tracker-cat.html?subj=cat_varc', icon: '📖', label: 'VARC' }
+    ]
   }
 };
 
@@ -208,6 +231,7 @@ function getCurrentExam() {
   if (page.includes('ibps')) return 'ibps_po';
   if (page.includes('jee')) return 'jee';
   if (page.includes('neet')) return 'neet_ug';
+  if (page.includes('cat')) return 'cat';
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }
