@@ -37,6 +37,11 @@ const SUBJECT_COLORS = {
   jee_phy: { primary: '#3B5BDB' },
   jee_che: { primary: '#2B8A6E' },
   jee_mat: { primary: '#B7791F' },
+  // NEET UG colors
+  neet_bot: { primary: '#4C9A3F' },
+  neet_zoo: { primary: '#B04A2F' },
+  neet_che: { primary: '#7C3AED' },
+  neet_phy: { primary: '#3B5BDB' },
 };
 
 const KEYS = {
@@ -69,6 +74,11 @@ const KEYS = {
   jee_phy: { prefix: 'jee_phy_', total: 20, p1: 20 },
   jee_che: { prefix: 'jee_che_', total: 21, p1: 21 },
   jee_mat: { prefix: 'jee_mat_', total: 15, p1: 15 },
+  // NEET UG subjects
+  neet_bot: { prefix: 'neet_bot_', total: 16, p1: 16 },
+  neet_zoo: { prefix: 'neet_zoo_', total: 15, p1: 15 },
+  neet_che: { prefix: 'neet_che_', total: 20, p1: 20 },
+  neet_phy: { prefix: 'neet_phy_', total: 19, p1: 19 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -170,6 +180,22 @@ const EXAM_CONFIG = {
       { page: 'tracker-jee.html?subj=jee_che', href: 'tracker-jee.html?subj=jee_che', icon: '🧪', label: 'Chemistry' },
       { page: 'tracker-jee.html?subj=jee_mat', href: 'tracker-jee.html?subj=jee_mat', icon: '📐', label: 'Mathematics' }
     ]
+  },
+  neet_ug: {
+    label: 'NEET UG',
+    color: '#4C9A3F',
+    icon: '🩺',
+    subjects: ['neet_bot', 'neet_zoo', 'neet_che', 'neet_phy'],
+    countMode: 'all',
+    examDate: '2027-05-02',
+    totalChapters: 70,
+    links: [
+      { page: 'dashboard-neet.html', href: 'dashboard-neet.html', icon: '📊', label: 'NEET Dashboard' },
+      { page: 'tracker-neet.html?subj=neet_bot', href: 'tracker-neet.html?subj=neet_bot', icon: '🌱', label: 'Botany' },
+      { page: 'tracker-neet.html?subj=neet_zoo', href: 'tracker-neet.html?subj=neet_zoo', icon: '🧬', label: 'Zoology' },
+      { page: 'tracker-neet.html?subj=neet_che', href: 'tracker-neet.html?subj=neet_che', icon: '🧪', label: 'Chemistry' },
+      { page: 'tracker-neet.html?subj=neet_phy', href: 'tracker-neet.html?subj=neet_phy', icon: '⚛️', label: 'Physics' }
+    ]
   }
 };
 
@@ -181,6 +207,7 @@ function getCurrentExam() {
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) return 'ibps_po';
   if (page.includes('jee')) return 'jee';
+  if (page.includes('neet')) return 'neet_ug';
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }

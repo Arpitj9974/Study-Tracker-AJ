@@ -116,6 +116,12 @@
     const jeePct = Math.round((jeeDone / EXAM_CONFIG.jee.totalChapters) * 100);
     const jeeDays = Math.ceil((new Date(EXAM_CONFIG.jee.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // NEET UG stats
+    const neetStats = readExamStats('neet_ug');
+    const neetDone = Object.values(neetStats).reduce((s, v) => s + v.done, 0);
+    const neetPct = Math.round((neetDone / EXAM_CONFIG.neet_ug.totalChapters) * 100);
+    const neetDays = Math.ceil((new Date(EXAM_CONFIG.neet_ug.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
@@ -180,6 +186,19 @@
         </div>
         <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.jee.subjects.length} Subjects · ${EXAM_CONFIG.jee.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#3B5BDB">Start JEE Prep →</button>
+      </a>
+
+      <a href="dashboard-neet.html" class="exam-card" style="--card-glow:rgba(76,154,63,0.12);--card-border:rgba(76,154,63,0.4);border-top-color:#4C9A3F" onclick="localStorage.setItem('selectedExam','neet_ug')">
+        <span class="ec-icon">🩺</span>
+        <div class="ec-name">NEET UG</div>
+        <div class="ec-desc">Botany, Zoology, Chemistry & Physics (PCB)</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#4C9A3F">${neetPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#4C9A3F">${neetDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.neet_ug.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${neetDays < 30 ? '#EF4444' : '#4C9A3F'}">${neetDays > 0 ? neetDays : '🎯'}</div><div class="ec-stat-lbl">${neetDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(76,154,63,0.15);color:#4C9A3F;border:1px solid rgba(76,154,63,0.3)">${EXAM_CONFIG.neet_ug.subjects.length} Subjects · ${EXAM_CONFIG.neet_ug.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#4C9A3F">Start NEET Prep →</button>
       </a>
     `;
   </script>
