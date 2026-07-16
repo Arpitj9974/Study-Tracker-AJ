@@ -330,10 +330,12 @@ document.getElementById('user-search').addEventListener('input', renderUserTable
 document.getElementById('exam-filter').addEventListener('change', renderUserTable);
 document.getElementById('sort-filter').addEventListener('change', renderUserTable);
 
-document.addEventListener('DOMContentLoaded', () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      loadAdminData();
-    }
-  });
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loadAdminData();
+  }
 });
+
+if (auth.currentUser) {
+  loadAdminData();
+}
