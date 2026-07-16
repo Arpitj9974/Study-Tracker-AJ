@@ -2,19 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>UGC NET Subject Tracker — Arpit's Exam Hub</title>
+  <title>UPSC NDA Subject Tracker — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="assets/ugcnet_exam_data.js"></script>
+  <script src="assets/nda_exam_data.js"></script>
   <style>
     .cat-group { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:12px; margin-bottom:20px; overflow:hidden; }
     .cat-header { background:var(--bg-surface); padding:14px 20px; font:700 15px/1.2 'DM Sans'; color:var(--text-primary); border-bottom:1px solid var(--border-medium); display:flex; align-items:center; justify-content:space-between; }
-    .ch-item { padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:10px; transition:background .15s; }
+    .ch-item { padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; gap:16px; transition:background .15s; }
     .ch-item:last-child { border-bottom:none; }
     .ch-item:hover { background:rgba(255,255,255,0.02); }
-    .ch-row { display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .ch-title { font:600 15px/1.4 'DM Sans'; color:var(--text-primary); }
     .ch-meta { display:flex; align-items:center; gap:10px; font:400 12px/1 'JetBrains Mono'; color:var(--text-tertiary); margin-top:4px; }
-    .topic-list { margin-top:6px; padding-left:18px; font:400 13px/1.6 'DM Sans'; color:var(--text-secondary); }
     .p-badge { font:600 10px/1 'JetBrains Mono'; text-transform:uppercase; padding:3px 8px; border-radius:12px; }
     .p-VERY-HIGH { background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid rgba(239,68,68,0.3); }
     .p-HIGH { background:rgba(245,158,11,0.15); color:#F59E0B; border:1px solid rgba(245,158,11,0.3); }
@@ -34,14 +32,14 @@
     <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--bg-elevated);padding:16px 20px;border-radius:12px;border:1px solid var(--border-medium)">
       <div>
         <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);display:flex;align-items:center;gap:10px">
-          <span id="subj-icon">🎓</span> <span id="subj-name">Loading Subject...</span>
+          <span id="subj-icon">🎖️</span> <span id="subj-name">Loading Subject...</span>
         </div>
         <div style="font:400 13px/1.4 'DM Sans';color:var(--text-secondary);margin-top:4px" id="subj-exam-label">
-          UGC NET Paper 1 Prep
+          UPSC NDA Written Exam Prep
         </div>
       </div>
       <div style="display:flex;gap:8px">
-        <a href="dashboard-ugcnet.html" class="btn-tab">📊 UGC NET Dashboard</a>
+        <a href="dashboard-nda.html" class="btn-tab">📊 NDA Dashboard</a>
       </div>
     </div>
 
@@ -49,10 +47,10 @@
     <div style="background:var(--bg-elevated);border:1px solid var(--border-medium);border-radius:12px;padding:20px;margin-bottom:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <div style="font:600 13px/1 'JetBrains Mono';color:var(--text-secondary)" id="subj-progress-text">0 / 0 completed</div>
-        <div style="font:700 16px/1 'JetBrains Mono';color:#4F46E5" id="subj-pct-text">0%</div>
+        <div style="font:700 16px/1 'JetBrains Mono';color:#F59E0B" id="subj-pct-text">0%</div>
       </div>
       <div style="width:100%;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden">
-        <div id="subj-bar-fill" style="width:0%;height:100%;background:#4F46E5;transition:width .3s ease"></div>
+        <div id="subj-bar-fill" style="width:0%;height:100%;background:#F59E0B;transition:width .3s ease"></div>
       </div>
     </div>
 
@@ -73,10 +71,10 @@
   const params = new URLSearchParams(window.location.search);
   const subjKey = params.get('subj');
 
-  const configData = EXAM_CONFIG_UGCNET;
-  const priorityData = UGCNET_PRIORITY_DATA;
+  const configData = EXAM_CONFIG_NDA;
+  const priorityData = NDA_PRIORITY_DATA;
 
-  localStorage.setItem('selectedExam', 'ugcnet');
+  localStorage.setItem('selectedExam', 'nda');
 
   const subject = configData.subjects.find(s => s.key === subjKey) || configData.subjects[0];
 
@@ -92,7 +90,7 @@
   // Group by category
   const grouped = {};
   chapters.forEach(ch => {
-    const cat = ch.category || 'General Units';
+    const cat = ch.category || 'General Modules';
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push(ch);
   });
@@ -111,24 +109,19 @@
         const isDone = localStorage.getItem(ch.key) === '1';
         if (isDone) { catDone++; totalDone++; }
 
-        const topicItems = ch.topics ? ch.topics.map(t => `<li>${t}</li>`).join('') : '';
-
         return `
           <div class="ch-item">
-            <div class="ch-row">
-              <div style="flex:1">
-                <div class="ch-title">${ch.name}</div>
-                <div class="ch-meta">
-                  <span class="p-badge p-${ch.priority}">${ch.priority}</span>
-                  <span>⏱️ ${ch.days}</span>
-                  <span>📊 ${ch.unitWeight}</span>
-                </div>
+            <div>
+              <div class="ch-title">${ch.name}</div>
+              <div class="ch-meta">
+                <span class="p-badge p-${ch.priority}">${ch.priority}</span>
+                <span>⏱️ ${ch.days}</span>
+                <span>📊 ${ch.prelimsWeight}</span>
               </div>
-              <button class="check-btn${isDone ? ' checked' : ''}" onclick="toggleChapter('${ch.key}')">
-                ${isDone ? '✓' : ''}
-              </button>
             </div>
-            ${topicItems ? `<ul class="topic-list">${topicItems}</ul>` : ''}
+            <button class="check-btn${isDone ? ' checked' : ''}" onclick="toggleChapter('${ch.key}')">
+              ${isDone ? '✓' : ''}
+            </button>
           </div>
         `;
       }).join('');
@@ -146,7 +139,7 @@
 
     const total = chapters.length;
     const pct = total > 0 ? Math.round((totalDone / total) * 100) : 0;
-    document.getElementById('subj-progress-text').textContent = `${totalDone} / ${total} units completed`;
+    document.getElementById('subj-progress-text').textContent = `${totalDone} / ${total} chapters completed`;
     document.getElementById('subj-pct-text').textContent = `${pct}%`;
     const fill = document.getElementById('subj-bar-fill');
     fill.style.width = pct + '%';
@@ -160,7 +153,6 @@
     } else {
       localStorage.setItem(key, '1');
     }
-    window.dispatchEvent(new CustomEvent('storageChange', { detail: { key, value: localStorage.getItem(key) } }));
     window.dispatchEvent(new Event('storage'));
     renderChecklist();
   };

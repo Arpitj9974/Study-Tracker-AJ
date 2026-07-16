@@ -111,6 +111,9 @@ const SUBJECT_COLORS = {
   ibps_clerk_gfa:  { primary: '#92400E' },
   ibps_clerk_eng:  { primary: '#0D9488' },
   ibps_clerk_comp: { primary: '#6B21A8' },
+  // NDA colors
+  nda_gat: { primary: '#F59E0B' },
+  nda_ma:  { primary: '#3B82F6' },
 };
 
 const KEYS = {
@@ -217,6 +220,9 @@ const KEYS = {
   ibps_clerk_gfa:  { prefix: 'iclk_gfa_',  total: 8,  p1: 8  },
   ibps_clerk_eng:  { prefix: 'iclk_eng_',  total: 10, p1: 10 },
   ibps_clerk_comp: { prefix: 'iclk_comp_', total: 7,  p1: 7  },
+  // UPSC NDA subjects
+  nda_gat: { prefix: 'nda_gat_', total: 14, p1: 14 },
+  nda_ma:  { prefix: 'nda_ma_',  total: 9,  p1: 9  },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -539,6 +545,20 @@ const EXAM_CONFIG = {
       { page: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_eng',  href: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_eng',  icon: '📚', label: 'English Language' },
       { page: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_comp', href: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_comp', icon: '💻', label: 'Computer Aptitude' }
     ]
+  },
+  nda: {
+    label: 'UPSC NDA & NA',
+    color: '#F59E0B',
+    icon: '🎖️',
+    subjects: ['nda_gat', 'nda_ma'],
+    countMode: 'all',
+    examDate: '2026-09-13',
+    totalChapters: 23,
+    links: [
+      { page: 'dashboard-nda.html', href: 'dashboard-nda.html', icon: '📊', label: 'NDA Dashboard' },
+      { page: 'tracker-nda.html?subj=nda_gat', href: 'tracker-nda.html?subj=nda_gat', icon: '🌍', label: 'General Ability Test (GAT)' },
+      { page: 'tracker-nda.html?subj=nda_ma',  href: 'tracker-nda.html?subj=nda_ma',  icon: '📐', label: 'Mathematics' }
+    ]
   }
 };
 
@@ -554,6 +574,7 @@ function getCurrentExam() {
     return 'ssc';
   }
   if (page.includes('ugcnet')) return 'ugcnet';
+  if (page.includes('nda')) return 'nda';
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) {
     const params = new URLSearchParams(window.location.search);

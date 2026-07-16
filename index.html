@@ -9,6 +9,7 @@
   <script src="assets/ssc_mts_exam_data.js"></script>
   <script src="assets/ugcnet_exam_data.js"></script>
   <script src="assets/ibps_clerk_exam_data.js"></script>
+  <script src="assets/nda_exam_data.js"></script>
   <style>
     body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
     .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
@@ -85,7 +86,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=12"></script>
+  <script src="assets/nav.js?v=13"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -198,6 +199,12 @@
     const clerkPct = Math.round((clerkDone / EXAM_CONFIG.ibps_clerk.totalChapters) * 100);
     const clerkDays = Math.ceil((new Date(EXAM_CONFIG.ibps_clerk.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // NDA stats
+    const ndaStats = readExamStats('nda');
+    const ndaDone = Object.values(ndaStats).reduce((s, v) => s + v.done, 0);
+    const ndaPct = Math.round((ndaDone / EXAM_CONFIG.nda.totalChapters) * 100);
+    const ndaDays = Math.ceil((new Date(EXAM_CONFIG.nda.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <!-- Corporate Placement & Aptitude -->
       <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
@@ -277,6 +284,19 @@
         </div>
         <span class="ec-badge" style="background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)">${EXAM_CONFIG.cds.subjects.length} Subjects · ${EXAM_CONFIG.cds.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
+      </a>
+
+      <a href="dashboard-nda.html" class="exam-card" style="--card-glow:rgba(245,158,11,0.12);--card-border:rgba(245,158,11,0.4);border-top-color:#F59E0B" onclick="if(window.setSelectedExam)window.setSelectedExam('nda');else localStorage.setItem('selectedExam','nda')">
+        <span class="ec-icon">🎖️</span>
+        <div class="ec-name">UPSC NDA & NA</div>
+        <div class="ec-desc">General Ability Test (GAT 600M) & Mathematics (300M)</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#F59E0B">${ndaPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#F59E0B">${ndaDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.nda.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${ndaDays < 30 ? '#EF4444' : '#F59E0B'}">${ndaDays > 0 ? ndaDays : '🎯'}</div><div class="ec-stat-lbl">${ndaDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(245,158,11,0.15);color:#F59E0B;border:1px solid rgba(245,158,11,0.3)">2 Papers · 23 Chapters</span>
+        <button class="ec-enter" style="background:#F59E0B">Start NDA Prep →</button>
       </a>
 
       <!-- UGC NET Section -->
@@ -479,6 +499,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=12"></script>
+  <script type="module" src="assets/auth-sync.js?v=13"></script>
 </body>
 </html>
