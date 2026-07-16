@@ -52,6 +52,10 @@ const SUBJECT_COLORS = {
   cmat_lc: { primary: '#10B981' },
   cmat_ga: { primary: '#F59E0B' },
   cmat_ie: { primary: '#EF4444' },
+  // CDS colors
+  cds_gk: { primary: '#F59E0B' },
+  cds_en: { primary: '#10B981' },
+  cds_ma: { primary: '#3B82F6' },
 };
 
 const KEYS = {
@@ -99,6 +103,10 @@ const KEYS = {
   cmat_lc: { prefix: 'cmat_lc_', total: 9,  p1: 9  },
   cmat_ga: { prefix: 'cmat_ga_', total: 10, p1: 10 },
   cmat_ie: { prefix: 'cmat_ie_', total: 12, p1: 12 },
+  // CDS subjects
+  cds_gk: { prefix: 'cds_gk_', total: 12, p1: 12 },
+  cds_en: { prefix: 'cds_en_', total: 8,  p1: 8  },
+  cds_ma: { prefix: 'cds_ma_', total: 10, p1: 10 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -248,6 +256,21 @@ const EXAM_CONFIG = {
       { page: 'tracker-cmat.html?subj=cmat_ga', href: 'tracker-cmat.html?subj=cmat_ga', icon: '🌐', label: 'General Awareness' },
       { page: 'tracker-cmat.html?subj=cmat_ie', href: 'tracker-cmat.html?subj=cmat_ie', icon: '🚀', label: 'Innovation & Entr' }
     ]
+  },
+  cds: {
+    label: 'UPSC CDS',
+    color: '#10B981',
+    icon: '🎖️',
+    subjects: ['cds_gk', 'cds_en', 'cds_ma'],
+    countMode: 'all',
+    examDate: '2026-09-13',
+    totalChapters: 30,
+    links: [
+      { page: 'dashboard-cds.html', href: 'dashboard-cds.html', icon: '📊', label: 'CDS Dashboard' },
+      { page: 'tracker-cds.html?subj=cds_gk', href: 'tracker-cds.html?subj=cds_gk', icon: '🌍', label: 'General Knowledge' },
+      { page: 'tracker-cds.html?subj=cds_en', href: 'tracker-cds.html?subj=cds_en', icon: '📝', label: 'English' },
+      { page: 'tracker-cds.html?subj=cds_ma', href: 'tracker-cds.html?subj=cds_ma', icon: '📐', label: 'Elementary Maths (IMA/INA/AFA)' }
+    ]
   }
 };
 
@@ -262,6 +285,7 @@ function getCurrentExam() {
   if (page.includes('neet')) return 'neet_ug';
   if (page.includes('cat')) return 'cat';
   if (page.includes('cmat')) return 'cmat';
+  if (page.includes('cds')) return 'cds';
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }

@@ -134,6 +134,12 @@
     const cmatPct = Math.round((cmatDone / EXAM_CONFIG.cmat.totalChapters) * 100);
     const cmatDays = Math.ceil((new Date(EXAM_CONFIG.cmat.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // CDS stats
+    const cdsStats = readExamStats('cds');
+    const cdsDone = Object.values(cdsStats).reduce((s, v) => s + v.done, 0);
+    const cdsPct = Math.round((cdsDone / EXAM_CONFIG.cds.totalChapters) * 100);
+    const cdsDays = Math.ceil((new Date(EXAM_CONFIG.cds.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
@@ -237,6 +243,19 @@
         </div>
         <span class="ec-badge" style="background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)">${EXAM_CONFIG.cmat.subjects.length} Subjects · ${EXAM_CONFIG.cmat.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#EF4444">Start CMAT Prep →</button>
+      </a>
+
+      <a href="dashboard-cds.html" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="localStorage.setItem('selectedExam','cds')">
+        <span class="ec-icon">🎖️</span>
+        <div class="ec-name">UPSC CDS</div>
+        <div class="ec-desc">General Knowledge, English & Elementary Maths</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cds.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cdsDays < 30 ? '#EF4444' : '#10B981'}">${cdsDays > 0 ? cdsDays : '🎯'}</div><div class="ec-stat-lbl">${cdsDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)">${EXAM_CONFIG.cds.subjects.length} Subjects · ${EXAM_CONFIG.cds.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
       </a>
     `;
   </script>
