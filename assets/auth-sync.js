@@ -1,3 +1,4 @@
+import { auth, db } from "./firebase-config.js";
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
@@ -154,18 +155,23 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+// Global window.handleLogout function
+window.handleLogout = async function() {
+  try {
+    await signOut(auth);
+  } catch (err) {
+    console.error("Firebase SignOut Error:", err);
+  }
+  localStorage.clear();
+  window.location.href = 'login.html';
+};
+
 // Robust Global Click Delegation for Logout Buttons
 document.addEventListener('click', async (e) => {
-  const logoutBtn = e.target.closest('#logout-btn, .logout-btn-trigger');
+  const logoutBtn = e.target.closest('#logout-btn, .logout-btn-trigger, .logout-btn');
   if (logoutBtn) {
     e.preventDefault();
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error("Firebase SignOut Error:", err);
-    }
-    localStorage.clear();
-    window.location.href = 'login.html';
+    await window.handleLogout();
   }
 });
 

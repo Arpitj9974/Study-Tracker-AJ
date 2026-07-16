@@ -23,6 +23,9 @@ async function hydrateLocalCache(uid) {
     // Step 2: Inject the cloud data
     if (userSnap.exists()) {
       const data = userSnap.data();
+      if (data.selectedExam) {
+        localStorage.setItem('selectedExam', data.selectedExam);
+      }
       if (data.progress) {
         for (const [key, value] of Object.entries(data.progress)) {
           localStorage.setItem(key, value);

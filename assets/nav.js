@@ -509,7 +509,7 @@ function buildNav() {
           <div class="sc-days" style="color:${daysColor}">${days > 0 ? days : '🎯'}</div>
           <div class="sc-sub">${days > 0 ? 'days' : 'Exam Day!'}</div>
         </div>
-        <button id="logout-btn" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:10px;border-radius:8px;font:600 12px/1 'DM Sans';cursor:pointer;margin-top:16px;transition:all 0.2s">Log Out</button>
+        <button id="logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:10px;border-radius:8px;font:600 12px/1 'DM Sans';cursor:pointer;margin-top:16px;transition:all 0.2s">Log Out</button>
       </div>
     </div>
   </div>`;
@@ -529,7 +529,7 @@ function buildNav() {
       </div>
       <div class="mh-actions">
         <a href="index.html?select=true" class="switch-exam-btn mh-btn">🔄 Switch</a>
-        <button class="logout-btn-trigger mh-btn logout-btn">Log Out</button>
+        <button class="logout-btn-trigger mh-btn logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}">Log Out</button>
       </div>
     </div>
     <div class="mh-bottom">
