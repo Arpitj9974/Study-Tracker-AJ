@@ -128,6 +128,12 @@
     const catPct = Math.round((catDone / EXAM_CONFIG.cat.totalChapters) * 100);
     const catDays = Math.ceil((new Date(EXAM_CONFIG.cat.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // CMAT stats
+    const cmatStats = readExamStats('cmat');
+    const cmatDone = Object.values(cmatStats).reduce((s, v) => s + v.done, 0);
+    const cmatPct = Math.round((cmatDone / EXAM_CONFIG.cmat.totalChapters) * 100);
+    const cmatDays = Math.ceil((new Date(EXAM_CONFIG.cmat.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
@@ -218,6 +224,19 @@
         </div>
         <span class="ec-badge" style="background:rgba(230,126,34,0.15);color:#E67E22;border:1px solid rgba(230,126,34,0.3)">${EXAM_CONFIG.cat.subjects.length} Subjects · ${EXAM_CONFIG.cat.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#E67E22">Start CAT Prep →</button>
+      </a>
+
+      <a href="dashboard-cmat.html" class="exam-card" style="--card-glow:rgba(239,68,68,0.12);--card-border:rgba(239,68,68,0.4);border-top-color:#EF4444" onclick="localStorage.setItem('selectedExam','cmat')">
+        <span class="ec-icon">🚀</span>
+        <div class="ec-name">CMAT (MBA)</div>
+        <div class="ec-desc">Quant & DI, LR, Language, GA, Innovation & Entr</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#EF4444">${cmatPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#EF4444">${cmatDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cmat.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cmatDays < 30 ? '#EF4444' : '#EF4444'}">${cmatDays > 0 ? cmatDays : '🎯'}</div><div class="ec-stat-lbl">${cmatDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)">${EXAM_CONFIG.cmat.subjects.length} Subjects · ${EXAM_CONFIG.cmat.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#EF4444">Start CMAT Prep →</button>
       </a>
     `;
   </script>

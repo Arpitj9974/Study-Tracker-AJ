@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CMAT Subject Tracker — Arpit's Exam Hub</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <script src="./assets/cmat_exam_data.js"></script>
+  <style>
+    .wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .sc { padding: 14px 16px; background: var(--bg-surface); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-medium); }
+    .sn { font-size: 24px; font-weight: 600; color: var(--text-primary); font-family: 'JetBrains Mono', monospace; }
+    .sl { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+    .category-group { margin-bottom: 24px; }
+    .cat-header { font: 600 12px/1 'JetBrains Mono'; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; padding: 10px 0 6px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 12px; }
+
+    .chapter-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media(max-width: 768px) { .chapter-grid { grid-template-columns: 1fr; } }
+
+    .ch-card {
+      display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px;
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md); cursor: pointer; transition: all 0.18s ease; user-select: none;
+    }
+    .ch-card:hover { background: var(--bg-hover); border-color: var(--border-medium); }
+    .ch-card.done { opacity: 0.65; background: var(--bg-elevated); }
+    .ch-card.done .ch-title { text-decoration: line-through; color: var(--text-tertiary); }
+    .ch-card.done .ck-box { background: #EF4444; border-color: #EF4444; color: white; }
+
+    .ck-box {
+      width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border-medium);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 11px; color: transparent; transition: all 0.2s; background: var(--bg-elevated); margin-top: 2px;
+    }
+    .ch-num { font: 600 12px/1.4 'JetBrains Mono'; color: var(--text-tertiary); min-width: 22px; flex-shrink: 0; margin-top: 1px; }
+    .ch-info { display: flex; flex-direction: column; flex: 1; min-width: 0; gap: 4px; }
+    .ch-title { font: 500 13px/1.4 'DM Sans'; color: var(--text-primary); }
+    .ch-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+
+    .badge-pri { font: 700 8px/1 'JetBrains Mono'; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .pri-VERY-HIGH { background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); }
+    .pri-HIGH      { background: rgba(251,146,60,0.15); color: #FB923C; border: 1px solid rgba(251,146,60,0.3); }
+    .pri-MEDIUM    { background: rgba(250,204,21,0.12); color: #FCD34D; border: 1px solid rgba(250,204,21,0.25); }
+    .pri-LOW       { background: rgba(148,163,184,0.1); color: #94A3B8; border: 1px solid rgba(148,163,184,0.2); }
+
+    .meta-tag { font: 400 10px/1 'DM Sans'; color: var(--text-tertiary); background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body style="--page-accent:#EF4444">
+<main>
+
+  <div class="content-wrapper">
+  <div class="tracker-shell page-content">
+    <div class="tracker-header">
+      <div class="th-top">
+        <div class="th-title" id="subject-title">🚀 Subject Tracker</div>
+        <div class="th-badges" id="subject-badges">
+          <span class="badge" style="background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)" id="stage-badge">CMAT</span>
+        </div>
+      </div>
+      <div class="th-mini-stats" id="mini-stats"></div>
+    </div>
+
+    <div class="wrap">
+      <div class="stats-row">
+        <div class="sc"><div class="sn" id="stat-done">0</div><div class="sl">Completed</div></div>
+        <div class="sc"><div class="sn" id="stat-rem">0</div><div class="sl">Remaining</div></div>
+        <div class="sc"><div class="sn" id="stat-pct">0%</div><div class="sl">Progress</div></div>
+      </div>
+
+      <div id="categories-container"></div>
+    </div>
+  </div>
+  </div>
+</main>
+<script src="assets/nav.js?v=5"></script>
+<script type="module" src="assets/auth-sync.js?v=5"></script>
+<script>
+  // Dynamic CMAT Subject Tracker Engine
+  const params = new URLSearchParams(window.location.search);
+  const rawSubj = params.get('subj') || 'cmat_qt';
+  const cleanSubjKey = rawSubj.startsWith('cmat_') ? rawSubj.replace('cmat_', '') : rawSubj;
+
+  const subjConfig = EXAM_CONFIG_CMAT.subjects.find(s => s.key === cleanSubjKey || s.key === rawSubj || s.prefix.includes(cleanSubjKey)) 
+                   || EXAM_CONFIG_CMAT.subjects[0];
+
+  document.body.style.setProperty('--page-accent', subjConfig.color);
+  document.getElementById('subject-title').innerHTML = `${subjConfig.icon} ${subjConfig.name}`;
+  document.getElementById('stage-badge').textContent = subjConfig.examStage;
+  document.title = `${subjConfig.name} — CMAT Tracker`;
+
+  // Filter chapters for this subject
+  const chapters = [];
+  for (let i = 1; i <= subjConfig.totalChapters; i++) {
+    const chKey = subjConfig.prefix + i;
+    if (CMAT_PRIORITY_DATA[chKey]) {
+      chapters.push({ key: chKey, index: i, data: CMAT_PRIORITY_DATA[chKey] });
+    }
+  }
+
+  // Render chapters grouped by category
+  function renderTracker() {
+    let doneCount = 0;
+    chapters.forEach(ch => {
+      if (localStorage.getItem(ch.key) === '1') doneCount++;
+    });
+
+    const total = chapters.length;
+    const remaining = total - doneCount;
+    const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+    document.getElementById('stat-done').textContent = doneCount;
+    document.getElementById('stat-rem').textContent = remaining;
+    document.getElementById('stat-pct').textContent = pct + '%';
+
+    // Update mini-stats in top banner
+    document.getElementById('mini-stats').innerHTML = `
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${subjConfig.color}">${doneCount}</div>
+        <div class="th-stat-lbl">Done of ${total}</div>
+      </div>
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${subjConfig.color}">${remaining}</div>
+        <div class="th-stat-lbl">Remaining</div>
+      </div>
+      <div class="th-stat">
+        <div class="th-stat-val" style="color:${subjConfig.color}">${pct}%</div>
+        <div class="th-stat-lbl">Complete</div>
+      </div>`;
+
+    // Group by category
+    const categories = {};
+    chapters.forEach(ch => {
+      const cat = ch.data.category || 'Core Units';
+      if (!categories[cat]) categories[cat] = [];
+      categories[cat].push(ch);
+    });
+
+    const container = document.getElementById('categories-container');
+    container.innerHTML = Object.entries(categories).map(([catName, list]) => `
+      <div class="category-group">
+        <div class="cat-header">📂 ${catName}</div>
+        <div class="chapter-grid">
+          ${list.map(ch => {
+            const isDone = localStorage.getItem(ch.key) === '1';
+            return `
+              <div class="ch-card ${isDone ? 'done' : ''}" onclick="toggleChapter('${ch.key}')">
+                <div class="ck-box">✓</div>
+                <span class="ch-num">${ch.index}</span>
+                <div class="ch-info">
+                  <span class="ch-title">${ch.data.name}</span>
+                  <div class="ch-meta">
+                    <span class="badge-pri pri-${ch.data.priority}">${ch.data.priority}</span>
+                    <span class="meta-tag">📊 ${ch.data.prelimsWeight}</span>
+                    <span class="meta-tag">⏱ ${ch.data.days}</span>
+                    <span class="meta-tag" style="color:var(--text-secondary)">${ch.data.stage}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.toggleChapter = function(key) {
+    const current = localStorage.getItem(key);
+    if (current === '1') {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, '1');
+    }
+    // Dispatch storage event to update background sync & UI
+    window.dispatchEvent(new Event('storage'));
+    renderTracker();
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    localStorage.setItem('selectedExam', 'cmat');
+    renderTracker();
+  });
+
+  window.addEventListener('cloudDataSynced', renderTracker);
+  window.addEventListener('storage', renderTracker);
+</script>
+</body>
+</html>

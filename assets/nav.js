@@ -46,6 +46,12 @@ const SUBJECT_COLORS = {
   cat_qa:   { primary: '#E67E22' },
   cat_dilr: { primary: '#27AE60' },
   cat_varc: { primary: '#2E86C1' },
+  // CMAT colors
+  cmat_qt: { primary: '#3B82F6' },
+  cmat_lr: { primary: '#8B5CF6' },
+  cmat_lc: { primary: '#10B981' },
+  cmat_ga: { primary: '#F59E0B' },
+  cmat_ie: { primary: '#EF4444' },
 };
 
 const KEYS = {
@@ -87,6 +93,12 @@ const KEYS = {
   cat_qa:   { prefix: 'cat_qa_',   total: 25, p1: 25 },
   cat_dilr: { prefix: 'cat_dilr_', total: 10, p1: 10 },
   cat_varc: { prefix: 'cat_varc_', total: 7,  p1: 7  },
+  // CMAT subjects
+  cmat_qt: { prefix: 'cmat_qt_', total: 14, p1: 14 },
+  cmat_lr: { prefix: 'cmat_lr_', total: 13, p1: 13 },
+  cmat_lc: { prefix: 'cmat_lc_', total: 9,  p1: 9  },
+  cmat_ga: { prefix: 'cmat_ga_', total: 10, p1: 10 },
+  cmat_ie: { prefix: 'cmat_ie_', total: 12, p1: 12 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -219,6 +231,23 @@ const EXAM_CONFIG = {
       { page: 'tracker-cat.html?subj=cat_dilr', href: 'tracker-cat.html?subj=cat_dilr', icon: '🧩', label: 'DILR' },
       { page: 'tracker-cat.html?subj=cat_varc', href: 'tracker-cat.html?subj=cat_varc', icon: '📖', label: 'VARC' }
     ]
+  },
+  cmat: {
+    label: 'CMAT (MBA)',
+    color: '#EF4444',
+    icon: '🚀',
+    subjects: ['cmat_qt', 'cmat_lr', 'cmat_lc', 'cmat_ga', 'cmat_ie'],
+    countMode: 'all',
+    examDate: '2027-01-24',
+    totalChapters: 58,
+    links: [
+      { page: 'dashboard-cmat.html', href: 'dashboard-cmat.html', icon: '📊', label: 'CMAT Dashboard' },
+      { page: 'tracker-cmat.html?subj=cmat_qt', href: 'tracker-cmat.html?subj=cmat_qt', icon: '📐', label: 'Quant & DI' },
+      { page: 'tracker-cmat.html?subj=cmat_lr', href: 'tracker-cmat.html?subj=cmat_lr', icon: '🧩', label: 'Logical Reasoning' },
+      { page: 'tracker-cmat.html?subj=cmat_lc', href: 'tracker-cmat.html?subj=cmat_lc', icon: '📖', label: 'Language Comp' },
+      { page: 'tracker-cmat.html?subj=cmat_ga', href: 'tracker-cmat.html?subj=cmat_ga', icon: '🌐', label: 'General Awareness' },
+      { page: 'tracker-cmat.html?subj=cmat_ie', href: 'tracker-cmat.html?subj=cmat_ie', icon: '🚀', label: 'Innovation & Entr' }
+    ]
   }
 };
 
@@ -232,6 +261,7 @@ function getCurrentExam() {
   if (page.includes('jee')) return 'jee';
   if (page.includes('neet')) return 'neet_ug';
   if (page.includes('cat')) return 'cat';
+  if (page.includes('cmat')) return 'cmat';
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }

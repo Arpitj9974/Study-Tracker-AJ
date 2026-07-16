@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/f
 import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 let currentUid = null;
-const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_'];
+const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_'];
 
 function isValidKey(key) {
   return key && validPrefixes.some(p => key.startsWith(p));
