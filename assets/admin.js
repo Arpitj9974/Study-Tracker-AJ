@@ -70,10 +70,27 @@ function countUserCompletedChapters(progressObj) {
 
 async function loadAdminData() {
   const tableBody = document.getElementById('user-table-body');
-  tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-tertiary)">Fetching users from Firestore...</td></tr>`;
+  tableBody.innerHTML = `
+    <tr>
+      <td colspan="7" style="text-align:center;padding:40px;color:var(--text-secondary)">
+        <div style="font-size:18px;margin-bottom:8px">⌛ Connecting to Firestore Database...</div>
+        <div style="font-size:12px;color:var(--text-tertiary)">Fetching user documents from collection 'users'</div>
+      </td>
+    </tr>
+  `;
 
   try {
-    const querySnapshot = await getDocs(collection(db, "users"));
+    console.log("[Admin] Fetching all user documents from Firestore collection 'users'...");
+    
+    // 8-Second Timeout Wrapper for Firestore Network Call
+    const getDocsPromise = getDocs(collection(db, "users"));
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("NETWORK_TIMEOUT: Firestore query exceeded 8 seconds. Check internet connection or ad-blockers.")), 8000)
+    );
+
+    const querySnapshot = await Promise.race([getDocsPromise, timeoutPromise]);
+    console.log(`[Admin] Successfully retrieved ${querySnapshot.size} user document(s).`);
+
     cachedUsers = [];
     
     querySnapshot.forEach((docSnap) => {
@@ -92,22 +109,42 @@ async function loadAdminData() {
 
     renderMetrics();
     populateExamFilter();
+    
+    if (cachedUsers.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align:center;padding:40px;color:var(--text-secondary)">
+            <div style="font:600 16px 'DM Sans';color:#F59E0B;margin-bottom:6px">📂 Firestore Connected — 0 Users Found</div>
+            <div style="font:400 13px 'DM Sans';color:var(--text-tertiary);max-width:500px;margin:0 auto 16px">
+              The 'users' collection in Firestore is currently empty. As soon as students log in or sign up on the hub, their profiles and study progress will automatically appear here!
+            </div>
+            <button onclick="window.loadAdminData()" class="btn-inspect" style="padding:8px 20px">🔄 Refresh User List</button>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
     renderUserTable();
   } catch (e) {
     console.error("Error fetching admin users from Firestore:", e);
     const isPermissionErr = e.code === 'permission-denied' || (e.message && e.message.includes('permissions'));
-    
+    const isTimeout = e.message && e.message.includes('NETWORK_TIMEOUT');
+
     tableBody.innerHTML = `
       <tr>
         <td colspan="7" style="padding:24px;text-align:left">
-          <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:20px;color:var(--text-primary)">
-            <div style="font:700 16px/1.2 'DM Sans';color:#EF4444;margin-bottom:8px">
-              ⚠️ Firestore Permission / Security Rules Warning
+          <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:22px;color:var(--text-primary)">
+            <div style="font:700 16px/1.2 'DM Sans';color:#EF4444;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+              <span>⚠️ Firestore Data Fetch Error (${e.code || 'Timeout / Blocked'})</span>
+              <button onclick="window.loadAdminData()" class="btn-inspect" style="background:#EF4444;color:white;border:none;padding:6px 14px">🔄 Retry Now</button>
             </div>
             <div style="font:400 13px/1.5 'DM Sans';color:var(--text-secondary);margin-bottom:14px">
               ${isPermissionErr 
-                ? 'Your Firebase Firestore Security Rules currently restrict reading all user accounts. To allow your Admin Panel to list all registered users, update your rules in Firebase Console.' 
-                : e.message}
+                ? 'Your Firebase Firestore Security Rules currently restrict reading all user accounts. Update your rules in Firebase Console to grant read access.' 
+                : (isTimeout 
+                  ? 'The request to Firestore timed out after 8 seconds. Please check if an ad-blocker or browser extension (e.g. uBlock, Brave Shields) is blocking Firebase gRPC WebSockets.' 
+                  : e.message)}
             </div>
             ${isPermissionErr ? `
               <div style="background:rgba(0,0,0,0.4);padding:14px;border-radius:8px;font:400 12px 'JetBrains Mono';color:#F59E0B;margin-bottom:14px;white-space:pre-wrap">rules_version = '2';
@@ -128,6 +165,7 @@ service cloud.firestore {
     `;
   }
 }
+window.loadAdminData = loadAdminData;
 
 function renderMetrics() {
   const totalUsers = cachedUsers.length;
