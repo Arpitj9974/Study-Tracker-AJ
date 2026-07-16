@@ -7,8 +7,8 @@
 
 const EXAM_CONFIG_MTS = {
   examKey: "ssc_mts",
-  examName: "SSC MTS & Havaldar",
-  fullName: "SSC Multi-Tasking (Non-Technical) Staff & Havaldar (CBIC & CBN) Examination",
+  examName: "SSC MTS",
+  fullName: "SSC Multi-Tasking (Non-Technical) Staff Examination",
   targetYear: 2026,
   eligibility: "10th pass; age 18–25 (MTS) / 18–27 (Havaldar)",
   examDate: "2026-09-01",

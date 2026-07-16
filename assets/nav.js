@@ -553,9 +553,9 @@ const EXAM_CONFIG = {
     ]
   },
   ssc_mts: {
-    label: 'SSC MTS & Havaldar',
+    label: 'SSC MTS',
     color: '#E67E22',
-    icon: '🧹',
+    icon: '🎖️',
     subjects: ['mts_ga', 'mts_eng', 'mts_math', 'mts_reason'],
     countMode: 'all',
     examDate: '2026-09-01',
