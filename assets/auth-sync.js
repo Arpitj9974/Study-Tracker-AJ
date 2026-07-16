@@ -3,7 +3,7 @@ import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 let currentUid = null;
-const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_', 'cds_', 'cafnd_', 'cain_', 'cafin_', 'ntpc_ga_', 'ntpc_reas_', 'ntpc_math_', 'rrbd_reas_', 'rrbd_sci_', 'rrbd_math_', 'rrbd_ga_', 'chsl_eng_', 'chsl_reason_', 'chsl_math_', 'chsl_ga_', 'chsl_comp_', 'mts_ga_', 'mts_eng_', 'mts_math_', 'mts_reason_', 'ugcnet_ta_', 'ugcnet_ra_', 'ugcnet_lr_', 'ugcnet_di_', 'ugcnet_com_', 'ugcnet_rc_', 'ugcnet_ict_', 'ugcnet_env_', 'ugcnet_he_'];
+const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_', 'cds_', 'cafnd_', 'cain_', 'cafin_', 'ntpc_ga_', 'ntpc_reas_', 'ntpc_math_', 'rrbd_reas_', 'rrbd_sci_', 'rrbd_math_', 'rrbd_ga_', 'chsl_eng_', 'chsl_reason_', 'chsl_math_', 'chsl_ga_', 'chsl_comp_', 'mts_ga_', 'mts_eng_', 'mts_math_', 'mts_reason_', 'ugcnet_ta_', 'ugcnet_ra_', 'ugcnet_lr_', 'ugcnet_di_', 'ugcnet_com_', 'ugcnet_rc_', 'ugcnet_ict_', 'ugcnet_env_', 'ugcnet_he_', 'iclk_qa_', 'iclk_ra_', 'iclk_gfa_', 'iclk_eng_', 'iclk_comp_'];
 
 function isValidKey(key) {
   return key && validPrefixes.some(p => key.startsWith(p));
@@ -19,6 +19,7 @@ function getDashboardUrl(examKey) {
     ugcnet: 'dashboard-ugcnet.html',
     upsc: 'dashboard-upsc.html',
     ibps_po: 'dashboard-ibps.html',
+    ibps_clerk: 'dashboard-ibps.html?exam=clerk',
     jee: 'dashboard-jee.html',
     neet_ug: 'dashboard-neet.html',
     cat: 'dashboard-cat.html',

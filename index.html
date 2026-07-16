@@ -8,6 +8,7 @@
   <script src="assets/ssc_chsl_exam_data.js"></script>
   <script src="assets/ssc_mts_exam_data.js"></script>
   <script src="assets/ugcnet_exam_data.js"></script>
+  <script src="assets/ibps_clerk_exam_data.js"></script>
   <style>
     body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
     .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
@@ -84,7 +85,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=11"></script>
+  <script src="assets/nav.js?v=12"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -191,10 +192,16 @@
     const ugcnetPct = Math.round((ugcnetDone / EXAM_CONFIG.ugcnet.totalChapters) * 100);
     const ugcnetDays = Math.ceil((new Date(EXAM_CONFIG.ugcnet.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // IBPS Clerk stats
+    const clerkStats = readExamStats('ibps_clerk');
+    const clerkDone = Object.values(clerkStats).reduce((s, v) => s + v.done, 0);
+    const clerkPct = Math.round((clerkDone / EXAM_CONFIG.ibps_clerk.totalChapters) * 100);
+    const clerkDays = Math.ceil((new Date(EXAM_CONFIG.ibps_clerk.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <!-- Placement & National Level Exams -->
       <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
-        <span>🏛️</span> Placement & National Level Exams
+        <span>🏛️</span> Placement & Competitive Banking Exams
       </div>
 
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="if(window.setSelectedExam)window.setSelectedExam('nqt');else localStorage.setItem('selectedExam','nqt')">
@@ -220,7 +227,20 @@
           <div class="ec-stat"><div class="ec-stat-val" style="color:${ibpsDays < 30 ? '#EF4444' : '#B7791F'}">${ibpsDays > 0 ? ibpsDays : '🎯'}</div><div class="ec-stat-lbl">${ibpsDays > 0 ? 'days left' : 'exam day!'}</div></div>
         </div>
         <span class="ec-badge" style="background:rgba(183,121,31,0.15);color:#B7791F;border:1px solid rgba(183,121,31,0.3)">${EXAM_CONFIG.ibps_po.subjects.length} Subjects · ${EXAM_CONFIG.ibps_po.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#B7791F">Start IBPS Prep →</button>
+        <button class="ec-enter" style="background:#B7791F">Start PO Prep →</button>
+      </a>
+
+      <a href="dashboard-ibps.html?exam=clerk" class="exam-card" style="--card-glow:rgba(225,29,72,0.12);--card-border:rgba(225,29,72,0.4);border-top-color:#E11D48" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_clerk');else localStorage.setItem('selectedExam','ibps_clerk')">
+        <span class="ec-icon">📋</span>
+        <div class="ec-name">IBPS Clerk (CSA)</div>
+        <div class="ec-desc">Numerical, Reasoning, English, Financial & Computer</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#E11D48">${clerkPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#E11D48">${clerkDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ibps_clerk.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${clerkDays < 30 ? '#EF4444' : '#E11D48'}">${clerkDays > 0 ? clerkDays : '🎯'}</div><div class="ec-stat-lbl">${clerkDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(225,29,72,0.15);color:#E11D48;border:1px solid rgba(225,29,72,0.3)">5 Subjects · 50 Chapters</span>
+        <button class="ec-enter" style="background:#E11D48">Start Clerk Prep →</button>
       </a>
 
       <!-- Union Public Service Commission (UPSC) Section -->
@@ -454,6 +474,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=11"></script>
+  <script type="module" src="assets/auth-sync.js?v=12"></script>
 </body>
 </html>

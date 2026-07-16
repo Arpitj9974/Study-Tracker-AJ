@@ -105,6 +105,12 @@ const SUBJECT_COLORS = {
   ugcnet_p1_ict:           { primary: '#0284C7' },
   ugcnet_p1_environment:   { primary: '#16A34A' },
   ugcnet_p1_highered:      { primary: '#B45309' },
+  // IBPS Clerk colors
+  ibps_clerk_qa:   { primary: '#E11D48' },
+  ibps_clerk_ra:   { primary: '#1D4ED8' },
+  ibps_clerk_gfa:  { primary: '#92400E' },
+  ibps_clerk_eng:  { primary: '#0D9488' },
+  ibps_clerk_comp: { primary: '#6B21A8' },
 };
 
 const KEYS = {
@@ -205,6 +211,12 @@ const KEYS = {
   ugcnet_p1_ict:           { prefix: 'ugcnet_ict_', total: 1, p1: 1 },
   ugcnet_p1_environment:   { prefix: 'ugcnet_env_', total: 1, p1: 1 },
   ugcnet_p1_highered:      { prefix: 'ugcnet_he_',  total: 1, p1: 1 },
+  // IBPS Clerk subjects
+  ibps_clerk_qa:   { prefix: 'iclk_qa_',   total: 13, p1: 13 },
+  ibps_clerk_ra:   { prefix: 'iclk_ra_',   total: 12, p1: 12 },
+  ibps_clerk_gfa:  { prefix: 'iclk_gfa_',  total: 8,  p1: 8  },
+  ibps_clerk_eng:  { prefix: 'iclk_eng_',  total: 10, p1: 10 },
+  ibps_clerk_comp: { prefix: 'iclk_comp_', total: 7,  p1: 7  },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -510,6 +522,23 @@ const EXAM_CONFIG = {
       { page: 'tracker-ugcnet.html?subj=ugcnet_p1_environment',   href: 'tracker-ugcnet.html?subj=ugcnet_p1_environment',   icon: '🌿', label: 'Environment' },
       { page: 'tracker-ugcnet.html?subj=ugcnet_p1_highered',      href: 'tracker-ugcnet.html?subj=ugcnet_p1_highered',      icon: '🏛️', label: 'Higher Education' }
     ]
+  },
+  ibps_clerk: {
+    label: 'IBPS Clerk (CSA)',
+    color: '#E11D48',
+    icon: '🏦',
+    subjects: ['ibps_clerk_qa', 'ibps_clerk_ra', 'ibps_clerk_gfa', 'ibps_clerk_eng', 'ibps_clerk_comp'],
+    countMode: 'all',
+    examDate: '2026-10-10',
+    totalChapters: 50,
+    links: [
+      { page: 'dashboard-ibps.html?exam=clerk', href: 'dashboard-ibps.html?exam=clerk', icon: '📊', label: 'Clerk Dashboard' },
+      { page: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_qa',   href: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_qa',   icon: '🔢', label: 'Quantitative Aptitude' },
+      { page: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_ra',   href: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_ra',   icon: '🧠', label: 'Reasoning Ability' },
+      { page: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_gfa',  href: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_gfa',  icon: '🏦', label: 'Financial Awareness' },
+      { page: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_eng',  href: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_eng',  icon: '📚', label: 'English Language' },
+      { page: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_comp', href: 'tracker-ibps.html?exam=clerk&subj=ibps_clerk_comp', icon: '💻', label: 'Computer Aptitude' }
+    ]
   }
 };
 
@@ -526,7 +555,12 @@ function getCurrentExam() {
   }
   if (page.includes('ugcnet')) return 'ugcnet';
   if (page.includes('upsc')) return 'upsc';
-  if (page.includes('ibps')) return 'ibps_po';
+  if (page.includes('ibps')) {
+    const params = new URLSearchParams(window.location.search);
+    const ex = params.get('exam');
+    if (ex === 'clerk') return 'ibps_clerk';
+    return 'ibps_po';
+  }
   if (page.includes('jee')) return 'jee';
   if (page.includes('neet')) return 'neet_ug';
   if (page.includes('cat')) return 'cat';

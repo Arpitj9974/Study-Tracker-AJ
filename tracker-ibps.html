@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>IBPS PO Subject Tracker — Arpit's Exam Hub</title>
+  <title>IBPS Subject Tracker — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
   <script src="./assets/ibps_po_exam_data.js"></script>
+  <script src="./assets/ibps_clerk_exam_data.js"></script>
   <style>
     .wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0; }
     .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
@@ -26,7 +27,7 @@
     .ch-card:hover { background: var(--bg-hover); border-color: var(--border-medium); }
     .ch-card.done { opacity: 0.65; background: var(--bg-elevated); }
     .ch-card.done .ch-title { text-decoration: line-through; color: var(--text-tertiary); }
-    .ch-card.done .ck-box { background: #B7791F; border-color: #B7791F; color: white; }
+    .ch-card.done .ck-box { background: var(--page-accent, #B7791F); border-color: var(--page-accent, #B7791F); color: white; }
 
     .ck-box {
       width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border-medium);
@@ -56,7 +57,7 @@
       <div class="th-top">
         <div class="th-title" id="subject-title">🏦 Subject Tracker</div>
         <div class="th-badges" id="subject-badges">
-          <span class="badge" style="background:rgba(183,121,31,0.15);color:#B7791F;border:1px solid rgba(183,121,31,0.3)" id="stage-badge">IBPS PO</span>
+          <span class="badge" style="background:rgba(183,121,31,0.15);color:#B7791F;border:1px solid rgba(183,121,31,0.3)" id="stage-badge">IBPS Banking</span>
         </div>
       </div>
       <div class="th-mini-stats" id="mini-stats"></div>
@@ -74,28 +75,39 @@
   </div>
   </div>
 </main>
-<script src="assets/nav.js?v=11"></script>
-<script type="module" src="assets/auth-sync.js?v=11"></script>
+<script src="assets/nav.js?v=12"></script>
+<script type="module" src="assets/auth-sync.js?v=12"></script>
 <script>
-  // Dynamic IBPS PO Subject Tracker Engine
+  // Dynamic IBPS PO / Clerk Subject Tracker Engine
   const params = new URLSearchParams(window.location.search);
-  const rawSubj = params.get('subj') || 'ibps_qnt';
-  const cleanSubjKey = rawSubj.startsWith('ibps_') ? rawSubj.replace('ibps_', '') : rawSubj;
+  const examMode = params.get('exam') === 'clerk' ? 'clerk' : 'po';
+  const isClerk = examMode === 'clerk';
+  const rawSubj = params.get('subj') || (isClerk ? 'ibps_clerk_qa' : 'ibps_qnt');
 
-  const subjConfig = EXAM_CONFIG_IBPS_PO.subjects.find(s => s.key === cleanSubjKey || s.key === rawSubj || s.prefix.includes(cleanSubjKey)) 
-                   || EXAM_CONFIG_IBPS_PO.subjects[0];
+  localStorage.setItem('selectedExam', isClerk ? 'ibps_clerk' : 'ibps_po');
+
+  const configData = isClerk ? EXAM_CONFIG_IBPS_CLERK : EXAM_CONFIG_IBPS_PO;
+  const priorityData = isClerk ? IBPS_CLERK_PRIORITY_DATA : IBPS_PO_PRIORITY_DATA;
+
+  const cleanSubjKey = rawSubj.startsWith('ibps_') ? rawSubj.replace('ibps_', '').replace('clerk_', '') : rawSubj;
+
+  const subjConfig = configData.subjects.find(s => s.key === cleanSubjKey || s.key === rawSubj || s.prefix.includes(cleanSubjKey)) 
+                   || configData.subjects[0];
 
   document.body.style.setProperty('--page-accent', subjConfig.color);
   document.getElementById('subject-title').innerHTML = `${subjConfig.icon} ${subjConfig.name}`;
-  document.getElementById('stage-badge').textContent = subjConfig.examStage;
-  document.title = `${subjConfig.name} — IBPS PO Tracker`;
+  document.getElementById('stage-badge').textContent = `${isClerk ? 'IBPS Clerk' : 'IBPS PO'} · ${subjConfig.examStage}`;
+  document.getElementById('stage-badge').style.background = subjConfig.color + '22';
+  document.getElementById('stage-badge').style.color = subjConfig.color;
+  document.getElementById('stage-badge').style.borderColor = subjConfig.color + '44';
+  document.title = `${subjConfig.name} — ${isClerk ? 'IBPS Clerk' : 'IBPS PO'} Tracker`;
 
   // Filter chapters for this subject
   const chapters = [];
   for (let i = 1; i <= subjConfig.totalChapters; i++) {
     const chKey = subjConfig.prefix + i;
-    if (IBPS_PO_PRIORITY_DATA[chKey]) {
-      chapters.push({ key: chKey, index: i, data: IBPS_PO_PRIORITY_DATA[chKey] });
+    if (priorityData[chKey]) {
+      chapters.push({ key: chKey, index: i, data: priorityData[chKey] });
     }
   }
 
@@ -172,13 +184,11 @@
     } else {
       localStorage.setItem(key, '1');
     }
-    // Dispatch storage event to update background sync & UI
     window.dispatchEvent(new Event('storage'));
     renderTracker();
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    localStorage.setItem('selectedExam', 'ibps_po');
     renderTracker();
   });
 

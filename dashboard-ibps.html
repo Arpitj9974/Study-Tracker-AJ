@@ -2,20 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>IBPS PO Dashboard — Arpit's Exam Hub</title>
-  <meta name="description" content="IBPS PO / MT Exam Preparation Dashboard."/>
+  <title>IBPS Banking Hub — Arpit's Exam Hub</title>
+  <meta name="description" content="IBPS PO and IBPS Clerk (Customer Service Associate) Exam Preparation Dashboard."/>
   <link rel="stylesheet" href="assets/style.css"/>
   <script src="./assets/ibps_po_exam_data.js"></script>
+  <script src="./assets/ibps_clerk_exam_data.js"></script>
   <style>
-    .page-content { padding: 28px 32px 60px; display: flex; flex-direction: column; gap: 32px; }
+    .page-content { padding: 28px 32px 60px; display: flex; flex-direction: column; gap: 24px; }
+    
+    /* Exam Tabs */
+    .tab-bar { display:flex; gap:12px; background:var(--bg-elevated); padding:6px; border-radius:12px; border:1px solid var(--border-medium); width:fit-content; margin-bottom:8px; }
+    .exam-tab { padding:10px 20px; font:600 14px/1 'DM Sans'; border-radius:8px; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:8px; }
+    .exam-tab:hover { color:var(--text-primary); background:rgba(255,255,255,0.04); }
+    .exam-tab.active { background:#B7791F; color:white; box-shadow:0 2px 8px rgba(183,121,31,0.3); }
+    .exam-tab.active.clerk { background:#E11D48; box-shadow:0 2px 8px rgba(225,29,72,0.3); }
+
     /* Hub header */
-    .hub-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 26px; background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); flex-wrap:wrap; border-left:3px solid #B7791F; }
+    .hub-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 26px; background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); flex-wrap:wrap; border-left:3px solid #B7791F; transition:border-color .2s; }
     .hub-name   { font:700 21px/1.2 'DM Sans'; color:var(--text-primary); margin-bottom:4px; }
     .hub-tag    { font:500 10px/1 'JetBrains Mono'; color:#B7791F; text-transform:uppercase; letter-spacing:.08em; }
     .cdown-lbl  { font:500 9px/1 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.07em; color:var(--text-tertiary); margin-bottom:4px; }
     .cdown-row  { display:flex; align-items:baseline; gap:6px; }
     #countdown-days  { font:700 38px/1 'JetBrains Mono'; }
     #countdown-badge { font:600 13px/1 'DM Sans'; }
+
     /* Master stats */
     .master-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
     @media(max-width:900px){ .master-grid{ grid-template-columns:repeat(3,1fr); } }
@@ -25,9 +35,11 @@
     .ms-lbl { font:500 9px/1 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.06em; color:var(--text-tertiary); }
     .ms-val { font:600 26px/1 'JetBrains Mono'; color:var(--text-primary); }
     .ms-sub { font:400 11px/1 'DM Sans'; color:var(--text-tertiary); }
+
     /* Donut + stats together */
     .overview-row { display:grid; grid-template-columns:120px 1fr; gap:24px; align-items:center; }
     .donut-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; }
+
     /* Subject cards */
     .subject-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     @media(max-width:650px){ .subject-grid{ grid-template-columns:1fr; } }
@@ -42,6 +54,7 @@
     .sc-phase-count { margin-left:auto; font:500 11px/1 'JetBrains Mono'; color:var(--text-tertiary); }
     .sc-link    { display:inline-flex; align-items:center; font:500 12px/1 'DM Sans'; color:var(--text-tertiary); text-decoration:none; border-top:1px solid var(--border-subtle); padding-top:10px; transition:color .2s; }
     .sc-link:hover{ color:var(--subj-color,#B7791F); }
+
     /* Focus + Smart */
     .focus-wrap  { background:var(--bg-surface); border:1px solid var(--accent-amber); border-radius:var(--radius-lg); padding:22px; }
     .focus-on-track{ font:500 14px/1.5 'DM Sans'; color:var(--accent-green); }
@@ -59,11 +72,20 @@
   <div class="content-wrapper">
   <div class="page-content">
 
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button id="tab-po" class="exam-tab active" onclick="switchIBPSExam('po')">🏦 IBPS PO / MT</button>
+      <button id="tab-clerk" class="exam-tab" onclick="switchIBPSExam('clerk')">📋 IBPS Clerk (CSA)</button>
+    </div>
+
     <!-- ① HEADER -->
-    <div class="hub-header">
-      <div><div class="hub-name">🏦 IBPS PO / MT (CRP PO/MT-XVI)</div><div class="hub-tag">Prelims (Qualifying) · Mains Objective + Descriptive · Interview</div></div>
+    <div class="hub-header" id="ibps-hub-header">
       <div>
-        <div class="cdown-lbl">Days until Prelims 2026</div>
+        <div class="hub-name" id="ibps-hub-name">🏦 IBPS PO / MT (CRP PO/MT-XVI)</div>
+        <div class="hub-tag" id="ibps-hub-tag">Prelims (Qualifying) · Mains Objective + Descriptive · Interview</div>
+      </div>
+      <div>
+        <div class="cdown-lbl" id="countdown-lbl">Days until Prelims 2026</div>
         <div class="cdown-row">
           <span id="countdown-days" style="color:#B7791F">—</span>
           <span id="countdown-badge" style="color:#B7791F">days left</span>
@@ -73,32 +95,32 @@
 
     <!-- ② MASTER STATS -->
     <div>
-      <div class="section-head" style="--accent-purple:#B7791F"><h2>IBPS PO Stats</h2></div>
+      <div class="section-head" style="--accent-purple:#B7791F"><h2 id="ibps-stats-title">IBPS PO Stats</h2></div>
       <div class="master-grid">
-        <div class="ms-card" style="border-left-color:#B7791F">
+        <div class="ms-card" id="ms-card-done" style="border-left-color:#B7791F">
           <span class="ms-lbl">Total Done</span>
           <span class="ms-val" id="ms-total-done" style="color:#B7791F">—</span>
           <span class="ms-sub">chapters</span>
         </div>
         <div class="ms-card" style="border-left-color:var(--border-medium)">
           <span class="ms-lbl">Total Chapters</span>
-          <span class="ms-val">68</span>
-          <span class="ms-sub">IBPS PO syllabus</span>
+          <span class="ms-val" id="ms-total-chapters">68</span>
+          <span class="ms-sub" id="ms-syllabus-sub">IBPS PO syllabus</span>
         </div>
-        <div class="ms-card" style="border-left-color:#B7791F">
+        <div class="ms-card" id="ms-card-pct" style="border-left-color:#B7791F">
           <span class="ms-lbl">Overall %</span>
           <span class="ms-val" id="ms-overall-pct" style="background:linear-gradient(90deg,#B7791F,#2B8A6E);-webkit-background-clip:text;color:transparent">—</span>
           <span class="ms-sub">of syllabus</span>
         </div>
-        <div class="ms-card" style="border-left-color:#B7791F">
+        <div class="ms-card" id="ms-card-subj" style="border-left-color:#B7791F">
           <span class="ms-lbl">Subjects</span>
-          <span class="ms-val" style="color:#B7791F">6</span>
+          <span class="ms-val" id="ms-subj-count" style="color:#B7791F">6</span>
           <span class="ms-sub">active modules</span>
         </div>
         <div class="ms-card" style="border-left-color:var(--text-muted)">
           <span class="ms-lbl">Target Exam</span>
-          <span class="ms-val" style="color:var(--accent-amber);font-size:20px">22 Aug 2026</span>
-          <span class="ms-sub" style="color:var(--text-muted)">PO Prelims</span>
+          <span class="ms-val" id="ms-target-date" style="color:var(--accent-amber);font-size:18px">22 Aug 2026</span>
+          <span class="ms-sub" id="ms-target-label" style="color:var(--text-muted)">Prelims</span>
         </div>
       </div>
     </div>
@@ -132,8 +154,8 @@
   </div>
   </div>
 </main>
-<script src="assets/nav.js?v=11"></script>
-<script src="assets/dashboard-ibps.js?v=1"></script>
-<script type="module" src="assets/auth-sync.js?v=11"></script>
+<script src="assets/nav.js?v=12"></script>
+<script src="assets/dashboard-ibps.js?v=2"></script>
+<script type="module" src="assets/auth-sync.js?v=12"></script>
 </body>
 </html>
