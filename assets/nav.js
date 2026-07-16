@@ -119,6 +119,12 @@ const SUBJECT_COLORS = {
   xat_valr: { primary: '#1F618D' },
   xat_qadi: { primary: '#B9770E' },
   xat_gk:   { primary: '#5D6D7E' },
+  // CLAT UG colors
+  clat_legal: { primary: '#7B241C' },
+  clat_ca:    { primary: '#1A5276' },
+  clat_eng:   { primary: '#117A65' },
+  clat_lr:    { primary: '#6C3483' },
+  clat_qt:    { primary: '#B9770E' },
 };
 
 const KEYS = {
@@ -233,6 +239,12 @@ const KEYS = {
   xat_valr: { prefix: 'xat_valr_', total: 10, p1: 10 },
   xat_qadi: { prefix: 'xat_qadi_', total: 24, p1: 24 },
   xat_gk:   { prefix: 'xat_gk_',   total: 10, p1: 10 },
+  // CLAT UG subjects
+  clat_legal: { prefix: 'clat_legal_', total: 10, p1: 10 },
+  clat_ca:    { prefix: 'clat_ca_',    total: 10, p1: 10 },
+  clat_eng:   { prefix: 'clat_eng_',   total: 8,  p1: 8  },
+  clat_lr:    { prefix: 'clat_lr_',    total: 10, p1: 10 },
+  clat_qt:    { prefix: 'clat_qt_',    total: 10, p1: 10 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -585,6 +597,23 @@ const EXAM_CONFIG = {
       { page: 'tracker-xat.html?subj=xat_qadi', href: 'tracker-xat.html?subj=xat_qadi', icon: '🔢', label: 'Quantitative & DI' },
       { page: 'tracker-xat.html?subj=xat_gk',   href: 'tracker-xat.html?subj=xat_gk',   icon: '🌏', label: 'General Knowledge' }
     ]
+  },
+  clat_ug: {
+    label: 'CLAT UG',
+    color: '#7B241C',
+    icon: '⚖️',
+    subjects: ['clat_legal', 'clat_ca', 'clat_eng', 'clat_lr', 'clat_qt'],
+    countMode: 'all',
+    examDate: '2026-12-06',
+    totalChapters: 48,
+    links: [
+      { page: 'dashboard-clat.html', href: 'dashboard-clat.html', icon: '📊', label: 'CLAT Dashboard' },
+      { page: 'tracker-clat.html?subj=clat_legal', href: 'tracker-clat.html?subj=clat_legal', icon: '⚖️', label: 'Legal Reasoning' },
+      { page: 'tracker-clat.html?subj=clat_ca',    href: 'tracker-clat.html?subj=clat_ca',    icon: '📰', label: 'Current Affairs & GK' },
+      { page: 'tracker-clat.html?subj=clat_eng',   href: 'tracker-clat.html?subj=clat_eng',   icon: '📖', label: 'English Language' },
+      { page: 'tracker-clat.html?subj=clat_lr',    href: 'tracker-clat.html?subj=clat_lr',    icon: '🧩', label: 'Logical Reasoning' },
+      { page: 'tracker-clat.html?subj=clat_qt',    href: 'tracker-clat.html?subj=clat_qt',    icon: '🔢', label: 'Quantitative Techniques' }
+    ]
   }
 };
 
@@ -602,6 +631,7 @@ function getCurrentExam() {
   if (page.includes('ugcnet')) return 'ugcnet';
   if (page.includes('nda')) return 'nda';
   if (page.includes('xat')) return 'xat';
+  if (page.includes('clat')) return 'clat_ug';
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) {
     const params = new URLSearchParams(window.location.search);

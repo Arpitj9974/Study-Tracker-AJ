@@ -11,6 +11,7 @@
   <script src="assets/ibps_clerk_exam_data.js"></script>
   <script src="assets/nda_exam_data.js"></script>
   <script src="assets/xat_exam_data.js"></script>
+  <script src="assets/clat_ug_exam_data.js"></script>
   <style>
     body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
     .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
@@ -87,7 +88,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=15"></script>
+  <script src="assets/nav.js?v=16"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -211,6 +212,12 @@
     const xatDone = Object.values(xatStats).reduce((s, v) => s + v.done, 0);
     const xatPct = Math.round((xatDone / EXAM_CONFIG.xat.totalChapters) * 100);
     const xatDays = Math.ceil((new Date(EXAM_CONFIG.xat.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // CLAT UG stats
+    const clatStats = readExamStats('clat_ug');
+    const clatDone = Object.values(clatStats).reduce((s, v) => s + v.done, 0);
+    const clatPct = Math.round((clatDone / EXAM_CONFIG.clat_ug.totalChapters) * 100);
+    const clatDays = Math.ceil((new Date(EXAM_CONFIG.clat_ug.examDate + 'T00:00:00') - new Date()) / 86400000);
 
     grid.innerHTML = `
       <!-- Corporate Placement & Aptitude -->
@@ -474,6 +481,24 @@
         <button class="ec-enter" style="background:#943126">Start XAT Prep →</button>
       </a>
 
+      <!-- Law Entrance Examinations (NLU / CLAT) Section Header -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#7B241C;display:flex;align-items:center;gap:10px">
+        <span>⚖️</span> Law Entrance Examinations (NLU / CLAT)
+      </div>
+
+      <a href="dashboard-clat.html" class="exam-card" style="--card-glow:rgba(123,36,28,0.12);--card-border:rgba(123,36,28,0.4);border-top-color:#7B241C" onclick="if(window.setSelectedExam)window.setSelectedExam('clat_ug');else localStorage.setItem('selectedExam','clat_ug')">
+        <span class="ec-icon">⚖️</span>
+        <div class="ec-name">CLAT UG</div>
+        <div class="ec-desc">Legal Reasoning, Current Affairs, English, LR & Quant</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#7B241C">${clatPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#7B241C">${clatDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.clat_ug.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${clatDays < 30 ? '#EF4444' : '#7B241C'}">${clatDays > 0 ? clatDays : '🎯'}</div><div class="ec-stat-lbl">${clatDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(123,36,28,0.15);color:#7B241C;border:1px solid rgba(123,36,28,0.3)">5 Sections · 48 Chapters</span>
+        <button class="ec-enter" style="background:#7B241C">Start CLAT Prep →</button>
+      </a>
+
       <!-- Chartered Accountancy (CA) Section Header -->
       <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#C0392B;display:flex;align-items:center;gap:10px">
         <span>🎓</span> Chartered Accountancy (CA — ICAI)
@@ -519,6 +544,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=15"></script>
+  <script type="module" src="assets/auth-sync.js?v=16"></script>
 </body>
 </html>
