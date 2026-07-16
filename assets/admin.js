@@ -94,8 +94,38 @@ async function loadAdminData() {
     populateExamFilter();
     renderUserTable();
   } catch (e) {
-    console.error("Error fetching admin users:", e);
-    tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#EF4444">Failed to load users: ${e.message}</td></tr>`;
+    console.error("Error fetching admin users from Firestore:", e);
+    const isPermissionErr = e.code === 'permission-denied' || (e.message && e.message.includes('permissions'));
+    
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="7" style="padding:24px;text-align:left">
+          <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:20px;color:var(--text-primary)">
+            <div style="font:700 16px/1.2 'DM Sans';color:#EF4444;margin-bottom:8px">
+              ⚠️ Firestore Permission / Security Rules Warning
+            </div>
+            <div style="font:400 13px/1.5 'DM Sans';color:var(--text-secondary);margin-bottom:14px">
+              ${isPermissionErr 
+                ? 'Your Firebase Firestore Security Rules currently restrict reading all user accounts. To allow your Admin Panel to list all registered users, update your rules in Firebase Console.' 
+                : e.message}
+            </div>
+            ${isPermissionErr ? `
+              <div style="background:rgba(0,0,0,0.4);padding:14px;border-radius:8px;font:400 12px 'JetBrains Mono';color:#F59E0B;margin-bottom:14px;white-space:pre-wrap">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}</div>
+              <div style="font:400 12px/1.4 'DM Sans';color:var(--text-tertiary)">
+                👉 <strong>How to fix:</strong> Go to <a href="https://console.firebase.google.com" target="_blank" style="color:#F59E0B">Firebase Console</a> → Project <strong>arpits-exam-hub</strong> → Firestore Database → Rules tab → Paste the rule above and click <strong>Publish</strong>.
+              </div>
+            ` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
   }
 }
 
@@ -301,5 +331,9 @@ document.getElementById('exam-filter').addEventListener('change', renderUserTabl
 document.getElementById('sort-filter').addEventListener('change', renderUserTable);
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadAdminData();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loadAdminData();
+    }
+  });
 });
