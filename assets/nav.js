@@ -84,6 +84,17 @@ const SUBJECT_COLORS = {
   rrbd_sci:  { primary: '#229954' },
   rrbd_math: { primary: '#CA6F1E' },
   rrbd_ga:   { primary: '#7D3C98' },
+  // SSC CHSL colors
+  chsl_eng:      { primary: '#8E44AD' },
+  chsl_reason:   { primary: '#2980B9' },
+  chsl_math:     { primary: '#27AE60' },
+  chsl_ga:       { primary: '#E67E22' },
+  chsl_computer: { primary: '#1ABC9C' },
+  // SSC MTS colors
+  mts_ga:     { primary: '#E67E22' },
+  mts_eng:    { primary: '#8E44AD' },
+  mts_math:   { primary: '#27AE60' },
+  mts_reason: { primary: '#2980B9' },
 };
 
 const KEYS = {
@@ -163,6 +174,17 @@ const KEYS = {
   rrbd_sci:  { prefix: 'rrbd_sci_',  total: 21, p1: 21 },
   rrbd_math: { prefix: 'rrbd_math_', total: 18, p1: 18 },
   rrbd_ga:   { prefix: 'rrbd_ga_',   total: 16, p1: 16 },
+  // SSC CHSL subjects
+  chsl_eng:      { prefix: 'chsl_eng_',    total: 11, p1: 11 },
+  chsl_reason:   { prefix: 'chsl_reason_', total: 12, p1: 12 },
+  chsl_math:     { prefix: 'chsl_math_',   total: 13, p1: 13 },
+  chsl_ga:       { prefix: 'chsl_ga_',     total: 12, p1: 12 },
+  chsl_computer: { prefix: 'chsl_comp_',   total: 6,  p1: 6  },
+  // SSC MTS subjects
+  mts_ga:     { prefix: 'mts_ga_',     total: 12, p1: 12 },
+  mts_eng:    { prefix: 'mts_eng_',    total: 10, p1: 10 },
+  mts_math:   { prefix: 'mts_math_',   total: 12, p1: 12 },
+  mts_reason: { prefix: 'mts_reason_', total: 11, p1: 11 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -410,6 +432,39 @@ const EXAM_CONFIG = {
       { page: 'tracker-rrb.html?exam=group_d&subj=rrbd_math', href: 'tracker-rrb.html?exam=group_d&subj=rrbd_math', icon: '🔢', label: 'Mathematics' },
       { page: 'tracker-rrb.html?exam=group_d&subj=rrbd_ga',   href: 'tracker-rrb.html?exam=group_d&subj=rrbd_ga',   icon: '🌏', label: 'General Awareness' }
     ]
+  },
+  ssc_chsl: {
+    label: 'SSC CHSL',
+    color: '#8E44AD',
+    icon: '📝',
+    subjects: ['chsl_eng', 'chsl_reason', 'chsl_math', 'chsl_ga', 'chsl_computer'],
+    countMode: 'all',
+    examDate: '2026-07-01',
+    totalChapters: 54,
+    links: [
+      { page: 'dashboard-ssc.html?exam=chsl', href: 'dashboard-ssc.html?exam=chsl', icon: '📊', label: 'CHSL Dashboard' },
+      { page: 'tracker-ssc.html?exam=chsl&subj=chsl_eng',      href: 'tracker-ssc.html?exam=chsl&subj=chsl_eng',      icon: '📝', label: 'English Language' },
+      { page: 'tracker-ssc.html?exam=chsl&subj=chsl_reason',   href: 'tracker-ssc.html?exam=chsl&subj=chsl_reason',   icon: '🧠', label: 'Reasoning' },
+      { page: 'tracker-ssc.html?exam=chsl&subj=chsl_math',     href: 'tracker-ssc.html?exam=chsl&subj=chsl_math',     icon: '🔢', label: 'Quantitative Aptitude' },
+      { page: 'tracker-ssc.html?exam=chsl&subj=chsl_ga',       href: 'tracker-ssc.html?exam=chsl&subj=chsl_ga',       icon: '🌍', label: 'General Awareness' },
+      { page: 'tracker-ssc.html?exam=chsl&subj=chsl_computer', href: 'tracker-ssc.html?exam=chsl&subj=chsl_computer', icon: '💻', label: 'Computer Knowledge' }
+    ]
+  },
+  ssc_mts: {
+    label: 'SSC MTS & Havaldar',
+    color: '#E67E22',
+    icon: '🧹',
+    subjects: ['mts_ga', 'mts_eng', 'mts_math', 'mts_reason'],
+    countMode: 'all',
+    examDate: '2026-09-01',
+    totalChapters: 45,
+    links: [
+      { page: 'dashboard-ssc.html?exam=mts', href: 'dashboard-ssc.html?exam=mts', icon: '📊', label: 'MTS Dashboard' },
+      { page: 'tracker-ssc.html?exam=mts&subj=mts_ga',     href: 'tracker-ssc.html?exam=mts&subj=mts_ga',     icon: '🌍', label: 'General Awareness' },
+      { page: 'tracker-ssc.html?exam=mts&subj=mts_eng',    href: 'tracker-ssc.html?exam=mts&subj=mts_eng',    icon: '📝', label: 'English Language' },
+      { page: 'tracker-ssc.html?exam=mts&subj=mts_math',   href: 'tracker-ssc.html?exam=mts&subj=mts_math',   icon: '🔢', label: 'Numerical Ability' },
+      { page: 'tracker-ssc.html?exam=mts&subj=mts_reason', href: 'tracker-ssc.html?exam=mts&subj=mts_reason', icon: '🧠', label: 'Reasoning Ability' }
+    ]
   }
 };
 
@@ -417,7 +472,13 @@ const EXAM_CONFIG = {
 function getCurrentExam() {
   const page = window.location.pathname.split('/').pop() || '';
   if (page.includes('nqt')) return 'nqt';
-  if (page.includes('ssc')) return 'ssc';
+  if (page.includes('ssc')) {
+    const params = new URLSearchParams(window.location.search);
+    const ex = params.get('exam');
+    if (ex === 'chsl') return 'ssc_chsl';
+    if (ex === 'mts') return 'ssc_mts';
+    return 'ssc';
+  }
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) return 'ibps_po';
   if (page.includes('jee')) return 'jee';

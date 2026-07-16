@@ -5,6 +5,8 @@
   <title>Arpit's Exam Hub — Choose Your Exam</title>
   <meta name="description" content="Select your exam to start tracking: TCS NQT, SSC CGL, or UPSC."/>
   <link rel="stylesheet" href="assets/style.css"/>
+  <script src="assets/ssc_chsl_exam_data.js"></script>
+  <script src="assets/ssc_mts_exam_data.js"></script>
   <style>
     body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
     .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
@@ -81,7 +83,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=9"></script>
+  <script src="assets/nav.js?v=10"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -170,10 +172,22 @@
     const rrbdPct = Math.round((rrbdDone / EXAM_CONFIG.rrb_group_d.totalChapters) * 100);
     const rrbdDays = Math.ceil((new Date(EXAM_CONFIG.rrb_group_d.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // SSC CHSL stats
+    const chslStats = readExamStats('ssc_chsl');
+    const chslDone = Object.values(chslStats).reduce((s, v) => s + v.done, 0);
+    const chslPct = Math.round((chslDone / EXAM_CONFIG.ssc_chsl.totalChapters) * 100);
+    const chslDays = Math.ceil((new Date(EXAM_CONFIG.ssc_chsl.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // SSC MTS stats
+    const mtsStats = readExamStats('ssc_mts');
+    const mtsDone = Object.values(mtsStats).reduce((s, v) => s + v.done, 0);
+    const mtsPct = Math.round((mtsDone / EXAM_CONFIG.ssc_mts.totalChapters) * 100);
+    const mtsDays = Math.ceil((new Date(EXAM_CONFIG.ssc_mts.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
-      <!-- Placement & Government Exams -->
+      <!-- Placement & National Level Exams -->
       <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
-        <span>🏛️</span> Placement & Competitive Exams
+        <span>🏛️</span> Placement & National Level Exams
       </div>
 
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="if(window.setSelectedExam)window.setSelectedExam('nqt');else localStorage.setItem('selectedExam','nqt')">
@@ -187,19 +201,6 @@
         </div>
         <span class="ec-badge" style="background:rgba(127,119,221,0.15);color:#7F77DD;border:1px solid rgba(127,119,221,0.3)">${EXAM_CONFIG.nqt.subjects.length} Subjects · ${EXAM_CONFIG.nqt.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#7F77DD">Start NQT Prep →</button>
-      </a>
-
-      <a href="dashboard-ssc.html" class="exam-card" style="--card-glow:rgba(29,158,117,0.12);--card-border:rgba(29,158,117,0.4);border-top-color:#1D9E75" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc');else localStorage.setItem('selectedExam','ssc')">
-        <span class="ec-icon">📋</span>
-        <div class="ec-name">SSC CGL</div>
-        <div class="ec-desc">Quant, Reasoning, English & General Knowledge</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${sscDays < 30 ? '#EF4444' : '#1D9E75'}">${sscDays > 0 ? sscDays : '🎯'}</div><div class="ec-stat-lbl">${sscDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(29,158,117,0.15);color:#1D9E75;border:1px solid rgba(29,158,117,0.3)">${EXAM_CONFIG.ssc.subjects.length} Subjects · ${EXAM_CONFIG.ssc.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#1D9E75">Start SSC Prep →</button>
       </a>
 
       <a href="dashboard-upsc.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('upsc');else localStorage.setItem('selectedExam','upsc')">
@@ -226,6 +227,50 @@
         </div>
         <span class="ec-badge" style="background:rgba(183,121,31,0.15);color:#B7791F;border:1px solid rgba(183,121,31,0.3)">${EXAM_CONFIG.ibps_po.subjects.length} Subjects · ${EXAM_CONFIG.ibps_po.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#B7791F">Start IBPS Prep →</button>
+      </a>
+
+      <!-- Staff Selection Commission (SSC) Section -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#1D9E75;display:flex;align-items:center;gap:10px">
+        <span>📋</span> Staff Selection Commission (SSC)
+      </div>
+
+      <a href="dashboard-ssc.html?exam=cgl" class="exam-card" style="--card-glow:rgba(29,158,117,0.12);--card-border:rgba(29,158,117,0.4);border-top-color:#1D9E75" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc');else localStorage.setItem('selectedExam','ssc')">
+        <span class="ec-icon">📋</span>
+        <div class="ec-name">SSC CGL</div>
+        <div class="ec-desc">Quant, Reasoning, English & General Knowledge</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${sscDays < 30 ? '#EF4444' : '#1D9E75'}">${sscDays > 0 ? sscDays : '🎯'}</div><div class="ec-stat-lbl">${sscDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(29,158,117,0.15);color:#1D9E75;border:1px solid rgba(29,158,117,0.3)">5 Subjects · ${EXAM_CONFIG.ssc.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#1D9E75">Start CGL Prep →</button>
+      </a>
+
+      <a href="dashboard-ssc.html?exam=chsl" class="exam-card" style="--card-glow:rgba(142,68,173,0.12);--card-border:rgba(142,68,173,0.4);border-top-color:#8E44AD" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_chsl');else localStorage.setItem('selectedExam','ssc_chsl')">
+        <span class="ec-icon">📝</span>
+        <div class="ec-name">SSC CHSL</div>
+        <div class="ec-desc">English, Reasoning, Quant, GA & Computer Knowledge</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#8E44AD">${chslPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#8E44AD">${chslDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc_chsl.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${chslDays < 30 ? '#EF4444' : '#8E44AD'}">${chslDays > 0 ? chslDays : '🎯'}</div><div class="ec-stat-lbl">${chslDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(142,68,173,0.15);color:#8E44AD;border:1px solid rgba(142,68,173,0.3)">5 Subjects · 54 Chapters</span>
+        <button class="ec-enter" style="background:#8E44AD">Start CHSL Prep →</button>
+      </a>
+
+      <a href="dashboard-ssc.html?exam=mts" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_mts');else localStorage.setItem('selectedExam','ssc_mts')">
+        <span class="ec-icon">🧹</span>
+        <div class="ec-name">SSC MTS & Havaldar</div>
+        <div class="ec-desc">GA, English, Numerical & Reasoning Ability</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${mtsPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${mtsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc_mts.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${mtsDays < 30 ? '#EF4444' : '#E67E22'}">${mtsDays > 0 ? mtsDays : '🎯'}</div><div class="ec-stat-lbl">${mtsDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(230,126,34,0.15);color:#E67E22;border:1px solid rgba(230,126,34,0.3)">4 Subjects · 45 Chapters</span>
+        <button class="ec-enter" style="background:#E67E22">Start MTS Prep →</button>
       </a>
 
       <a href="dashboard-cds.html" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="if(window.setSelectedExam)window.setSelectedExam('cds');else localStorage.setItem('selectedExam','cds')">
@@ -379,6 +424,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=9"></script>
+  <script type="module" src="assets/auth-sync.js?v=10"></script>
 </body>
 </html>

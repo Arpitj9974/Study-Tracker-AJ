@@ -1,155 +1,173 @@
-// dashboard-ssc.js — SSC CGL-specific dashboard logic
+/* ============================================================================
+ * dashboard-ssc.js — Multi-exam controller for SSC CGL, CHSL, and MTS
+ * ============================================================================ */
 
-const SSC_SUBJECTS = [
-  { key: 'speedmath', label: 'Speed Math',        icon: '⚡', color: SUBJECT_COLORS.speedmath.primary, link: 'tracker-speedmath.html' },
-  { key: 'quant',     label: 'Quant',             icon: '🔢', color: SUBJECT_COLORS.quant.primary,     link: 'tracker-quant.html' },
-  { key: 'reasoning', label: 'Reasoning',         icon: '🧠', color: SUBJECT_COLORS.reasoning.primary, link: 'tracker-reasoning.html' },
-  { key: 'english',   label: 'English',           icon: '📝', color: SUBJECT_COLORS.english.primary,   link: 'tracker-english.html' },
-  { key: 'gk',        label: 'General Knowledge', icon: '🌍', color: SUBJECT_COLORS.gk.primary,        link: 'tracker-gk.html' },
-];
-
-const SSC_TOTAL = 162;
-
-function renderSSCCountdown() {
-  const examDate = new Date(EXAM_CONFIG.ssc.examDate + 'T00:00:00');
-  const days = Math.ceil((examDate - new Date()) / 86400000);
-  const el   = document.getElementById('countdown-days');
-  const badge = document.getElementById('countdown-badge');
-  if (!el) return;
-  el.textContent = days > 0 ? days : '0';
-  const color = days < 30 ? 'var(--accent-red)' : days < 60 ? 'var(--accent-amber)' : 'var(--accent-green)';
-  el.style.color   = color;
-  if (badge) { badge.textContent = days > 0 ? 'days left' : 'SSC Exam Day!'; badge.style.color = color; }
+function switchSSCExam(examType) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('exam', examType);
+  window.history.pushState({}, '', url.toString());
+  const selectedKey = examType === 'chsl' ? 'ssc_chsl' : (examType === 'mts' ? 'ssc_mts' : 'ssc');
+  localStorage.setItem('selectedExam', selectedKey);
+  renderSSCDashboard();
 }
 
-function renderSSCDonut(stats) {
-  const svg = document.getElementById('donut-svg');
-  if (!svg) return;
-  const R = 54, C = 2 * Math.PI * R;
-  const grandDone = Object.values(stats).reduce((s, v) => s + v.done, 0);
-  const pct = Math.round((grandDone / SSC_TOTAL) * 100);
+function renderSSCDashboard() {
+  const params = new URLSearchParams(window.location.search);
+  let examType = params.get('exam') || 'cgl';
+  if (!['cgl', 'chsl', 'mts'].includes(examType)) examType = 'cgl';
 
-  // Per-subject arcs
-  let usedAngle = 0;
-  const arcs = SSC_SUBJECTS.map(s => {
-    const d = stats[s.key];
-    const subjPct = d.done / SSC_TOTAL;
-    const arc = subjPct * C;
-    const off = C - arc;
-    const rot = -90 + usedAngle * 360;
-    usedAngle += subjPct;
-    return `<circle cx="60" cy="60" r="${R}" fill="none" stroke="${s.color}" stroke-width="10"
-      stroke-dasharray="${C}" stroke-dashoffset="${off}"
-      stroke-linecap="round" transform="rotate(${rot} 60 60)" style="transition:stroke-dashoffset 1.2s ease"/>`;
+  const examKey = examType === 'chsl' ? 'ssc_chsl' : (examType === 'mts' ? 'ssc_mts' : 'ssc');
+  const config = EXAM_CONFIG[examKey];
+
+  // Active Tab Highlight
+  document.querySelectorAll('#ssc-tabs button').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-exam') === examType);
   });
 
-  svg.innerHTML = `
-    <circle cx="60" cy="60" r="${R}" fill="none" stroke="#222640" stroke-width="10"/>
-    ${arcs.join('')}
-    <text x="60" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="16" font-weight="600" fill="#F0F2FF">${pct}%</text>
-    <text x="60" y="72" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#5A6080">${grandDone}/${SSC_TOTAL}</text>`;
-}
+  // Headers
+  if (examType === 'cgl') {
+    document.getElementById('ssc-exam-title').textContent = "SSC CGL";
+    document.getElementById('ssc-exam-sub').textContent = "Combined Graduate Level Examination (Group B & C Posts)";
+    document.getElementById('ssc-strategy-note').innerHTML = "<strong>💡 Strategy Note:</strong> Tier 1 (100 Qs / 200 Marks / 60 Min) is shortlisting. Tier 2 (Quant, Reasoning, English, GA, Computer) determines final merit list.";
+  } else if (examType === 'chsl') {
+    document.getElementById('ssc-exam-title').textContent = EXAM_CONFIG_CHSL.fullName;
+    document.getElementById('ssc-exam-sub').textContent = `${EXAM_CONFIG_CHSL.eligibility} · Posts: ${EXAM_CONFIG_CHSL.posts}`;
+    document.getElementById('ssc-strategy-note').innerHTML = "<strong>💡 Strategy Note:</strong> Tier 1 (100 Qs / 200 Marks) is qualifying. Tier 2 Session I objective score determines final merit. Skill/Typing test is qualifying.";
+  } else {
+    document.getElementById('ssc-exam-title').textContent = EXAM_CONFIG_MTS.fullName;
+    document.getElementById('ssc-exam-sub').textContent = `${EXAM_CONFIG_MTS.eligibility}`;
+    document.getElementById('ssc-strategy-note').innerHTML = "<strong>💡 Strategy Note:</strong> Session I (Math & Reasoning) has <strong>NO negative marking</strong>. Session II (GA & English) has <strong>−1 negative marking</strong> and determines final merit selection!";
+  }
 
-function renderSSCMasterStats(stats) {
-  const grandDone = Object.values(stats).reduce((s, v) => s + v.done, 0);
-  const pct = Math.round((grandDone / SSC_TOTAL) * 100);
-  const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
-  set('ms-total-done', grandDone);
-  set('ms-overall-pct', pct + '%');
-}
+  // Calculate statistics
+  let totalDone = 0;
+  let totalChapters = config.totalChapters;
 
-function renderSSCSubjectCards(stats) {
-  const container = document.getElementById('subject-cards');
-  if (!container) return;
-  container.innerHTML = SSC_SUBJECTS.map((s, idx) => {
-    const d = stats[s.key];
-    const totp = d.total > 0 ? Math.round((d.done / d.total) * 100) : 0;
-    // Show Phase 1 + Phase 2 breakdown for SSC
-    const p1p = d.p1 > 0 ? Math.round((d.p1done / d.p1) * 100) : 100;
-    const p2p = d.p2 > 0 ? Math.round((d.p2done / d.p2) * 100) : 0;
-    return `<div class="subject-card" style="--subj-color:${s.color}">
-      <div class="sc-header">
-        <div class="sc-title"><span class="sc-icon">${s.icon}</span>${s.label}</div>
-        <span class="sc-pct" style="color:${s.color};font:700 20px/1 'JetBrains Mono'">${totp}%</span>
-      </div>
-      <div class="sc-phases">
-        <div class="sc-phase">
-          <div class="sc-phase-label"><span>Tier 1 Core</span><span class="sc-phase-count">${d.p1done}/${d.p1}</span></div>
-          <div class="progress-bar"><div class="progress-fill" style="background:${s.color}" data-w="${p1p}"></div></div>
+  let subjectsList = [];
+  if (examType === 'cgl') {
+    subjectsList = [
+      { key: 'speedmath', name: 'Speed Math', icon: '⚡', color: '#7F77DD', tracker: 'tracker-speedmath.html' },
+      { key: 'quant',     name: 'Quantitative Aptitude', icon: '🔢', color: '#1D9E75', tracker: 'tracker-quant.html' },
+      { key: 'reasoning', name: 'Reasoning Ability', icon: '🧠', color: '#3B5BDB', tracker: 'tracker-reasoning.html' },
+      { key: 'english',   name: 'English Language', icon: '📝', color: '#8E44AD', tracker: 'tracker-english.html' },
+      { key: 'gk',        name: 'General Knowledge', icon: '🌍', color: '#B7791F', tracker: 'tracker-gk.html' }
+    ];
+  } else if (examType === 'chsl') {
+    subjectsList = EXAM_CONFIG_CHSL.subjects.map(s => ({
+      key: s.key,
+      name: s.name,
+      icon: s.icon,
+      color: s.color,
+      stage: s.examStage,
+      tracker: `tracker-ssc.html?exam=chsl&subj=${s.key}`
+    }));
+  } else {
+    subjectsList = EXAM_CONFIG_MTS.subjects.map(s => ({
+      key: s.key,
+      name: s.name,
+      icon: s.icon,
+      color: s.color,
+      stage: s.examStage,
+      tracker: `tracker-ssc.html?exam=mts&subj=${s.key}`
+    }));
+  }
+
+  const subjectCardsHTML = subjectsList.map(subj => {
+    let subjDone = 0;
+    let chapterCount = 0;
+
+    if (examType === 'cgl') {
+      const cfg = KEYS[subj.key];
+      chapterCount = cfg.total;
+      for (let i = 1; i <= cfg.total; i++) {
+        if (localStorage.getItem(cfg.prefix + i) === '1') subjDone++;
+      }
+    } else if (examType === 'chsl') {
+      const chapters = Object.entries(CHSL_PRIORITY_DATA).filter(([k]) => k.startsWith(KEYS[subj.key].prefix));
+      chapterCount = chapters.length;
+      chapters.forEach(([k]) => {
+        if (localStorage.getItem(k) === '1') subjDone++;
+      });
+    } else {
+      const chapters = Object.entries(MTS_PRIORITY_DATA).filter(([k]) => k.startsWith(KEYS[subj.key].prefix));
+      chapterCount = chapters.length;
+      chapters.forEach(([k]) => {
+        if (localStorage.getItem(k) === '1') subjDone++;
+      });
+    }
+
+    totalDone += subjDone;
+    const subjPct = chapterCount > 0 ? Math.round((subjDone / chapterCount) * 100) : 0;
+
+    return `
+      <div style="background:var(--bg-elevated);border:1px solid var(--border-medium);border-radius:12px;padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <span style="font-size:24px">${subj.icon}</span>
+            <span style="font:600 11px/1 'JetBrains Mono';padding:4px 8px;border-radius:12px;background:rgba(255,255,255,0.06);color:var(--text-secondary)">${subj.stage || 'Tier 1 & 2'}</span>
+          </div>
+          <div style="font:700 16px/1.2 'DM Sans';color:var(--text-primary);margin-bottom:8px">${subj.name}</div>
+          <div style="font:600 12px/1 'JetBrains Mono';color:${subj.color};margin-bottom:14px">${subjDone} / ${chapterCount} chapters completed (${subjPct}%)</div>
+          <div style="width:100%;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin-bottom:16px">
+            <div style="width:${subjPct}%;height:100%;background:${subj.color}"></div>
+          </div>
         </div>
-        ${d.p2 > 0 ? `<div class="sc-phase">
-          <div class="sc-phase-label"><span>Advanced</span><span class="sc-phase-count">${d.p2done}/${d.p2}</span></div>
-          <div class="progress-bar"><div class="progress-fill" style="background:#1D9E75" data-w="${p2p}"></div></div>
-        </div>` : ''}
+        <a href="${subj.tracker}" class="btn" style="background:${subj.color};text-align:center;text-decoration:none;display:block;padding:10px;font-size:13px;border-radius:8px;color:white;font-weight:600">
+          Open ${subj.name} Tracker →
+        </a>
       </div>
-      <a href="${s.link}" class="sc-link">View Full Tracker →</a>
-    </div>`;
+    `;
   }).join('');
-  setTimeout(() => {
-    container.querySelectorAll('.progress-fill[data-w]').forEach(el => {
-      el.style.width = el.dataset.w + '%';
-    });
-  }, 100);
-}
 
-function renderSSCFocusBox(stats) {
-  const box = document.getElementById('focus-box');
-  if (!box) return;
-  const items = SSC_SUBJECTS.map(s => ({
-    label: s.label,
-    pct: stats[s.key].total > 0 ? Math.round((stats[s.key].done / stats[s.key].total) * 100) : 0
-  }));
-  const weak = items.filter(s => s.pct < 50).sort((a, b) => a.pct - b.pct);
-  const allStrong = items.every(s => s.pct >= 80);
-  if (allStrong) {
-    box.innerHTML = `<div class="focus-on-track">🚀 On track — maintain momentum! All SSC subjects above 80%.</div>`;
-  } else if (weak.length === 0) {
-    box.innerHTML = `<div class="focus-on-track">✅ All SSC subjects above 50%. Push for 80%!</div>`;
-  } else {
-    box.innerHTML = `<div class="focus-title">⚡ Focus Now — Below 50%</div>
-    <div class="focus-items">${weak.map(s => `
-      <div class="focus-item">
-        <span class="focus-subject">${s.label}</span>
-        <span class="focus-pct">${s.pct}%</span>
-        <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:${s.pct}%;background:var(--accent-amber)"></div></div>
-      </div>`).join('')}</div>`;
+  document.getElementById('ssc-subject-cards').innerHTML = subjectCardsHTML;
+
+  // Overall Donut Update
+  const overallPct = totalChapters > 0 ? Math.round((totalDone / totalChapters) * 100) : 0;
+  document.getElementById('overall-pct').textContent = `${overallPct}%`;
+  document.getElementById('overall-count').textContent = `${totalDone} / ${totalChapters}`;
+  
+  const donutPath = document.getElementById('overall-donut-path');
+  if (donutPath) {
+    donutPath.setAttribute('stroke-dasharray', `${overallPct}, 100`);
+    donutPath.setAttribute('stroke', config.color || '#1D9E75');
   }
-}
 
-function renderSSCSmartSuggestion(stats) {
-  const box = document.getElementById('smart-box');
-  if (!box) return;
-  const q = stats.quant, r = stats.reasoning, e = stats.english, g = stats.gk;
-  let msg = '', color = 'var(--accent-green)';
-  if (g.done < g.total * 0.3) {
-    msg = `📌 GK needs attention — only ${Math.round((g.done/g.total)*100)}% done. It's SSC-exclusive and high weightage.`;
-    color = 'var(--accent-amber)';
-  } else if (q.done < q.total * 0.5 || r.done < r.total * 0.5) {
-    msg = `📌 Focus on Quant & Reasoning — they carry the most marks in SSC CGL.`;
-    color = 'var(--accent-amber)';
-  } else if (SSC_SUBJECTS.every(s => stats[s.key].done / stats[s.key].total > 0.9)) {
-    msg = `🌟 Excellent! All SSC subjects above 90%. You're SSC-ready!`;
-    color = 'var(--accent-green)';
+  // Days Countdown
+  const daysLeft = Math.ceil((new Date(config.examDate + 'T00:00:00') - new Date()) / 86400000);
+  document.getElementById('ssc-days-left').innerHTML = `
+    <strong>Target Date:</strong> ${config.examDate} (${daysLeft > 0 ? daysLeft + ' days left' : 'Exam Day!'})
+  `;
+
+  // Pattern Details
+  if (examType === 'cgl') {
+    document.getElementById('ssc-pattern-details').innerHTML = `
+      <div style="margin-bottom:10px"><strong>Tier 1:</strong> 100 Qs / 200 Marks / 60 Min (Qualifying / Shortlisting)</div>
+      <div style="margin-bottom:10px"><strong>Tier 2:</strong> Section I (Math 30Q + Reasoning 30Q) + Section II (English 45Q + GA 25Q) + Computer (20Q)</div>
+      <div style="margin-bottom:10px"><strong>Marking Scheme:</strong> Tier 1: +2 / −0.50 | Tier 2: +3 / −1</div>
+      <div><strong>Qualifying Threshold:</strong> UR 30% · OBC/EWS 25% · SC/ST 20%</div>
+    `;
+  } else if (examType === 'chsl') {
+    const p = EXAM_CONFIG_CHSL.examPattern;
+    document.getElementById('ssc-pattern-details').innerHTML = `
+      <div style="margin-bottom:10px"><strong>Stages:</strong> ${p.stages}</div>
+      <div style="margin-bottom:10px"><strong>Tier 1 Scheme:</strong> ${p.tier1.marking} (${p.tier1.totalQuestions} Qs / ${p.tier1.totalMarks} Marks / ${p.tier1.durationMinutes} Min)</div>
+      <div style="margin-bottom:10px"><strong>Tier 2 Session I:</strong> ${p.tier2.session1} (${p.tier2.marking})</div>
+      <div><strong>Tier 2 Session II:</strong> ${p.tier2.session2}</div>
+    `;
   } else {
-    msg = `💡 Keep going — balance your prep across all 4 subjects. GK revision is daily!`;
+    const p = EXAM_CONFIG_MTS.examPattern;
+    document.getElementById('ssc-pattern-details').innerHTML = `
+      <div style="margin-bottom:10px"><strong>Stages:</strong> ${p.stages}</div>
+      <div style="margin-bottom:10px"><strong>Session I:</strong> ${p.cbe.session1}</div>
+      <div style="margin-bottom:10px"><strong>Session II (Merit):</strong> ${p.cbe.session2}</div>
+      <div><strong>PET Standard:</strong> ${p.pet}</div>
+    `;
   }
-  box.innerHTML = `<div style="color:${color};font:500 14px/1.6 'DM Sans'">${msg}</div>`;
-}
-
-function refreshSSCUI() {
-  renderSSCCountdown();
-  const stats = readExamStats('ssc');
-  renderSSCDonut(stats);
-  renderSSCMasterStats(stats);
-  renderSSCSubjectCards(stats);
-  renderSSCFocusBox(stats);
-  renderSSCSmartSuggestion(stats);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  localStorage.setItem('selectedExam', 'ssc');
-  refreshSSCUI();
+  renderSSCDashboard();
 });
 
-window.addEventListener('cloudDataSynced', refreshSSCUI);
-window.addEventListener('storage', refreshSSCUI);
+window.addEventListener('cloudDataSynced', renderSSCDashboard);
+window.addEventListener('storage', renderSSCDashboard);

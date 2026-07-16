@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>RRB Subject Tracker — Arpit's Exam Hub</title>
+  <title>SSC Subject Tracker — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="assets/rrb_ntpc_exam_data.js"></script>
-  <script src="assets/rrb_group_d_exam_data.js"></script>
+  <script src="assets/ssc_chsl_exam_data.js"></script>
+  <script src="assets/ssc_mts_exam_data.js"></script>
   <style>
     .cat-group { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:12px; margin-bottom:20px; overflow:hidden; }
     .cat-header { background:var(--bg-surface); padding:14px 20px; font:700 15px/1.2 'DM Sans'; color:var(--text-primary); border-bottom:1px solid var(--border-medium); display:flex; align-items:center; justify-content:space-between; }
@@ -36,11 +36,11 @@
           <span id="subj-icon">📚</span> <span id="subj-name">Loading Subject...</span>
         </div>
         <div style="font:400 13px/1.4 'DM Sans';color:var(--text-secondary);margin-top:4px" id="subj-exam-label">
-          RRB Exam Prep
+          SSC Exam Prep
         </div>
       </div>
-      <div style="display:flex;gap:8px" id="rrb-exam-tabs">
-        <a href="dashboard-rrb.html" class="btn-tab">📊 RRB Dashboard</a>
+      <div style="display:flex;gap:8px" id="ssc-exam-tabs">
+        <a href="dashboard-ssc.html" class="btn-tab" id="dash-link">📊 SSC Dashboard</a>
       </div>
     </div>
 
@@ -70,14 +70,15 @@
 <script>
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const examType = params.get('exam') === 'group_d' ? 'group_d' : 'ntpc';
+  const examType = params.get('exam') === 'mts' ? 'mts' : 'chsl';
   const subjKey  = params.get('subj');
 
-  const configData = examType === 'group_d' ? EXAM_CONFIG_RRB_GROUP_D : EXAM_CONFIG_RRB_NTPC;
-  const priorityData = examType === 'group_d' ? RRB_GROUP_D_PRIORITY_DATA : RRB_NTPC_PRIORITY_DATA;
+  const configData = examType === 'mts' ? EXAM_CONFIG_MTS : EXAM_CONFIG_CHSL;
+  const priorityData = examType === 'mts' ? MTS_PRIORITY_DATA : CHSL_PRIORITY_DATA;
 
   // Set exam context in localStorage
-  localStorage.setItem('selectedExam', examType === 'group_d' ? 'rrb_group_d' : 'rrb_ntpc');
+  localStorage.setItem('selectedExam', examType === 'mts' ? 'ssc_mts' : 'ssc_chsl');
+  document.getElementById('dash-link').href = `dashboard-ssc.html?exam=${examType}`;
 
   const subject = configData.subjects.find(s => s.key === subjKey) || configData.subjects[0];
 
