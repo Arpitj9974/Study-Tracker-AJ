@@ -490,7 +490,7 @@ function buildNav() {
         <h1>${config.icon} ${config.label}</h1>
         <p>${userSub}</p>
       </div>
-      <a href="index.html" class="switch-exam-btn">🔄 Switch Exam</a>
+      <a href="index.html?select=true" class="switch-exam-btn">🔄 Switch Exam</a>
       <div class="sidebar-divider"></div>
     </div>
     <div class="sidebar-scrollable">
@@ -528,7 +528,7 @@ function buildNav() {
         </div>
       </div>
       <div class="mh-actions">
-        <a href="index.html" class="switch-exam-btn mh-btn">🔄 Switch</a>
+        <a href="index.html?select=true" class="switch-exam-btn mh-btn">🔄 Switch</a>
         <button class="logout-btn-trigger mh-btn logout-btn">Log Out</button>
       </div>
     </div>

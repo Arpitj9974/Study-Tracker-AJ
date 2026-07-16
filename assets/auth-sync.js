@@ -1,5 +1,4 @@
-import { auth, db } from "./firebase-config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 let currentUid = null;
@@ -9,17 +8,69 @@ function isValidKey(key) {
   return key && validPrefixes.some(p => key.startsWith(p));
 }
 
+// Map exam keys to their respective main dashboard URLs
+function getDashboardUrl(examKey) {
+  const map = {
+    nqt: 'dashboard-nqt.html',
+    ssc: 'dashboard-ssc.html',
+    upsc: 'dashboard-upsc.html',
+    ibps_po: 'dashboard-ibps.html',
+    jee: 'dashboard-jee.html',
+    neet_ug: 'dashboard-neet.html',
+    cat: 'dashboard-cat.html',
+    cmat: 'dashboard-cmat.html',
+    cds: 'dashboard-cds.html',
+    ca_foundation: 'dashboard-ca.html?level=foundation',
+    ca_inter: 'dashboard-ca.html?level=inter',
+    ca_final: 'dashboard-ca.html?level=final'
+  };
+  return map[examKey] || null;
+}
+
+// Global function to set selected exam and sync to Firestore
+window.setSelectedExam = async function(examKey) {
+  if (!examKey) return;
+  localStorage.setItem('selectedExam', examKey);
+  if (currentUid) {
+    try {
+      const userRef = doc(db, "users", currentUid);
+      await updateDoc(userRef, { selectedExam: examKey }).catch(async (err) => {
+        if (err.code === 'not-found') {
+          await setDoc(userRef, { selectedExam: examKey }, { merge: true });
+        }
+      });
+    } catch (err) {
+      console.error("Failed to sync selectedExam to cloud:", err);
+    }
+  }
+};
+
 // 2-Way Sync / Cloud Hydration Function
 async function syncCloudAndLocalStorage(uid) {
   try {
     const userRef = doc(db, "users", uid);
     const userSnap = await getDoc(userRef);
-    const cloudProgress = (userSnap.exists() && userSnap.data().progress) ? userSnap.data().progress : {};
+    const userData = userSnap.exists() ? userSnap.data() : {};
+    const cloudProgress = userData.progress || {};
     
+    // 1. Sync Selected Exam Preference
+    const cloudSelectedExam = userData.selectedExam;
+    const localSelectedExam = localStorage.getItem('selectedExam');
+
+    if (cloudSelectedExam && !localSelectedExam) {
+      localStorage.setItem('selectedExam', cloudSelectedExam);
+    } else if (localSelectedExam && cloudSelectedExam !== localSelectedExam) {
+      await updateDoc(userRef, { selectedExam: localSelectedExam }).catch(async (err) => {
+        if (err.code === 'not-found') {
+          await setDoc(userRef, { selectedExam: localSelectedExam }, { merge: true });
+        }
+      });
+    }
+
     let localChanged = false;
     let cloudPending = {};
 
-    // 1. Pull cloud keys into localStorage
+    // 2. Pull cloud keys into localStorage
     for (const [key, value] of Object.entries(cloudProgress)) {
       if (isValidKey(key)) {
         if (localStorage.getItem(key) !== value) {
@@ -29,7 +80,7 @@ async function syncCloudAndLocalStorage(uid) {
       }
     }
 
-    // 2. Push any local keys that are NOT in cloud up to Firestore
+    // 3. Push any local keys that are NOT in cloud up to Firestore
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (isValidKey(key)) {
@@ -79,6 +130,22 @@ onAuthStateChanged(auth, async (user) => {
     // Automatically pull & sync cloud progress on login / session restore
     await syncCloudAndLocalStorage(user.uid);
     
+    // Route Redirection Check:
+    // If user is on index.html (or root) and NOT explicitly in switch-exam mode (?select=true),
+    // auto-redirect to their selected exam dashboard.
+    const page = window.location.pathname.split('/').pop() || 'index.html';
+    const params = new URLSearchParams(window.location.search);
+    const isSelectMode = params.get('select') === 'true';
+
+    if ((page === 'index.html' || page === '') && !isSelectMode) {
+      const activeExam = localStorage.getItem('selectedExam');
+      const targetUrl = getDashboardUrl(activeExam);
+      if (targetUrl) {
+        window.location.href = targetUrl;
+        return;
+      }
+    }
+
   } else {
     // Not logged in! Redirect to login if we are not already there
     if (!window.location.pathname.includes('login.html')) {
@@ -87,23 +154,19 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Bind Logout Buttons (injected by nav.js)
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    const logoutBtns = document.querySelectorAll('#logout-btn, .logout-btn-trigger');
-    if (logoutBtns.length > 0) {
-      import("https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js").then((m) => {
-        logoutBtns.forEach(btn => {
-          btn.addEventListener('click', () => {
-            m.signOut(auth).then(() => {
-              localStorage.clear();
-              window.location.href = 'login.html';
-            });
-          });
-        });
-      });
+// Robust Global Click Delegation for Logout Buttons
+document.addEventListener('click', async (e) => {
+  const logoutBtn = e.target.closest('#logout-btn, .logout-btn-trigger');
+  if (logoutBtn) {
+    e.preventDefault();
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error("Firebase SignOut Error:", err);
     }
-  }, 100);
+    localStorage.clear();
+    window.location.href = 'login.html';
+  }
 });
 
 // Listen for storageChange postMessage from iframe trackers
