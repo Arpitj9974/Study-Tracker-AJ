@@ -127,6 +127,14 @@ async function syncCloudAndLocalStorage(uid) {
   }
 }
 
+const ADMIN_EMAILS = ['jaiswalarpit4282@gmail.com', 'arpitj9974@gmail.com'];
+
+window.isAdmin = function(email) {
+  const target = email || window.currentUserEmail;
+  if (!target) return false;
+  return ADMIN_EMAILS.includes(target.trim().toLowerCase());
+};
+
 // Protect Routes & Watch Auth State
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -139,15 +147,33 @@ onAuthStateChanged(auth, async (user) => {
       b.innerHTML = `Logged in: <span style="color:var(--accent-purple);font-size:10px">${user.email}</span>`;
     });
 
+    // Save/update basic user metadata & lastActive timestamp in Firestore
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const now = new Date().toISOString();
+      await setDoc(userRef, {
+        email: user.email || "Unknown User",
+        lastActive: now
+      }, { merge: true });
+    } catch (e) {
+      console.error("Telemetry update error:", e);
+    }
+
     // Automatically pull & sync cloud progress on login / session restore
     await syncCloudAndLocalStorage(user.uid);
     
-    // Route Redirection Check:
-    // If user is on index.html (or root) and NOT explicitly in switch-exam mode (?select=true),
-    // auto-redirect to their selected exam dashboard.
     const page = window.location.pathname.split('/').pop() || 'index.html';
     const params = new URLSearchParams(window.location.search);
     const isSelectMode = params.get('select') === 'true';
+
+    // Route Protection for Admin Panel
+    if (page === 'admin.html') {
+      if (!window.isAdmin(user.email)) {
+        alert("Access Denied: You do not have administrator permissions.");
+        window.location.href = 'index.html';
+        return;
+      }
+    }
 
     if ((page === 'index.html' || page === '') && !isSelectMode) {
       const activeExam = localStorage.getItem('selectedExam');

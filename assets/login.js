@@ -14,9 +14,31 @@ const googleProvider = new GoogleAuthProvider();
 
 // --- Hydrate LocalStorage from Cloud ---
 // This is the magic that restores progress on a new device
-async function hydrateLocalCache(uid) {
+async function hydrateLocalCache(uid, email) {
   try {
-    const userSnap = await getDoc(doc(db, "users", uid));
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    const now = new Date().toISOString();
+    
+    // Telemetry & user profile recording
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        email: email || "Unknown User",
+        createdAt: now,
+        lastLogin: now,
+        lastActive: now,
+        loginCount: 1
+      }, { merge: true });
+    } else {
+      const data = userSnap.data();
+      await setDoc(userRef, {
+        email: email || data.email || "Unknown User",
+        lastLogin: now,
+        lastActive: now,
+        loginCount: (data.loginCount || 0) + 1
+      }, { merge: true });
+    }
+
     // Step 1: Wipe local storage completely so we don't mix up users
     localStorage.clear();
     
@@ -48,7 +70,7 @@ async function handleGoogleLogin(e) {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     btn.innerHTML = "Syncing Data...";
-    await hydrateLocalCache(result.user.uid);
+    await hydrateLocalCache(result.user.uid, result.user.email);
     window.location.href = 'index.html';
   } catch (err) {
     console.error(err);
@@ -74,7 +96,7 @@ loginForm.addEventListener('submit', async (e) => {
   
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pass);
-    await hydrateLocalCache(cred.user.uid);
+    await hydrateLocalCache(cred.user.uid, cred.user.email || email);
     window.location.href = 'index.html';
   } catch (err) {
     loginErr.textContent = err.message.replace('Firebase: ', '');
@@ -94,8 +116,8 @@ signupForm.addEventListener('submit', async (e) => {
   
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    // New user, local cache is empty anyway
     localStorage.clear();
+    await hydrateLocalCache(cred.user.uid, cred.user.email || email);
     window.location.href = 'index.html';
   } catch (err) {
     signupErr.textContent = err.message.replace('Firebase: ', '');

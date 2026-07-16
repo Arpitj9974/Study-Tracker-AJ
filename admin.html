@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin Control Panel — Arpit's Exam Hub</title>
+  <meta name="description" content="Administrator dashboard for Arpit's Exam Hub user monitoring and telemetry."/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <style>
+    .admin-container { max-width: 1200px; margin: 0 auto; padding: 24px 20px 60px; }
+    
+    .admin-header {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px; background: var(--bg-elevated);
+      padding: 20px 24px; border-radius: 14px; border: 1px solid var(--border-medium);
+      margin-bottom: 28px; border-left: 4px solid #F59E0B;
+    }
+    .admin-title-h1 { font: 700 22px/1.2 'DM Sans'; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+    .admin-title-sub { font: 400 13px/1.4 'DM Sans'; color: var(--text-secondary); margin-top: 4px; }
+    .admin-header-actions { display: flex; gap: 10px; align-items: center; }
+    
+    /* Metrics Grid */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 32px; }
+    .kpi-card {
+      background: var(--bg-elevated); border: 1px solid var(--border-medium);
+      border-radius: 12px; padding: 20px; text-align: left; position: relative; overflow: hidden;
+    }
+    .kpi-label { font: 600 12px/1 'JetBrains Mono'; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
+    .kpi-val { font: 700 28px/1 'JetBrains Mono'; color: var(--text-primary); margin-bottom: 6px; }
+    .kpi-sub { font: 400 12px/1.4 'DM Sans'; color: var(--text-secondary); }
+    .kpi-icon { position: absolute; right: 16px; top: 18px; font-size: 32px; opacity: 0.15; }
+
+    /* Controls Bar */
+    .table-controls {
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      background: var(--bg-elevated); padding: 16px 20px; border-radius: 12px;
+      border: 1px solid var(--border-medium); margin-bottom: 20px;
+    }
+    .search-box {
+      flex: 1; min-width: 260px; background: rgba(0,0,0,0.25); border: 1px solid var(--border-medium);
+      color: var(--text-primary); padding: 10px 14px; border-radius: 8px; font: 400 14px/1 'DM Sans';
+    }
+    .search-box:focus { border-color: #F59E0B; outline: none; }
+    .filter-select {
+      background: rgba(0,0,0,0.25); border: 1px solid var(--border-medium);
+      color: var(--text-primary); padding: 10px 14px; border-radius: 8px; font: 500 13px/1 'DM Sans'; cursor: pointer;
+    }
+
+    /* User Table */
+    .table-wrap {
+      background: var(--bg-elevated); border: 1px solid var(--border-medium);
+      border-radius: 14px; overflow-x: auto; margin-bottom: 32px;
+    }
+    .admin-table { width: 100%; border-collapse: collapse; text-align: left; font: 400 14px/1.5 'DM Sans'; }
+    .admin-table th {
+      background: rgba(255,255,255,0.03); color: var(--text-tertiary);
+      font: 600 11px/1 'JetBrains Mono'; text-transform: uppercase; letter-spacing: .06em;
+      padding: 14px 18px; border-bottom: 1px solid var(--border-medium);
+    }
+    .admin-table td { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; }
+    .admin-table tr:hover { background: rgba(255,255,255,0.02); }
+    .user-email { font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .dot-active { background: #10B981; box-shadow: 0 0 8px rgba(16,185,129,0.5); }
+    .dot-recent { background: #F59E0B; }
+    .dot-idle { background: #6B7280; }
+    
+    .exam-pill {
+      font: 600 11px/1 'JetBrains Mono'; text-transform: uppercase; padding: 4px 10px;
+      border-radius: 20px; display: inline-block; letter-spacing: .04em;
+    }
+
+    .btn-inspect {
+      background: rgba(245,158,11,0.12); color: #F59E0B; border: 1px solid rgba(245,158,11,0.3);
+      padding: 6px 14px; border-radius: 6px; font: 600 12px/1 'DM Sans'; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-inspect:hover { background: rgba(245,158,11,0.25); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center; z-index: 1000;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease; padding: 20px;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: var(--bg-elevated); border: 1px solid var(--border-medium);
+      border-radius: 16px; width: 100%; max-width: 760px; max-height: 90vh; overflow-y: auto;
+      padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.08);
+      border: none; color: var(--text-secondary); width: 32px; height: 32px; border-radius: 50%;
+      font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.15); color: white; }
+  </style>
+</head>
+<body>
+
+<main style="padding-left:0;margin-left:0">
+  <div class="admin-container">
+    
+    <!-- Top Header -->
+    <div class="admin-header">
+      <div>
+        <div class="admin-title-h1">
+          <span>🛡️</span> Admin Control Panel
+        </div>
+        <div class="admin-title-sub">
+          Real-time user monitoring, login history, and progress telemetry
+        </div>
+      </div>
+      <div class="admin-header-actions">
+        <a href="index.html" class="btn" style="background:var(--bg-hover);color:var(--text-primary);border:1px solid var(--border-medium);text-decoration:none;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600">🏠 Return to Hub</a>
+        <button id="logout-btn" class="logout-btn-trigger" style="background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.3);padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Log Out</button>
+      </div>
+    </div>
+
+    <!-- KPI Cards Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-label">Total Users</div>
+        <div class="kpi-val" id="kpi-total-users">--</div>
+        <div class="kpi-sub">Registered student accounts</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🟢</div>
+        <div class="kpi-label">Active Users</div>
+        <div class="kpi-val" id="kpi-active-users">--</div>
+        <div class="kpi-sub" id="kpi-active-sub">Last 24h & 7d active</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📚</div>
+        <div class="kpi-label">Chapters Finished</div>
+        <div class="kpi-val" id="kpi-total-done">--</div>
+        <div class="kpi-sub">Cumulative across all users</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🏆</div>
+        <div class="kpi-label">Top Choice Exam</div>
+        <div class="kpi-val" id="kpi-top-exam" style="font-size:22px">--</div>
+        <div class="kpi-sub" id="kpi-top-exam-sub">Most selected module</div>
+      </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="table-controls">
+      <input type="text" id="user-search" class="search-box" placeholder="🔍 Search user by email..."/>
+      <select id="exam-filter" class="filter-select">
+        <option value="ALL">All Selected Exams</option>
+      </select>
+      <select id="sort-filter" class="filter-select">
+        <option value="lastActive">Sort by Recent Activity</option>
+        <option value="lastLogin">Sort by Recent Login</option>
+        <option value="progress">Sort by Completed Chapters</option>
+        <option value="created">Sort by Registration Date</option>
+      </select>
+    </div>
+
+    <!-- User Table -->
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>User Email</th>
+            <th>Selected Exam</th>
+            <th>Chapters Done</th>
+            <th>Last Active</th>
+            <th>Registered</th>
+            <th>Logins</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="user-table-body">
+          <tr>
+            <td colspan="7" style="text-align:center;padding:40px;color:var(--text-tertiary)">Loading user telemetry from Firestore...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<!-- User Detail Modal -->
+<div class="modal-overlay" id="user-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="window.closeUserModal()">✕</button>
+    <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);margin-bottom:6px" id="modal-user-email">User Details</div>
+    <div style="font:400 12px/1 'JetBrains Mono';color:var(--text-tertiary);margin-bottom:20px" id="modal-user-uid">UID: --</div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px;background:rgba(0,0,0,0.2);padding:16px;border-radius:10px;border:1px solid var(--border-medium)">
+      <div><div style="font-size:11px;color:var(--text-tertiary)">Registration Date</div><div style="font:600 13px 'JetBrains Mono';color:var(--text-primary)" id="modal-created">--</div></div>
+      <div><div style="font-size:11px;color:var(--text-tertiary)">Last Login</div><div style="font:600 13px 'JetBrains Mono';color:var(--text-primary)" id="modal-last-login">--</div></div>
+      <div><div style="font-size:11px;color:var(--text-tertiary)">Total Login Count</div><div style="font:600 13px 'JetBrains Mono';color:#F59E0B" id="modal-logins">--</div></div>
+    </div>
+
+    <div style="font:700 16px/1 'DM Sans';color:var(--text-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+      <span>📊</span> Detailed Exam Progress Breakdown
+    </div>
+    <div id="modal-exam-breakdown" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</div>
+
+<script src="assets/nav.js?v=19"></script>
+<script type="module" src="assets/admin.js?v=1"></script>
+<script type="module" src="assets/auth-sync.js?v=19"></script>
+</body>
+</html>

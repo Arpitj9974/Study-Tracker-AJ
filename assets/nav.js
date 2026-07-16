@@ -844,6 +844,9 @@ function buildNav() {
     ? `Logged in: <span style="color:var(--accent-purple);font-size:10px">${window.currentUserEmail}</span>`
     : `Arpit's Exam Hub`;
 
+  const isAdminUser = window.isAdmin && window.isAdmin(window.currentUserEmail);
+  const adminBtnHTML = isAdminUser ? `<a href="admin.html" class="switch-exam-btn" style="background:rgba(245,158,11,0.15);color:#F59E0B;border-color:rgba(245,158,11,0.3);margin-top:6px;display:inline-block">🛡️ Admin Panel</a>` : ``;
+
   const sidebarHTML = `
   <div id="sidebar">
     <div class="sidebar-top">
@@ -851,7 +854,10 @@ function buildNav() {
         <h1>${config.icon} ${config.label}</h1>
         <p>${userSub}</p>
       </div>
-      <a href="index.html?select=true" class="switch-exam-btn">🔄 Switch Exam</a>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <a href="index.html?select=true" class="switch-exam-btn">🔄 Switch Exam</a>
+        ${adminBtnHTML}
+      </div>
       <div class="sidebar-divider"></div>
     </div>
     <div class="sidebar-scrollable">
@@ -889,6 +895,7 @@ function buildNav() {
         </div>
       </div>
       <div class="mh-actions">
+        ${isAdminUser ? `<a href="admin.html" class="switch-exam-btn mh-btn" style="background:rgba(245,158,11,0.15);color:#F59E0B">🛡️ Admin</a>` : ''}
         <a href="index.html?select=true" class="switch-exam-btn mh-btn">🔄 Switch</a>
         <button class="logout-btn-trigger mh-btn logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}">Log Out</button>
       </div>
