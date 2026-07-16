@@ -3,7 +3,7 @@ import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { doc, getDoc, updateDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 let currentUid = null;
-const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_', 'cds_', 'cafnd_', 'cain_', 'cafin_'];
+const validPrefixes = ['qt3_', 'rs3_', 'cdf_', 'en_', 'gk_', 'sm_', 'upsc_', 'ibps_', 'jee_', 'neet_', 'cat_', 'cmat_', 'cds_', 'cafnd_', 'cain_', 'cafin_', 'ntpc_ga_', 'ntpc_reas_', 'ntpc_math_', 'rrbd_reas_', 'rrbd_sci_', 'rrbd_math_', 'rrbd_ga_'];
 
 function isValidKey(key) {
   return key && validPrefixes.some(p => key.startsWith(p));
@@ -23,7 +23,9 @@ function getDashboardUrl(examKey) {
     cds: 'dashboard-cds.html',
     ca_foundation: 'dashboard-ca.html?level=foundation',
     ca_inter: 'dashboard-ca.html?level=inter',
-    ca_final: 'dashboard-ca.html?level=final'
+    ca_final: 'dashboard-ca.html?level=final',
+    rrb_ntpc: 'dashboard-rrb.html?exam=ntpc',
+    rrb_group_d: 'dashboard-rrb.html?exam=group_d'
   };
   return map[examKey] || null;
 }

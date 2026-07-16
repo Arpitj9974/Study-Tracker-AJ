@@ -81,7 +81,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=8"></script>
+  <script src="assets/nav.js?v=9"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -158,6 +158,18 @@
     const cafinPct = Math.round((cafinDone / EXAM_CONFIG.ca_final.totalChapters) * 100);
     const cafinDays = Math.ceil((new Date(EXAM_CONFIG.ca_final.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // RRB NTPC stats
+    const ntpcStats = readExamStats('rrb_ntpc');
+    const ntpcDone = Object.values(ntpcStats).reduce((s, v) => s + v.done, 0);
+    const ntpcPct = Math.round((ntpcDone / EXAM_CONFIG.rrb_ntpc.totalChapters) * 100);
+    const ntpcDays = Math.ceil((new Date(EXAM_CONFIG.rrb_ntpc.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // RRB Group D stats
+    const rrbdStats = readExamStats('rrb_group_d');
+    const rrbdDone = Object.values(rrbdStats).reduce((s, v) => s + v.done, 0);
+    const rrbdPct = Math.round((rrbdDone / EXAM_CONFIG.rrb_group_d.totalChapters) * 100);
+    const rrbdDays = Math.ceil((new Date(EXAM_CONFIG.rrb_group_d.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
       <!-- Placement & Government Exams -->
       <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
@@ -227,6 +239,37 @@
         </div>
         <span class="ec-badge" style="background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)">${EXAM_CONFIG.cds.subjects.length} Subjects · ${EXAM_CONFIG.cds.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
+      </a>
+
+      <!-- Railway Recruitment Board (RRB) Section -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#6C3483;display:flex;align-items:center;gap:10px">
+        <span>🚆</span> Railway Recruitment Board (RRB)
+      </div>
+
+      <a href="dashboard-rrb.html?exam=ntpc" class="exam-card" style="--card-glow:rgba(108,52,131,0.12);--card-border:rgba(108,52,131,0.4);border-top-color:#6C3483" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_ntpc');else localStorage.setItem('selectedExam','rrb_ntpc')">
+        <span class="ec-icon">🚆</span>
+        <div class="ec-name">RRB NTPC</div>
+        <div class="ec-desc">GA, Reasoning & Mathematics (Graduate & UG)</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#6C3483">${ntpcPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#6C3483">${ntpcDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.rrb_ntpc.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${ntpcDays < 30 ? '#EF4444' : '#6C3483'}">${ntpcDays > 0 ? ntpcDays : '🎯'}</div><div class="ec-stat-lbl">${ntpcDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(108,52,131,0.15);color:#6C3483;border:1px solid rgba(108,52,131,0.3)">3 Subjects · 62 Chapters</span>
+        <button class="ec-enter" style="background:#6C3483">Start NTPC Prep →</button>
+      </a>
+
+      <a href="dashboard-rrb.html?exam=group_d" class="exam-card" style="--card-glow:rgba(34,153,84,0.12);--card-border:rgba(34,153,84,0.4);border-top-color:#229954" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_group_d');else localStorage.setItem('selectedExam','rrb_group_d')">
+        <span class="ec-icon">🛠️</span>
+        <div class="ec-name">RRB Group D</div>
+        <div class="ec-desc">Reasoning, General Science, Math & GA (CEN 09/2025)</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#229954">${rrbdPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#229954">${rrbdDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.rrb_group_d.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${rrbdDays < 30 ? '#EF4444' : '#229954'}">${rrbdDays > 0 ? rrbdDays : '🎯'}</div><div class="ec-stat-lbl">${rrbdDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(34,153,84,0.15);color:#229954;border:1px solid rgba(34,153,84,0.3)">4 Subjects · 71 Chapters</span>
+        <button class="ec-enter" style="background:#229954">Start Group D Prep →</button>
       </a>
 
       <!-- Engineering & Medical Section -->
@@ -336,6 +379,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=8"></script>
+  <script type="module" src="assets/auth-sync.js?v=9"></script>
 </body>
 </html>

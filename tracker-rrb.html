@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>RRB Subject Tracker — Arpit's Exam Hub</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <script src="assets/rrb_ntpc_exam_data.js"></script>
+  <script src="assets/rrb_group_d_exam_data.js"></script>
+  <style>
+    .cat-group { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:12px; margin-bottom:20px; overflow:hidden; }
+    .cat-header { background:var(--bg-surface); padding:14px 20px; font:700 15px/1.2 'DM Sans'; color:var(--text-primary); border-bottom:1px solid var(--border-medium); display:flex; align-items:center; justify-content:space-between; }
+    .ch-item { padding:14px 20px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; gap:16px; transition:background .15s; }
+    .ch-item:last-child { border-bottom:none; }
+    .ch-item:hover { background:rgba(255,255,255,0.02); }
+    .ch-title { font:500 14px/1.4 'DM Sans'; color:var(--text-primary); }
+    .ch-meta { display:flex; align-items:center; gap:10px; font:400 12px/1 'JetBrains Mono'; color:var(--text-tertiary); margin-top:4px; }
+    .p-badge { font:600 10px/1 'JetBrains Mono'; text-transform:uppercase; padding:3px 8px; border-radius:12px; }
+    .p-VERY-HIGH { background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid rgba(239,68,68,0.3); }
+    .p-HIGH { background:rgba(245,158,11,0.15); color:#F59E0B; border:1px solid rgba(245,158,11,0.3); }
+    .p-MEDIUM { background:rgba(59,91,219,0.15); color:#3B5BDB; border:1px solid rgba(59,91,219,0.3); }
+    .p-LOW { background:rgba(107,114,128,0.15); color:#9CA3AF; border:1px solid rgba(107,114,128,0.3); }
+    .check-btn { width:24px; height:24px; border-radius:6px; border:2px solid var(--border-medium); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+    .check-btn.checked { background:var(--accent-green, #10B981); border-color:var(--accent-green, #10B981); color:white; }
+  </style>
+</head>
+<body>
+<main>
+
+  <div class="content-wrapper">
+  <div class="tracker-shell page-content">
+    
+    <!-- Top Nav Header -->
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--bg-elevated);padding:16px 20px;border-radius:12px;border:1px solid var(--border-medium)">
+      <div>
+        <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);display:flex;align-items:center;gap:10px">
+          <span id="subj-icon">📚</span> <span id="subj-name">Loading Subject...</span>
+        </div>
+        <div style="font:400 13px/1.4 'DM Sans';color:var(--text-secondary);margin-top:4px" id="subj-exam-label">
+          RRB Exam Prep
+        </div>
+      </div>
+      <div style="display:flex;gap:8px" id="rrb-exam-tabs">
+        <a href="dashboard-rrb.html" class="btn-tab">📊 RRB Dashboard</a>
+      </div>
+    </div>
+
+    <!-- Progress Summary Bar -->
+    <div style="background:var(--bg-elevated);border:1px solid var(--border-medium);border-radius:12px;padding:20px;margin-bottom:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font:600 13px/1 'JetBrains Mono';color:var(--text-secondary)" id="subj-progress-text">0 / 0 completed</div>
+        <div style="font:700 16px/1 'JetBrains Mono';color:var(--accent-purple)" id="subj-pct-text">0%</div>
+      </div>
+      <div style="width:100%;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden">
+        <div id="subj-bar-fill" style="width:0%;height:100%;background:var(--accent-purple);transition:width .3s ease"></div>
+      </div>
+    </div>
+
+    <!-- Chapter Checklist Container grouped by Category -->
+    <div id="chapters-container">
+      <!-- Injected by JS -->
+    </div>
+
+  </div>
+  </div>
+
+</main>
+
+<script src="assets/nav.js?v=9"></script>
+<script type="module" src="assets/auth-sync.js?v=9"></script>
+<script>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const examType = params.get('exam') === 'group_d' ? 'group_d' : 'ntpc';
+  const subjKey  = params.get('subj');
+
+  const configData = examType === 'group_d' ? EXAM_CONFIG_RRB_GROUP_D : EXAM_CONFIG_RRB_NTPC;
+  const priorityData = examType === 'group_d' ? RRB_GROUP_D_PRIORITY_DATA : RRB_NTPC_PRIORITY_DATA;
+
+  // Set exam context in localStorage
+  localStorage.setItem('selectedExam', examType === 'group_d' ? 'rrb_group_d' : 'rrb_ntpc');
+
+  const subject = configData.subjects.find(s => s.key === subjKey) || configData.subjects[0];
+
+  document.getElementById('subj-icon').textContent = subject.icon;
+  document.getElementById('subj-name').textContent = subject.name;
+  document.getElementById('subj-exam-label').textContent = `${configData.examName} · ${subject.examStage}`;
+
+  // Filter priority chapters for this subject
+  const chapters = Object.entries(priorityData)
+    .filter(([key]) => key.startsWith(subject.prefix))
+    .map(([key, data]) => ({ key, ...data }));
+
+  // Group by category
+  const grouped = {};
+  chapters.forEach(ch => {
+    const cat = ch.category || 'General Chapters';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(ch);
+  });
+
+  function renderChecklist() {
+    let totalDone = 0;
+    const container = document.getElementById('chapters-container');
+    container.innerHTML = '';
+
+    Object.entries(grouped).forEach(([category, chList]) => {
+      const groupDiv = document.createElement('div');
+      groupDiv.className = 'cat-group';
+
+      let catDone = 0;
+      let itemsHTML = chList.map(ch => {
+        const isDone = localStorage.getItem(ch.key) === '1';
+        if (isDone) { catDone++; totalDone++; }
+
+        return `
+          <div class="ch-item">
+            <div style="flex:1">
+              <div class="ch-title">${ch.name}</div>
+              <div class="ch-meta">
+                <span class="p-badge p-${ch.priority}">${ch.priority}</span>
+                <span>⏱️ ${ch.days}</span>
+                <span>📊 ${ch.prelimsWeight}</span>
+              </div>
+            </div>
+            <button class="check-btn${isDone ? ' checked' : ''}" onclick="toggleChapter('${ch.key}')">
+              ${isDone ? '✓' : ''}
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      groupDiv.innerHTML = `
+        <div class="cat-header">
+          <span>${category}</span>
+          <span style="font:600 12px/1 'JetBrains Mono';color:var(--text-tertiary)">${catDone} / ${chList.length}</span>
+        </div>
+        <div>${itemsHTML}</div>
+      `;
+
+      container.appendChild(groupDiv);
+    });
+
+    const total = chapters.length;
+    const pct = total > 0 ? Math.round((totalDone / total) * 100) : 0;
+    document.getElementById('subj-progress-text').textContent = `${totalDone} / ${total} chapters completed`;
+    document.getElementById('subj-pct-text').textContent = `${pct}%`;
+    const fill = document.getElementById('subj-bar-fill');
+    fill.style.width = pct + '%';
+    fill.style.background = subject.color;
+  }
+
+  window.toggleChapter = function(key) {
+    const cur = localStorage.getItem(key);
+    if (cur === '1') {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, '1');
+    }
+    window.dispatchEvent(new CustomEvent('storageChange', { detail: { key, value: localStorage.getItem(key) } }));
+    window.dispatchEvent(new Event('storage'));
+    renderChecklist();
+  };
+
+  renderChecklist();
+})();
+</script>
+</body>
+</html>

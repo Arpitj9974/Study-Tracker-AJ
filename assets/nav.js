@@ -75,6 +75,15 @@ const SUBJECT_COLORS = {
   cafin_dt:   { primary: '#6C3483' },
   cafin_idt:  { primary: '#A04000' },
   cafin_ibs:  { primary: '#148F77' },
+  // RRB NTPC colors
+  ntpc_ga:   { primary: '#6C3483' },
+  ntpc_reas: { primary: '#1A5276' },
+  ntpc_math: { primary: '#B9770E' },
+  // RRB Group D colors
+  rrbd_reas: { primary: '#2E86C1' },
+  rrbd_sci:  { primary: '#229954' },
+  rrbd_math: { primary: '#CA6F1E' },
+  rrbd_ga:   { primary: '#7D3C98' },
 };
 
 const KEYS = {
@@ -145,6 +154,15 @@ const KEYS = {
   cafin_dt:   { prefix: 'cafin_dt_',   total: 26, p1: 26 },
   cafin_idt:  { prefix: 'cafin_idt_',  total: 32, p1: 32 },
   cafin_ibs:  { prefix: 'cafin_ibs_',  total: 9,  p1: 9  },
+  // RRB NTPC subjects
+  ntpc_ga:   { prefix: 'ntpc_ga_',   total: 23, p1: 23 },
+  ntpc_reas: { prefix: 'ntpc_reas_', total: 19, p1: 19 },
+  ntpc_math: { prefix: 'ntpc_math_', total: 20, p1: 20 },
+  // RRB Group D subjects
+  rrbd_reas: { prefix: 'rrbd_reas_', total: 16, p1: 16 },
+  rrbd_sci:  { prefix: 'rrbd_sci_',  total: 21, p1: 21 },
+  rrbd_math: { prefix: 'rrbd_math_', total: 18, p1: 18 },
+  rrbd_ga:   { prefix: 'rrbd_ga_',   total: 16, p1: 16 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -361,6 +379,37 @@ const EXAM_CONFIG = {
       { page: 'tracker-ca.html?level=final&subj=cafin_idt', href: 'tracker-ca.html?level=final&subj=cafin_idt', icon: '📑', label: 'Indirect Tax (IDT)' },
       { page: 'tracker-ca.html?level=final&subj=cafin_ibs', href: 'tracker-ca.html?level=final&subj=cafin_ibs', icon: '🧠', label: 'Integrated Business Sol (IBS)' }
     ]
+  },
+  rrb_ntpc: {
+    label: 'RRB NTPC',
+    color: '#6C3483',
+    icon: '🚆',
+    subjects: ['ntpc_ga', 'ntpc_reas', 'ntpc_math'],
+    countMode: 'all',
+    examDate: '2027-03-01',
+    totalChapters: 62,
+    links: [
+      { page: 'dashboard-rrb.html?exam=ntpc', href: 'dashboard-rrb.html?exam=ntpc', icon: '📊', label: 'NTPC Dashboard' },
+      { page: 'tracker-rrb.html?exam=ntpc&subj=ntpc_ga',   href: 'tracker-rrb.html?exam=ntpc&subj=ntpc_ga',   icon: '🌏', label: 'General Awareness' },
+      { page: 'tracker-rrb.html?exam=ntpc&subj=ntpc_reas', href: 'tracker-rrb.html?exam=ntpc&subj=ntpc_reas', icon: '🧩', label: 'Reasoning Ability' },
+      { page: 'tracker-rrb.html?exam=ntpc&subj=ntpc_math', href: 'tracker-rrb.html?exam=ntpc&subj=ntpc_math', icon: '🔢', label: 'Mathematics' }
+    ]
+  },
+  rrb_group_d: {
+    label: 'RRB Group D',
+    color: '#229954',
+    icon: '🛠️',
+    subjects: ['rrbd_reas', 'rrbd_sci', 'rrbd_math', 'rrbd_ga'],
+    countMode: 'all',
+    examDate: '2026-08-03',
+    totalChapters: 71,
+    links: [
+      { page: 'dashboard-rrb.html?exam=group_d', href: 'dashboard-rrb.html?exam=group_d', icon: '📊', label: 'Group D Dashboard' },
+      { page: 'tracker-rrb.html?exam=group_d&subj=rrbd_reas', href: 'tracker-rrb.html?exam=group_d&subj=rrbd_reas', icon: '🧩', label: 'Reasoning Ability' },
+      { page: 'tracker-rrb.html?exam=group_d&subj=rrbd_sci',  href: 'tracker-rrb.html?exam=group_d&subj=rrbd_sci',  icon: '🔬', label: 'General Science' },
+      { page: 'tracker-rrb.html?exam=group_d&subj=rrbd_math', href: 'tracker-rrb.html?exam=group_d&subj=rrbd_math', icon: '🔢', label: 'Mathematics' },
+      { page: 'tracker-rrb.html?exam=group_d&subj=rrbd_ga',   href: 'tracker-rrb.html?exam=group_d&subj=rrbd_ga',   icon: '🌏', label: 'General Awareness' }
+    ]
   }
 };
 
@@ -376,6 +425,12 @@ function getCurrentExam() {
   if (page.includes('cat')) return 'cat';
   if (page.includes('cmat')) return 'cmat';
   if (page.includes('cds')) return 'cds';
+  if (page.includes('rrb')) {
+    const params = new URLSearchParams(window.location.search);
+    const ex = params.get('exam');
+    if (ex === 'group_d') return 'rrb_group_d';
+    return 'rrb_ntpc';
+  }
   if (page.includes('ca')) {
     const params = new URLSearchParams(window.location.search);
     const lvl = params.get('level');
