@@ -6,8 +6,8 @@
   <meta name="description" content="Select your exam to start tracking: TCS NQT, SSC CGL, or UPSC."/>
   <link rel="stylesheet" href="assets/style.css"/>
   <style>
-    body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; flex-direction:column; overflow:auto; }
-    .selector-page { width:100%; max-width:900px; text-align:center; animation:fadeUp .4s ease; }
+    body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
+    .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
     .sel-brand { margin-bottom:48px; }
     .sel-icon { font-size:56px; margin-bottom:14px; display:block; }
     .sel-title { font:700 32px/1.2 'DM Sans'; color:var(--text-primary); margin-bottom:8px; }
@@ -81,7 +81,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=5"></script>
+  <script src="assets/nav.js?v=6"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -140,7 +140,30 @@
     const cdsPct = Math.round((cdsDone / EXAM_CONFIG.cds.totalChapters) * 100);
     const cdsDays = Math.ceil((new Date(EXAM_CONFIG.cds.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // CA Foundation stats
+    const cafndStats = readExamStats('ca_foundation');
+    const cafndDone = Object.values(cafndStats).reduce((s, v) => s + v.done, 0);
+    const cafndPct = Math.round((cafndDone / EXAM_CONFIG.ca_foundation.totalChapters) * 100);
+    const cafndDays = Math.ceil((new Date(EXAM_CONFIG.ca_foundation.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // CA Inter stats
+    const cainStats = readExamStats('ca_inter');
+    const cainDone = Object.values(cainStats).reduce((s, v) => s + v.done, 0);
+    const cainPct = Math.round((cainDone / EXAM_CONFIG.ca_inter.totalChapters) * 100);
+    const cainDays = Math.ceil((new Date(EXAM_CONFIG.ca_inter.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // CA Final stats
+    const cafinStats = readExamStats('ca_final');
+    const cafinDone = Object.values(cafinStats).reduce((s, v) => s + v.done, 0);
+    const cafinPct = Math.round((cafinDone / EXAM_CONFIG.ca_final.totalChapters) * 100);
+    const cafinDays = Math.ceil((new Date(EXAM_CONFIG.ca_final.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     grid.innerHTML = `
+      <!-- Placement & Government Exams -->
+      <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
+        <span>🏛️</span> Placement & Competitive Exams
+      </div>
+
       <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
         <div class="ec-name">TCS NQT</div>
@@ -193,6 +216,24 @@
         <button class="ec-enter" style="background:#B7791F">Start IBPS Prep →</button>
       </a>
 
+      <a href="dashboard-cds.html" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="localStorage.setItem('selectedExam','cds')">
+        <span class="ec-icon">🎖️</span>
+        <div class="ec-name">UPSC CDS</div>
+        <div class="ec-desc">General Knowledge, English & Elementary Maths</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cds.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cdsDays < 30 ? '#EF4444' : '#10B981'}">${cdsDays > 0 ? cdsDays : '🎯'}</div><div class="ec-stat-lbl">${cdsDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)">${EXAM_CONFIG.cds.subjects.length} Subjects · ${EXAM_CONFIG.cds.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
+      </a>
+
+      <!-- Engineering & Medical Section -->
+      <div style="grid-column:1/-1;text-align:left;margin:20px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
+        <span>🔬</span> Engineering & Medical Entrance
+      </div>
+
       <a href="dashboard-jee.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="localStorage.setItem('selectedExam','jee')">
         <span class="ec-icon">⚛️</span>
         <div class="ec-name">JEE Main & Adv</div>
@@ -218,6 +259,11 @@
         <span class="ec-badge" style="background:rgba(76,154,63,0.15);color:#4C9A3F;border:1px solid rgba(76,154,63,0.3)">${EXAM_CONFIG.neet_ug.subjects.length} Subjects · ${EXAM_CONFIG.neet_ug.totalChapters} Chapters</span>
         <button class="ec-enter" style="background:#4C9A3F">Start NEET Prep →</button>
       </a>
+
+      <!-- Management Section -->
+      <div style="grid-column:1/-1;text-align:left;margin:20px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
+        <span>📈</span> Management Entrance (MBA)
+      </div>
 
       <a href="dashboard-cat.html" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="localStorage.setItem('selectedExam','cat')">
         <span class="ec-icon">📈</span>
@@ -245,17 +291,48 @@
         <button class="ec-enter" style="background:#EF4444">Start CMAT Prep →</button>
       </a>
 
-      <a href="dashboard-cds.html" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="localStorage.setItem('selectedExam','cds')">
-        <span class="ec-icon">🎖️</span>
-        <div class="ec-name">UPSC CDS</div>
-        <div class="ec-desc">General Knowledge, English & Elementary Maths</div>
+      <!-- Chartered Accountancy (CA) Section Header -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#C0392B;display:flex;align-items:center;gap:10px">
+        <span>🎓</span> Chartered Accountancy (CA — ICAI)
+      </div>
+
+      <a href="dashboard-ca.html?level=foundation" class="exam-card" style="--card-glow:rgba(192,57,43,0.12);--card-border:rgba(192,57,43,0.4);border-top-color:#C0392B" onclick="localStorage.setItem('selectedExam','ca_foundation')">
+        <span class="ec-icon">🎓</span>
+        <div class="ec-name">CA Foundation</div>
+        <div class="ec-desc">Accounting, Business Laws, QA & Economics</div>
         <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cds.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cdsDays < 30 ? '#EF4444' : '#10B981'}">${cdsDays > 0 ? cdsDays : '🎯'}</div><div class="ec-stat-lbl">${cdsDays > 0 ? 'days left' : 'exam day!'}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#C0392B">${cafndPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#C0392B">${cafndDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ca_foundation.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cafndDays < 30 ? '#EF4444' : '#C0392B'}">${cafndDays > 0 ? cafndDays : '🎯'}</div><div class="ec-stat-lbl">${cafndDays > 0 ? 'days left' : 'exam day!'}</div></div>
         </div>
-        <span class="ec-badge" style="background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)">${EXAM_CONFIG.cds.subjects.length} Subjects · ${EXAM_CONFIG.cds.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
+        <span class="ec-badge" style="background:rgba(192,57,43,0.15);color:#C0392B;border:1px solid rgba(192,57,43,0.3)">4 Papers · 59 Chapters</span>
+        <button class="ec-enter" style="background:#C0392B">Start Foundation →</button>
+      </a>
+
+      <a href="dashboard-ca.html?level=inter" class="exam-card" style="--card-glow:rgba(176,58,46,0.12);--card-border:rgba(176,58,46,0.4);border-top-color:#B03A2E" onclick="localStorage.setItem('selectedExam','ca_inter')">
+        <span class="ec-icon">🏛️</span>
+        <div class="ec-name">CA Intermediate</div>
+        <div class="ec-desc">Adv Acc, Corporate Laws, Tax, Costing, Audit, FM-SM</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#B03A2E">${cainPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#B03A2E">${cainDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ca_inter.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cainDays < 30 ? '#EF4444' : '#B03A2E'}">${cainDays > 0 ? cainDays : '🎯'}</div><div class="ec-stat-lbl">${cainDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(176,58,46,0.15);color:#B03A2E;border:1px solid rgba(176,58,46,0.3)">6 Papers (Group 1 & 2) · 96 Chapters</span>
+        <button class="ec-enter" style="background:#B03A2E">Start Inter Prep →</button>
+      </a>
+
+      <a href="dashboard-ca.html?level=final" class="exam-card" style="--card-glow:rgba(146,43,33,0.12);--card-border:rgba(146,43,33,0.4);border-top-color:#922B21" onclick="localStorage.setItem('selectedExam','ca_final')">
+        <span class="ec-icon">👑</span>
+        <div class="ec-name">CA Final</div>
+        <div class="ec-desc">FR, AFM, Auditing, Direct Tax, IDT, Open Book IBS</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#922B21">${cafinPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#922B21">${cafinDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ca_final.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cafinDays < 30 ? '#EF4444' : '#922B21'}">${cafinDays > 0 ? cafinDays : '🎯'}</div><div class="ec-stat-lbl">${cafinDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(146,43,33,0.15);color:#922B21;border:1px solid rgba(146,43,33,0.3)">6 Papers (Group 1 & 2) · 119 Chapters</span>
+        <button class="ec-enter" style="background:#922B21">Start Final Prep →</button>
       </a>
     `;
   </script>

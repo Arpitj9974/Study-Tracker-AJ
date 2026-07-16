@@ -2,20 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SSC CGL Dashboard — Arpit's Exam Hub</title>
-  <meta name="description" content="SSC CGL preparation dashboard with Quant, Reasoning, English and General Knowledge trackers."/>
+  <title>CA Dashboard — Arpit's Exam Hub</title>
+  <meta name="description" content="ICAI Chartered Accountancy (CA Foundation, Inter, Final) Preparation Dashboard."/>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="./assets/priority-data.js"></script>
+  <script src="./assets/ca_foundation_exam_data.js"></script>
+  <script src="./assets/ca_inter_exam_data.js"></script>
+  <script src="./assets/ca_final_exam_data.js"></script>
   <style>
     .page-content { padding: 28px 32px 60px; display: flex; flex-direction: column; gap: 32px; }
+    /* Level Selector Tabs */
+    .level-tabs { display: flex; gap: 12px; background: var(--bg-surface); padding: 6px; border-radius: var(--radius-lg); border: 1px solid var(--border-medium); width: fit-content; }
+    .level-tab { font: 600 13px/1 'DM Sans'; padding: 10px 20px; border-radius: var(--radius-md); border: none; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .level-tab.active { background: #C0392B; color: white; box-shadow: 0 2px 10px rgba(192,57,43,0.3); }
+
     /* Hub header */
-    .hub-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 26px; background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); flex-wrap:wrap; border-left:3px solid #1D9E75; }
+    .hub-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 26px; background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); flex-wrap:wrap; border-left:3px solid #C0392B; }
     .hub-name   { font:700 21px/1.2 'DM Sans'; color:var(--text-primary); margin-bottom:4px; }
-    .hub-tag    { font:500 10px/1 'JetBrains Mono'; color:#1D9E75; text-transform:uppercase; letter-spacing:.08em; }
+    .hub-tag    { font:500 10px/1 'JetBrains Mono'; color:#C0392B; text-transform:uppercase; letter-spacing:.08em; }
     .cdown-lbl  { font:500 9px/1 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.07em; color:var(--text-tertiary); margin-bottom:4px; }
     .cdown-row  { display:flex; align-items:baseline; gap:6px; }
     #countdown-days  { font:700 38px/1 'JetBrains Mono'; }
     #countdown-badge { font:600 13px/1 'DM Sans'; }
+
     /* Master stats */
     .master-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
     @media(max-width:900px){ .master-grid{ grid-template-columns:repeat(3,1fr); } }
@@ -28,15 +36,11 @@
     /* Donut + stats together */
     .overview-row { display:grid; grid-template-columns:120px 1fr; gap:24px; align-items:center; }
     .donut-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; }
-    .donut-legend { display:flex; flex-direction:column; gap:5px; }
-    .dl-item { display:flex; align-items:center; gap:6px; font:400 11px/1 'DM Sans'; color:var(--text-secondary); }
-    .dl-dot  { width:8px; height:8px; border-radius:50%; }
     /* Subject cards */
-    .subject-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    @media(max-width:650px){ .subject-grid{ grid-template-columns:1fr; } }
-    .subject-card { background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column; gap:12px; border-top:2px solid var(--subj-color,#1D9E75); box-shadow:0 0 0 1px var(--border-subtle),0 4px 20px rgba(0,0,0,.25); transition:transform .2s,box-shadow .2s; }
+    .subject-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    @media(max-width:850px){ .subject-grid{ grid-template-columns:1fr; } }
+    .subject-card { background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column; gap:12px; border-top:2px solid var(--subj-color,#C0392B); box-shadow:0 0 0 1px var(--border-subtle),0 4px 20px rgba(0,0,0,.25); transition:transform .2s,box-shadow .2s; }
     .subject-card:hover{ transform:translateY(-2px); box-shadow:0 0 0 1px var(--border-medium),0 8px 28px rgba(0,0,0,.35); }
-    .subject-card--wide{ grid-column:1/-1; }
     .sc-header  { display:flex; align-items:center; justify-content:space-between; }
     .sc-title   { display:flex; align-items:center; gap:10px; font:600 15px/1 'DM Sans'; color:var(--text-primary); }
     .sc-icon    { font-size:18px; }
@@ -45,14 +49,14 @@
     .sc-phase-label { display:flex; align-items:center; gap:6px; font:400 12px/1 'DM Sans'; color:var(--text-secondary); }
     .sc-phase-count { margin-left:auto; font:500 11px/1 'JetBrains Mono'; color:var(--text-tertiary); }
     .sc-link    { display:inline-flex; align-items:center; font:500 12px/1 'DM Sans'; color:var(--text-tertiary); text-decoration:none; border-top:1px solid var(--border-subtle); padding-top:10px; transition:color .2s; }
-    .sc-link:hover{ color:var(--subj-color,#1D9E75); }
+    .sc-link:hover{ color:var(--subj-color,#C0392B); }
     /* Focus + Smart */
     .focus-wrap  { background:var(--bg-surface); border:1px solid var(--accent-amber); border-radius:var(--radius-lg); padding:22px; }
     .focus-on-track{ font:500 14px/1.5 'DM Sans'; color:var(--accent-green); }
     .focus-title { font:700 12px/1 'JetBrains Mono'; color:var(--accent-amber); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px; }
     .focus-items { display:flex; flex-direction:column; gap:10px; }
     .focus-item  { display:flex; align-items:center; gap:12px; }
-    .focus-subject{ font:600 13px/1 'DM Sans'; color:var(--text-primary); min-width:80px; }
+    .focus-subject{ font:600 13px/1 'DM Sans'; color:var(--text-primary); min-width:140px; }
     .focus-pct   { font:500 12px/1 'JetBrains Mono'; min-width:42px; color:var(--accent-amber); }
     .smart-wrap  { background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); padding:22px; }
   </style>
@@ -63,59 +67,66 @@
   <div class="content-wrapper">
   <div class="page-content">
 
+    <!-- LEVEL SWITCHER -->
+    <div class="level-tabs">
+      <a href="dashboard-ca.html?level=foundation" class="level-tab" id="tab-foundation">🎓 CA Foundation</a>
+      <a href="dashboard-ca.html?level=inter" class="level-tab" id="tab-inter">🏛️ CA Intermediate</a>
+      <a href="dashboard-ca.html?level=final" class="level-tab" id="tab-final">👑 CA Final</a>
+    </div>
+
     <!-- ① HEADER -->
-    <div class="hub-header">
-      <div><div class="hub-name">📋 SSC CGL Preparation</div><div class="hub-tag">Quant · Reasoning · English · General Knowledge</div></div>
+    <div class="hub-header" id="ca-header">
+      <div><div class="hub-name" id="ca-name">🎓 CA Foundation (ICAI New Scheme)</div><div class="hub-tag" id="ca-tag">Paper 1, 2, 3, 4 · 400 Marks Total</div></div>
       <div>
-        <div class="cdown-lbl">Days until SSC CGL</div>
+        <div class="cdown-lbl">Days until Exam</div>
         <div class="cdown-row">
-          <span id="countdown-days" style="color:var(--accent-green)">—</span>
-          <span id="countdown-badge" style="color:var(--accent-green)">days left</span>
+          <span id="countdown-days" style="color:#C0392B">—</span>
+          <span id="countdown-badge" style="color:#C0392B">days left</span>
         </div>
       </div>
     </div>
 
     <!-- ② MASTER STATS -->
     <div>
-      <div class="section-head green"><h2>SSC Stats</h2></div>
+      <div class="section-head" style="--accent-purple:#C0392B"><h2 id="stats-title">CA Stats</h2></div>
       <div class="master-grid">
-        <div class="ms-card" style="border-left-color:#1D9E75">
+        <div class="ms-card" style="border-left-color:#C0392B">
           <span class="ms-lbl">Total Done</span>
-          <span class="ms-val" id="ms-total-done" style="color:#1D9E75">—</span>
+          <span class="ms-val" id="ms-total-done" style="color:#C0392B">—</span>
           <span class="ms-sub">chapters</span>
         </div>
         <div class="ms-card" style="border-left-color:var(--border-medium)">
           <span class="ms-lbl">Total Chapters</span>
-          <span class="ms-val">162</span>
-          <span class="ms-sub">SSC syllabus</span>
+          <span class="ms-val" id="ms-total-ch">59</span>
+          <span class="ms-sub">ICAI syllabus</span>
         </div>
-        <div class="ms-card" style="border-left-color:#3B82F6">
+        <div class="ms-card" style="border-left-color:#C0392B">
           <span class="ms-lbl">Overall %</span>
-          <span class="ms-val" id="ms-overall-pct" style="background:linear-gradient(90deg,#1D9E75,#3B82F6);-webkit-background-clip:text;color:transparent">—</span>
+          <span class="ms-val" id="ms-overall-pct" style="background:linear-gradient(90deg,#C0392B,#E67E22);-webkit-background-clip:text;color:transparent">—</span>
           <span class="ms-sub">of syllabus</span>
         </div>
-        <div class="ms-card" style="border-left-color:#1D9E75">
-          <span class="ms-lbl">Subjects</span>
-          <span class="ms-val" style="color:#1D9E75">5</span>
-          <span class="ms-sub">active</span>
+        <div class="ms-card" style="border-left-color:#C0392B">
+          <span class="ms-lbl">Papers</span>
+          <span class="ms-val" id="ms-papers-val" style="color:#C0392B">4</span>
+          <span class="ms-sub" id="ms-papers-sub">40% per paper min</span>
         </div>
         <div class="ms-card" style="border-left-color:var(--text-muted)">
-          <span class="ms-lbl">Streak</span>
-          <span class="ms-val" style="color:var(--text-muted);font-size:18px">—</span>
-          <span class="ms-sub" style="color:var(--text-muted)">coming soon</span>
+          <span class="ms-lbl">Target Attempt</span>
+          <span class="ms-val" id="ms-date-val" style="color:var(--accent-amber);font-size:18px">2 Sep 2026</span>
+          <span class="ms-sub" id="ms-date-sub" style="color:var(--text-muted)">ICAI Exam</span>
         </div>
       </div>
     </div>
 
     <!-- ③ DONUT + OVERVIEW -->
     <div>
-      <div class="section-head green"><h2>SSC Progress</h2></div>
+      <div class="section-head" style="--accent-purple:#C0392B"><h2>Progress Overview</h2></div>
       <div class="overview-row">
         <div class="donut-wrap">
           <svg id="donut-svg" width="120" height="120" viewBox="0 0 120 120"></svg>
         </div>
         <div>
-          <div class="section-head green" style="margin-bottom:12px"><h2>Subject Progress</h2></div>
+          <div class="section-head green" style="margin-bottom:12px"><h2>Paper Breakdown</h2></div>
           <div class="subject-grid" id="subject-cards"></div>
         </div>
       </div>
@@ -123,13 +134,13 @@
 
     <!-- ④ SMART SUGGESTION -->
     <div>
-      <div class="section-head amber"><h2>What's Next</h2></div>
+      <div class="section-head amber"><h2>Strategy Recommendation</h2></div>
       <div class="smart-wrap" id="smart-box"><span style="color:var(--text-tertiary)">Loading…</span></div>
     </div>
 
     <!-- ⑤ FOCUS BOX -->
     <div>
-      <div class="section-head amber"><h2>Priority Focus</h2><span class="sh-sub">what to study today</span></div>
+      <div class="section-head amber"><h2>Priority Focus</h2><span class="sh-sub">Weakest Papers Below 50%</span></div>
       <div class="focus-wrap" id="focus-box"><span style="color:var(--text-tertiary)">Loading…</span></div>
     </div>
 
@@ -137,7 +148,7 @@
   </div>
 </main>
 <script src="assets/nav.js?v=6"></script>
-<script src="assets/dashboard-ssc.js?v=1"></script>
+<script src="assets/dashboard-ca.js?v=1"></script>
 <script type="module" src="assets/auth-sync.js?v=5"></script>
 </body>
 </html>

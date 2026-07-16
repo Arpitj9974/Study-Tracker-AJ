@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>CMAT Subject Tracker — Arpit's Exam Hub</title>
+  <title>CA Subject Tracker — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="./assets/cmat_exam_data.js"></script>
+  <script src="./assets/ca_foundation_exam_data.js"></script>
+  <script src="./assets/ca_inter_exam_data.js"></script>
+  <script src="./assets/ca_final_exam_data.js"></script>
   <style>
     .wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0; }
     .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
@@ -26,7 +28,7 @@
     .ch-card:hover { background: var(--bg-hover); border-color: var(--border-medium); }
     .ch-card.done { opacity: 0.65; background: var(--bg-elevated); }
     .ch-card.done .ch-title { text-decoration: line-through; color: var(--text-tertiary); }
-    .ch-card.done .ck-box { background: #EF4444; border-color: #EF4444; color: white; }
+    .ch-card.done .ck-box { background: #C0392B; border-color: #C0392B; color: white; }
 
     .ck-box {
       width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border-medium);
@@ -45,18 +47,28 @@
     .pri-LOW       { background: rgba(148,163,184,0.1); color: #94A3B8; border: 1px solid rgba(148,163,184,0.2); }
 
     .meta-tag { font: 400 10px/1 'DM Sans'; color: var(--text-tertiary); background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); padding: 2px 6px; border-radius: 4px; }
+    .level-nav { display: flex; gap: 8px; margin-bottom: 16px; }
+    .level-btn { font: 600 12px/1 'DM Sans'; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--border-medium); background: var(--bg-surface); color: var(--text-secondary); text-decoration: none; transition: all 0.2s; }
+    .level-btn.active { background: #C0392B; color: white; border-color: #C0392B; }
   </style>
 </head>
-<body style="--page-accent:#EF4444">
+<body style="--page-accent:#C0392B">
 <main>
 
   <div class="content-wrapper">
   <div class="tracker-shell page-content">
+
+    <div class="level-nav">
+      <a href="tracker-ca.html?level=foundation" class="level-btn" id="btn-fnd">🎓 CA Foundation</a>
+      <a href="tracker-ca.html?level=inter" class="level-btn" id="btn-in">🏛️ CA Intermediate</a>
+      <a href="tracker-ca.html?level=final" class="level-btn" id="btn-fin">👑 CA Final</a>
+    </div>
+
     <div class="tracker-header">
       <div class="th-top">
-        <div class="th-title" id="subject-title">🚀 Subject Tracker</div>
+        <div class="th-title" id="subject-title">🎓 CA Subject Tracker</div>
         <div class="th-badges" id="subject-badges">
-          <span class="badge" style="background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)" id="stage-badge">CMAT</span>
+          <span class="badge" style="background:rgba(192,57,43,0.15);color:#C0392B;border:1px solid rgba(192,57,43,0.3)" id="stage-badge">ICAI CA</span>
         </div>
       </div>
       <div class="th-mini-stats" id="mini-stats"></div>
@@ -77,25 +89,42 @@
 <script src="assets/nav.js?v=6"></script>
 <script type="module" src="assets/auth-sync.js?v=5"></script>
 <script>
-  // Dynamic CMAT Subject Tracker Engine
+  // Dynamic CA Subject Tracker Engine (Foundation / Inter / Final)
   const params = new URLSearchParams(window.location.search);
-  const rawSubj = params.get('subj') || 'cmat_qt';
-  const cleanSubjKey = rawSubj.startsWith('cmat_') ? rawSubj.replace('cmat_', '') : rawSubj;
+  const level = params.get('level') || 'foundation';
+  const rawSubj = params.get('subj');
 
-  const subjConfig = EXAM_CONFIG_CMAT.subjects.find(s => s.key === cleanSubjKey || s.key === rawSubj || s.prefix.includes(cleanSubjKey)) 
-                   || EXAM_CONFIG_CMAT.subjects[0];
+  let activeConfig = EXAM_CONFIG_CA_FOUNDATION;
+  let activePriorityData = CA_FOUNDATION_PRIORITY_DATA;
+  let examKeyStorage = 'ca_foundation';
+
+  if (level === 'inter') {
+    activeConfig = EXAM_CONFIG_CA_INTER;
+    activePriorityData = CA_INTER_PRIORITY_DATA;
+    examKeyStorage = 'ca_inter';
+    document.getElementById('btn-in').classList.add('active');
+  } else if (level === 'final') {
+    activeConfig = EXAM_CONFIG_CA_FINAL;
+    activePriorityData = CA_FINAL_PRIORITY_DATA;
+    examKeyStorage = 'ca_final';
+    document.getElementById('btn-fin').classList.add('active');
+  } else {
+    document.getElementById('btn-fnd').classList.add('active');
+  }
+
+  const subjConfig = activeConfig.subjects.find(s => s.key === rawSubj || s.prefix.includes(rawSubj || '')) || activeConfig.subjects[0];
 
   document.body.style.setProperty('--page-accent', subjConfig.color);
   document.getElementById('subject-title').innerHTML = `${subjConfig.icon} ${subjConfig.name}`;
   document.getElementById('stage-badge').textContent = subjConfig.examStage;
-  document.title = `${subjConfig.name} — CMAT Tracker`;
+  document.title = `${subjConfig.name} — CA Tracker`;
 
   // Filter chapters for this subject
   const chapters = [];
   for (let i = 1; i <= subjConfig.totalChapters; i++) {
     const chKey = subjConfig.prefix + i;
-    if (CMAT_PRIORITY_DATA[chKey]) {
-      chapters.push({ key: chKey, index: i, data: CMAT_PRIORITY_DATA[chKey] });
+    if (activePriorityData[chKey]) {
+      chapters.push({ key: chKey, index: i, data: activePriorityData[chKey] });
     }
   }
 
@@ -172,13 +201,12 @@
     } else {
       localStorage.setItem(key, '1');
     }
-    // Dispatch storage event to update background sync & UI
     window.dispatchEvent(new Event('storage'));
     renderTracker();
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    localStorage.setItem('selectedExam', 'cmat');
+    localStorage.setItem('selectedExam', examKeyStorage);
     renderTracker();
   });
 

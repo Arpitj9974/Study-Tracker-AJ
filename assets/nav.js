@@ -56,6 +56,25 @@ const SUBJECT_COLORS = {
   cds_gk: { primary: '#F59E0B' },
   cds_en: { primary: '#10B981' },
   cds_ma: { primary: '#3B82F6' },
+  // CA Foundation colors
+  cafnd_acc: { primary: '#C0392B' },
+  cafnd_law: { primary: '#16A085' },
+  cafnd_qa:  { primary: '#8E44AD' },
+  cafnd_eco: { primary: '#D68910' },
+  // CA Inter colors
+  cain_acc:   { primary: '#B03A2E' },
+  cain_law:   { primary: '#117864' },
+  cain_tax:   { primary: '#1F618D' },
+  cain_cost:  { primary: '#7D3C98' },
+  cain_audit: { primary: '#196F3D' },
+  cain_fmsm:  { primary: '#B9770E' },
+  // CA Final colors
+  cafin_fr:   { primary: '#922B21' },
+  cafin_afm:  { primary: '#1A5276' },
+  cafin_aud:  { primary: '#0E6251' },
+  cafin_dt:   { primary: '#6C3483' },
+  cafin_idt:  { primary: '#A04000' },
+  cafin_ibs:  { primary: '#148F77' },
 };
 
 const KEYS = {
@@ -107,6 +126,25 @@ const KEYS = {
   cds_gk: { prefix: 'cds_gk_', total: 12, p1: 12 },
   cds_en: { prefix: 'cds_en_', total: 8,  p1: 8  },
   cds_ma: { prefix: 'cds_ma_', total: 10, p1: 10 },
+  // CA Foundation
+  cafnd_acc: { prefix: 'cafnd_acc_', total: 15, p1: 15 },
+  cafnd_law: { prefix: 'cafnd_law_', total: 15, p1: 15 },
+  cafnd_qa:  { prefix: 'cafnd_qa_',  total: 19, p1: 19 },
+  cafnd_eco: { prefix: 'cafnd_eco_', total: 10, p1: 10 },
+  // CA Inter
+  cain_acc:   { prefix: 'cain_acc_',   total: 15, p1: 15 },
+  cain_law:   { prefix: 'cain_law_',   total: 15, p1: 15 },
+  cain_tax:   { prefix: 'cain_tax_',   total: 26, p1: 26 },
+  cain_cost:  { prefix: 'cain_cost_',  total: 15, p1: 15 },
+  cain_audit: { prefix: 'cain_audit_', total: 11, p1: 11 },
+  cain_fmsm:  { prefix: 'cain_fmsm_',  total: 14, p1: 14 },
+  // CA Final
+  cafin_fr:   { prefix: 'cafin_fr_',   total: 17, p1: 17 },
+  cafin_afm:  { prefix: 'cafin_afm_',  total: 15, p1: 15 },
+  cafin_aud:  { prefix: 'cafin_aud_',  total: 20, p1: 20 },
+  cafin_dt:   { prefix: 'cafin_dt_',   total: 26, p1: 26 },
+  cafin_idt:  { prefix: 'cafin_idt_',  total: 32, p1: 32 },
+  cafin_ibs:  { prefix: 'cafin_ibs_',  total: 9,  p1: 9  },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -271,6 +309,58 @@ const EXAM_CONFIG = {
       { page: 'tracker-cds.html?subj=cds_en', href: 'tracker-cds.html?subj=cds_en', icon: '📝', label: 'English' },
       { page: 'tracker-cds.html?subj=cds_ma', href: 'tracker-cds.html?subj=cds_ma', icon: '📐', label: 'Elementary Maths (IMA/INA/AFA)' }
     ]
+  },
+  ca_foundation: {
+    label: 'CA Foundation',
+    color: '#C0392B',
+    icon: '🎓',
+    subjects: ['cafnd_acc', 'cafnd_law', 'cafnd_qa', 'cafnd_eco'],
+    countMode: 'all',
+    examDate: '2026-09-02',
+    totalChapters: 59,
+    links: [
+      { page: 'dashboard-ca.html?level=foundation', href: 'dashboard-ca.html?level=foundation', icon: '📊', label: 'Foundation Dashboard' },
+      { page: 'tracker-ca.html?level=foundation&subj=cafnd_acc', href: 'tracker-ca.html?level=foundation&subj=cafnd_acc', icon: '📒', label: 'Accounting' },
+      { page: 'tracker-ca.html?level=foundation&subj=cafnd_law', href: 'tracker-ca.html?level=foundation&subj=cafnd_law', icon: '⚖️', label: 'Business Laws' },
+      { page: 'tracker-ca.html?level=foundation&subj=cafnd_qa',  href: 'tracker-ca.html?level=foundation&subj=cafnd_qa',  icon: '🔢', label: 'Quantitative Aptitude' },
+      { page: 'tracker-ca.html?level=foundation&subj=cafnd_eco', href: 'tracker-ca.html?level=foundation&subj=cafnd_eco', icon: '📈', label: 'Business Economics' }
+    ]
+  },
+  ca_inter: {
+    label: 'CA Intermediate',
+    color: '#B03A2E',
+    icon: '🏛️',
+    subjects: ['cain_acc', 'cain_law', 'cain_tax', 'cain_cost', 'cain_audit', 'cain_fmsm'],
+    countMode: 'all',
+    examDate: '2026-09-01',
+    totalChapters: 96,
+    links: [
+      { page: 'dashboard-ca.html?level=inter', href: 'dashboard-ca.html?level=inter', icon: '📊', label: 'Intermediate Dashboard' },
+      { page: 'tracker-ca.html?level=inter&subj=cain_acc',   href: 'tracker-ca.html?level=inter&subj=cain_acc',   icon: '📗', label: 'Advanced Accounting' },
+      { page: 'tracker-ca.html?level=inter&subj=cain_law',   href: 'tracker-ca.html?level=inter&subj=cain_law',   icon: '⚖️', label: 'Corporate Laws' },
+      { page: 'tracker-ca.html?level=inter&subj=cain_tax',   href: 'tracker-ca.html?level=inter&subj=cain_tax',   icon: '🧾', label: 'Taxation (Income-tax & GST)' },
+      { page: 'tracker-ca.html?level=inter&subj=cain_cost',  href: 'tracker-ca.html?level=inter&subj=cain_cost',  icon: '🏭', label: 'Costing' },
+      { page: 'tracker-ca.html?level=inter&subj=cain_audit', href: 'tracker-ca.html?level=inter&subj=cain_audit', icon: '🔍', label: 'Auditing & Ethics' },
+      { page: 'tracker-ca.html?level=inter&subj=cain_fmsm',  href: 'tracker-ca.html?level=inter&subj=cain_fmsm',  icon: '📊', label: 'FM & SM' }
+    ]
+  },
+  ca_final: {
+    label: 'CA Final',
+    color: '#922B21',
+    icon: '👑',
+    subjects: ['cafin_fr', 'cafin_afm', 'cafin_aud', 'cafin_dt', 'cafin_idt', 'cafin_ibs'],
+    countMode: 'all',
+    examDate: '2026-11-02',
+    totalChapters: 119,
+    links: [
+      { page: 'dashboard-ca.html?level=final', href: 'dashboard-ca.html?level=final', icon: '📊', label: 'Final Dashboard' },
+      { page: 'tracker-ca.html?level=final&subj=cafin_fr',  href: 'tracker-ca.html?level=final&subj=cafin_fr',  icon: '📘', label: 'Financial Reporting (FR)' },
+      { page: 'tracker-ca.html?level=final&subj=cafin_afm', href: 'tracker-ca.html?level=final&subj=cafin_afm', icon: '💹', label: 'Adv Financial Mgmt (AFM)' },
+      { page: 'tracker-ca.html?level=final&subj=cafin_aud', href: 'tracker-ca.html?level=final&subj=cafin_aud', icon: '🔎', label: 'Adv Auditing & Ethics' },
+      { page: 'tracker-ca.html?level=final&subj=cafin_dt',  href: 'tracker-ca.html?level=final&subj=cafin_dt',  icon: '🧾', label: 'Direct Tax (DT)' },
+      { page: 'tracker-ca.html?level=final&subj=cafin_idt', href: 'tracker-ca.html?level=final&subj=cafin_idt', icon: '📑', label: 'Indirect Tax (IDT)' },
+      { page: 'tracker-ca.html?level=final&subj=cafin_ibs', href: 'tracker-ca.html?level=final&subj=cafin_ibs', icon: '🧠', label: 'Integrated Business Sol (IBS)' }
+    ]
   }
 };
 
@@ -286,6 +376,13 @@ function getCurrentExam() {
   if (page.includes('cat')) return 'cat';
   if (page.includes('cmat')) return 'cmat';
   if (page.includes('cds')) return 'cds';
+  if (page.includes('ca')) {
+    const params = new URLSearchParams(window.location.search);
+    const lvl = params.get('level');
+    if (lvl === 'inter') return 'ca_inter';
+    if (lvl === 'final') return 'ca_final';
+    return 'ca_foundation';
+  }
   // For tracker pages, check localStorage for last selected exam
   return localStorage.getItem('selectedExam') || 'nqt';
 }
