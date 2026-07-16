@@ -114,6 +114,11 @@ const SUBJECT_COLORS = {
   // NDA colors
   nda_gat: { primary: '#F59E0B' },
   nda_ma:  { primary: '#3B82F6' },
+  // XAT colors
+  xat_dm:   { primary: '#943126' },
+  xat_valr: { primary: '#1F618D' },
+  xat_qadi: { primary: '#B9770E' },
+  xat_gk:   { primary: '#5D6D7E' },
 };
 
 const KEYS = {
@@ -223,6 +228,11 @@ const KEYS = {
   // UPSC NDA subjects
   nda_gat: { prefix: 'nda_gat_', total: 14, p1: 14 },
   nda_ma:  { prefix: 'nda_ma_',  total: 9,  p1: 9  },
+  // XAT subjects
+  xat_dm:   { prefix: 'xat_dm_',   total: 8,  p1: 8  },
+  xat_valr: { prefix: 'xat_valr_', total: 10, p1: 10 },
+  xat_qadi: { prefix: 'xat_qadi_', total: 24, p1: 24 },
+  xat_gk:   { prefix: 'xat_gk_',   total: 10, p1: 10 },
 };
 
 const NQT_MAX = { speedmath: 0, quant: 27, reasoning: 23, coding: 16, english: 25, gk: 0  };
@@ -559,6 +569,22 @@ const EXAM_CONFIG = {
       { page: 'tracker-nda.html?subj=nda_gat', href: 'tracker-nda.html?subj=nda_gat', icon: '🌍', label: 'General Ability Test (GAT)' },
       { page: 'tracker-nda.html?subj=nda_ma',  href: 'tracker-nda.html?subj=nda_ma',  icon: '📐', label: 'Mathematics' }
     ]
+  },
+  xat: {
+    label: 'XAT (XLRI)',
+    color: '#943126',
+    icon: '⚖️',
+    subjects: ['xat_dm', 'xat_valr', 'xat_qadi', 'xat_gk'],
+    countMode: 'all',
+    examDate: '2027-01-03',
+    totalChapters: 52,
+    links: [
+      { page: 'dashboard-xat.html', href: 'dashboard-xat.html', icon: '📊', label: 'XAT Dashboard' },
+      { page: 'tracker-xat.html?subj=xat_dm',   href: 'tracker-xat.html?subj=xat_dm',   icon: '⚖️', label: 'Decision Making' },
+      { page: 'tracker-xat.html?subj=xat_valr', href: 'tracker-xat.html?subj=xat_valr', icon: '📖', label: 'Verbal & Logical Ability' },
+      { page: 'tracker-xat.html?subj=xat_qadi', href: 'tracker-xat.html?subj=xat_qadi', icon: '🔢', label: 'Quantitative & DI' },
+      { page: 'tracker-xat.html?subj=xat_gk',   href: 'tracker-xat.html?subj=xat_gk',   icon: '🌏', label: 'General Knowledge' }
+    ]
   }
 };
 
@@ -575,6 +601,7 @@ function getCurrentExam() {
   }
   if (page.includes('ugcnet')) return 'ugcnet';
   if (page.includes('nda')) return 'nda';
+  if (page.includes('xat')) return 'xat';
   if (page.includes('upsc')) return 'upsc';
   if (page.includes('ibps')) {
     const params = new URLSearchParams(window.location.search);

@@ -10,6 +10,7 @@
   <script src="assets/ugcnet_exam_data.js"></script>
   <script src="assets/ibps_clerk_exam_data.js"></script>
   <script src="assets/nda_exam_data.js"></script>
+  <script src="assets/xat_exam_data.js"></script>
   <style>
     body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
     .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
@@ -86,7 +87,7 @@
     </div>
   </div>
 
-  <script src="assets/nav.js?v=13"></script>
+  <script src="assets/nav.js?v=14"></script>
   <script>
     // Render exam cards
     const grid = document.getElementById('exam-grid');
@@ -204,6 +205,12 @@
     const ndaDone = Object.values(ndaStats).reduce((s, v) => s + v.done, 0);
     const ndaPct = Math.round((ndaDone / EXAM_CONFIG.nda.totalChapters) * 100);
     const ndaDays = Math.ceil((new Date(EXAM_CONFIG.nda.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // XAT stats
+    const xatStats = readExamStats('xat');
+    const xatDone = Object.values(xatStats).reduce((s, v) => s + v.done, 0);
+    const xatPct = Math.round((xatDone / EXAM_CONFIG.xat.totalChapters) * 100);
+    const xatDays = Math.ceil((new Date(EXAM_CONFIG.xat.examDate + 'T00:00:00') - new Date()) / 86400000);
 
     grid.innerHTML = `
       <!-- Corporate Placement & Aptitude -->
@@ -454,6 +461,19 @@
         <button class="ec-enter" style="background:#EF4444">Start CMAT Prep →</button>
       </a>
 
+      <a href="dashboard-xat.html" class="exam-card" style="--card-glow:rgba(148,49,38,0.12);--card-border:rgba(148,49,38,0.4);border-top-color:#943126" onclick="if(window.setSelectedExam)window.setSelectedExam('xat');else localStorage.setItem('selectedExam','xat')">
+        <span class="ec-icon">⚖️</span>
+        <div class="ec-name">XAT (XLRI)</div>
+        <div class="ec-desc">Decision Making, VALR, QA & DI, General Knowledge</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#943126">${xatPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#943126">${xatDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.xat.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${xatDays < 30 ? '#EF4444' : '#943126'}">${xatDays > 0 ? xatDays : '🎯'}</div><div class="ec-stat-lbl">${xatDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(148,49,38,0.15);color:#943126;border:1px solid rgba(148,49,38,0.3)">4 Subjects · 52 Chapters</span>
+        <button class="ec-enter" style="background:#943126">Start XAT Prep →</button>
+      </a>
+
       <!-- Chartered Accountancy (CA) Section Header -->
       <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#C0392B;display:flex;align-items:center;gap:10px">
         <span>🎓</span> Chartered Accountancy (CA — ICAI)
@@ -499,6 +519,6 @@
       </a>
     `;
   </script>
-  <script type="module" src="assets/auth-sync.js?v=13"></script>
+  <script type="module" src="assets/auth-sync.js?v=14"></script>
 </body>
 </html>

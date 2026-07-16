@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>UPSC NDA Subject Tracker — Arpit's Exam Hub</title>
+  <title>XAT Subject Tracker — Arpit's Exam Hub</title>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="assets/nda_exam_data.js"></script>
+  <script src="assets/xat_exam_data.js"></script>
   <style>
     .cat-group { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:12px; margin-bottom:20px; overflow:hidden; }
     .cat-header { background:var(--bg-surface); padding:14px 20px; font:700 15px/1.2 'DM Sans'; color:var(--text-primary); border-bottom:1px solid var(--border-medium); display:flex; align-items:center; justify-content:space-between; }
@@ -32,14 +32,14 @@
     <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--bg-elevated);padding:16px 20px;border-radius:12px;border:1px solid var(--border-medium)">
       <div>
         <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);display:flex;align-items:center;gap:10px">
-          <span id="subj-icon">🎖️</span> <span id="subj-name">Loading Subject...</span>
+          <span id="subj-icon">⚖️</span> <span id="subj-name">Loading Subject...</span>
         </div>
         <div style="font:400 13px/1.4 'DM Sans';color:var(--text-secondary);margin-top:4px" id="subj-exam-label">
-          UPSC NDA Written Exam Prep
+          XAT 2027 Subject Tracker
         </div>
       </div>
       <div style="display:flex;gap:8px">
-        <a href="dashboard-nda.html" class="btn-tab">📊 NDA Dashboard</a>
+        <a href="dashboard-xat.html" class="btn-tab">📊 XAT Dashboard</a>
       </div>
     </div>
 
@@ -47,10 +47,10 @@
     <div style="background:var(--bg-elevated);border:1px solid var(--border-medium);border-radius:12px;padding:20px;margin-bottom:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <div style="font:600 13px/1 'JetBrains Mono';color:var(--text-secondary)" id="subj-progress-text">0 / 0 completed</div>
-        <div style="font:700 16px/1 'JetBrains Mono';color:#F59E0B" id="subj-pct-text">0%</div>
+        <div style="font:700 16px/1 'JetBrains Mono';color:#943126" id="subj-pct-text">0%</div>
       </div>
       <div style="width:100%;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden">
-        <div id="subj-bar-fill" style="width:0%;height:100%;background:#F59E0B;transition:width .3s ease"></div>
+        <div id="subj-bar-fill" style="width:0%;height:100%;background:#943126;transition:width .3s ease"></div>
       </div>
     </div>
 
@@ -71,10 +71,10 @@
   const params = new URLSearchParams(window.location.search);
   const subjKey = params.get('subj');
 
-  const configData = EXAM_CONFIG_NDA;
-  const priorityData = NDA_PRIORITY_DATA;
+  const configData = EXAM_CONFIG_XAT;
+  const priorityData = XAT_PRIORITY_DATA;
 
-  localStorage.setItem('selectedExam', 'nda');
+  localStorage.setItem('selectedExam', 'xat_2027');
 
   const subject = configData.subjects.find(s => s.key === subjKey) || configData.subjects[0];
 
