@@ -203,19 +203,6 @@
         <button class="ec-enter" style="background:#7F77DD">Start NQT Prep →</button>
       </a>
 
-      <a href="dashboard-upsc.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('upsc');else localStorage.setItem('selectedExam','upsc')">
-        <span class="ec-icon">🏛️</span>
-        <div class="ec-name">UPSC CSE</div>
-        <div class="ec-desc">Polity, History, Geography, Economy, Ethics & CSAT</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.upsc.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${upscDays < 30 ? '#EF4444' : '#3B5BDB'}">${upscDays > 0 ? upscDays : '🎯'}</div><div class="ec-stat-lbl">${upscDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.upsc.subjects.length} Subjects · ${EXAM_CONFIG.upsc.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#3B5BDB">Start UPSC Prep →</button>
-      </a>
-
       <a href="dashboard-ibps.html" class="exam-card" style="--card-glow:rgba(183,121,31,0.12);--card-border:rgba(183,121,31,0.4);border-top-color:#B7791F" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_po');else localStorage.setItem('selectedExam','ibps_po')">
         <span class="ec-icon">🏦</span>
         <div class="ec-name">IBPS PO</div>
@@ -229,48 +216,22 @@
         <button class="ec-enter" style="background:#B7791F">Start IBPS Prep →</button>
       </a>
 
-      <!-- Staff Selection Commission (SSC) Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#1D9E75;display:flex;align-items:center;gap:10px">
-        <span>📋</span> Staff Selection Commission (SSC)
+      <!-- Union Public Service Commission (UPSC) Section -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#3B5BDB;display:flex;align-items:center;gap:10px">
+        <span>🏛️</span> Union Public Service Commission (UPSC)
       </div>
 
-      <a href="dashboard-ssc.html?exam=cgl" class="exam-card" style="--card-glow:rgba(29,158,117,0.12);--card-border:rgba(29,158,117,0.4);border-top-color:#1D9E75" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc');else localStorage.setItem('selectedExam','ssc')">
-        <span class="ec-icon">📋</span>
-        <div class="ec-name">SSC CGL</div>
-        <div class="ec-desc">Quant, Reasoning, English & General Knowledge</div>
+      <a href="dashboard-upsc.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('upsc');else localStorage.setItem('selectedExam','upsc')">
+        <span class="ec-icon">🏛️</span>
+        <div class="ec-name">UPSC CSE</div>
+        <div class="ec-desc">Polity, History, Geography, Economy, Ethics & CSAT</div>
         <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${sscDays < 30 ? '#EF4444' : '#1D9E75'}">${sscDays > 0 ? sscDays : '🎯'}</div><div class="ec-stat-lbl">${sscDays > 0 ? 'days left' : 'exam day!'}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.upsc.totalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${upscDays < 30 ? '#EF4444' : '#3B5BDB'}">${upscDays > 0 ? upscDays : '🎯'}</div><div class="ec-stat-lbl">${upscDays > 0 ? 'days left' : 'exam day!'}</div></div>
         </div>
-        <span class="ec-badge" style="background:rgba(29,158,117,0.15);color:#1D9E75;border:1px solid rgba(29,158,117,0.3)">5 Subjects · ${EXAM_CONFIG.ssc.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#1D9E75">Start CGL Prep →</button>
-      </a>
-
-      <a href="dashboard-ssc.html?exam=chsl" class="exam-card" style="--card-glow:rgba(142,68,173,0.12);--card-border:rgba(142,68,173,0.4);border-top-color:#8E44AD" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_chsl');else localStorage.setItem('selectedExam','ssc_chsl')">
-        <span class="ec-icon">📝</span>
-        <div class="ec-name">SSC CHSL</div>
-        <div class="ec-desc">English, Reasoning, Quant, GA & Computer Knowledge</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#8E44AD">${chslPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#8E44AD">${chslDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc_chsl.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${chslDays < 30 ? '#EF4444' : '#8E44AD'}">${chslDays > 0 ? chslDays : '🎯'}</div><div class="ec-stat-lbl">${chslDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(142,68,173,0.15);color:#8E44AD;border:1px solid rgba(142,68,173,0.3)">5 Subjects · 54 Chapters</span>
-        <button class="ec-enter" style="background:#8E44AD">Start CHSL Prep →</button>
-      </a>
-
-      <a href="dashboard-ssc.html?exam=mts" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_mts');else localStorage.setItem('selectedExam','ssc_mts')">
-        <span class="ec-icon">🧹</span>
-        <div class="ec-name">SSC MTS & Havaldar</div>
-        <div class="ec-desc">GA, English, Numerical & Reasoning Ability</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${mtsPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${mtsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc_mts.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${mtsDays < 30 ? '#EF4444' : '#E67E22'}">${mtsDays > 0 ? mtsDays : '🎯'}</div><div class="ec-stat-lbl">${mtsDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(230,126,34,0.15);color:#E67E22;border:1px solid rgba(230,126,34,0.3)">4 Subjects · 45 Chapters</span>
-        <button class="ec-enter" style="background:#E67E22">Start MTS Prep →</button>
+        <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.upsc.subjects.length} Subjects · ${EXAM_CONFIG.upsc.totalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#3B5BDB">Start CSE Prep →</button>
       </a>
 
       <a href="dashboard-cds.html" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="if(window.setSelectedExam)window.setSelectedExam('cds');else localStorage.setItem('selectedExam','cds')">
