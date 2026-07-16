@@ -819,7 +819,7 @@ function buildNav() {
   const stats   = readExamStats(examKey);
   const total   = config.totalChapters;
   const done    = Object.values(stats).reduce((s, v) => s + v.done, 0);
-  const pct     = Math.round((done / total) * 100);
+  const pct     = total > 0 ? Math.round((done / total) * 100) : 0;
   const examDate = new Date(config.examDate + 'T00:00:00');
   const days    = Math.ceil((examDate - new Date()) / 86400000);
   let daysColor = '#1D9E75';

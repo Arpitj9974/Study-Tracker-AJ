@@ -6,7 +6,7 @@ function renderCLATDashboard() {
   const config = EXAM_CONFIG_CLAT_UG;
   const priorityData = CLAT_UG_PRIORITY_DATA;
 
-  localStorage.setItem('selectedExam', 'clat_ug_2027');
+  localStorage.setItem('selectedExam', 'clat_ug');
 
   let totalDone = 0;
   let totalChapters = config.subjects.reduce((s, v) => s + v.totalChapters, 0);

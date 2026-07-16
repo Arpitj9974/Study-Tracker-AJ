@@ -105,3 +105,6 @@ function renderRRBDashboard() {
 document.addEventListener('DOMContentLoaded', () => {
   renderRRBDashboard();
 });
+
+window.addEventListener('cloudDataSynced', renderRRBDashboard);
+window.addEventListener('storage', renderRRBDashboard);

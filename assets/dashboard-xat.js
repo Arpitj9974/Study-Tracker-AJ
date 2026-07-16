@@ -6,7 +6,7 @@ function renderXATDashboard() {
   const config = EXAM_CONFIG_XAT;
   const priorityData = XAT_PRIORITY_DATA;
 
-  localStorage.setItem('selectedExam', 'xat_2027');
+  localStorage.setItem('selectedExam', 'xat');
 
   let totalDone = 0;
   let totalChapters = config.subjects.reduce((s, v) => s + v.totalChapters, 0);
