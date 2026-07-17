@@ -202,6 +202,11 @@ const KEYS = {
   cafnd_law: { prefix: 'cafnd_law_', total: 15, p1: 15 },
   cafnd_qa:  { prefix: 'cafnd_qa_',  total: 19, p1: 19 },
   cafnd_eco: { prefix: 'cafnd_eco_', total: 10, p1: 10 },
+  // CMA Foundation
+  cma_fnd_law:  { prefix: 'cma_fnd_law_',  total: 15, p1: 15 },
+  cma_fnd_acc:  { prefix: 'cma_fnd_acc_',  total: 15, p1: 15 },
+  cma_fnd_math: { prefix: 'cma_fnd_math_', total: 15, p1: 15 },
+  cma_fnd_eco:  { prefix: 'cma_fnd_eco_',  total: 15, p1: 15 },
   // CA Inter
   cain_acc:   { prefix: 'cain_acc_',   total: 15, p1: 15 },
   cain_law:   { prefix: 'cain_law_',   total: 15, p1: 15 },
@@ -450,6 +455,22 @@ const EXAM_CONFIG = {
       { page: 'tracker-cds.html?subj=cds_gk', href: 'tracker-cds.html?subj=cds_gk', icon: '🌍', label: 'General Knowledge' },
       { page: 'tracker-cds.html?subj=cds_en', href: 'tracker-cds.html?subj=cds_en', icon: '📝', label: 'English' },
       { page: 'tracker-cds.html?subj=cds_ma', href: 'tracker-cds.html?subj=cds_ma', icon: '📐', label: 'Elementary Maths (IMA/INA/AFA)' }
+    ]
+  },
+  cma_foundation: {
+    label: 'CMA Foundation',
+    color: '#16A085',
+    icon: '🎓',
+    subjects: ['cma_fnd_law', 'cma_fnd_acc', 'cma_fnd_math', 'cma_fnd_eco'],
+    countMode: 'all',
+    examDate: '2026-07-28',
+    totalChapters: 60,
+    links: [
+      { page: 'dashboard-cma.html', href: 'dashboard-cma.html', icon: '📊', label: 'CMA Dashboard' },
+      { page: 'tracker-cma.html?subj=law', href: 'tracker-cma.html?subj=law', icon: '⚖️', label: 'Business Laws & Comm' },
+      { page: 'tracker-cma.html?subj=acc', href: 'tracker-cma.html?subj=acc', icon: '📒', label: 'Financial & Cost Accounting' },
+      { page: 'tracker-cma.html?subj=math', href: 'tracker-cma.html?subj=math', icon: '🔢', label: 'Business Math & Stats' },
+      { page: 'tracker-cma.html?subj=eco', href: 'tracker-cma.html?subj=eco', icon: '📈', label: 'Business Economics & Mgmt' }
     ]
   },
   ca_foundation: {
@@ -745,6 +766,7 @@ function getCurrentExam() {
     if (ex === 'group_d') return 'rrb_group_d';
     return 'rrb_ntpc';
   }
+  if (page.includes('cma')) return 'cma_foundation';
   if (page.includes('ca')) {
     const params = new URLSearchParams(window.location.search);
     const lvl = params.get('level');
