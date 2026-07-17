@@ -155,6 +155,24 @@
     const cmaPct = Math.round((cmaDone / EXAM_CONFIG.cma_foundation.totalChapters) * 100);
     const cmaDays = Math.ceil((new Date(EXAM_CONFIG.cma_foundation.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // CFA Level 1 stats
+    const cfa1Stats = readExamStats('cfa_l1');
+    const cfa1Done = Object.values(cfa1Stats).reduce((s, v) => s + v.done, 0);
+    const cfa1Pct = Math.round((cfa1Done / EXAM_CONFIG.cfa_l1.totalChapters) * 100);
+    const cfa1Days = Math.ceil((new Date(EXAM_CONFIG.cfa_l1.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // CFA Level 2 stats
+    const cfa2Stats = readExamStats('cfa_l2');
+    const cfa2Done = Object.values(cfa2Stats).reduce((s, v) => s + v.done, 0);
+    const cfa2Pct = Math.round((cfa2Done / EXAM_CONFIG.cfa_l2.totalChapters) * 100);
+    const cfa2Days = Math.ceil((new Date(EXAM_CONFIG.cfa_l2.examDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // CFA Level 3 stats
+    const cfa3Stats = readExamStats('cfa_l3');
+    const cfa3Done = Object.values(cfa3Stats).reduce((s, v) => s + v.done, 0);
+    const cfa3Pct = Math.round((cfa3Done / EXAM_CONFIG.cfa_l3.totalChapters) * 100);
+    const cfa3Days = Math.ceil((new Date(EXAM_CONFIG.cfa_l3.examDate + 'T00:00:00') - new Date()) / 86400000);
+
     // CA Foundation stats
     const cafndStats = readExamStats('ca_foundation');
     const cafndDone = Object.values(cafndStats).reduce((s, v) => s + v.done, 0);
@@ -605,6 +623,50 @@
         </div>
         <span class="ec-badge" style="background:rgba(22,160,133,0.15);color:#16A085;border:1px solid rgba(22,160,133,0.3)">4 Papers · 60 Chapters</span>
         <button class="ec-enter" style="background:#16A085">Start CMA Prep →</button>
+      </a>
+
+      <!-- Chartered Financial Analyst (CFA) Section Header -->
+      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#1D4ED8;display:flex;align-items:center;gap:10px">
+        <span>📊</span> Chartered Financial Analyst (CFA Institute)
+      </div>
+
+      <a href="dashboard-cfa.html?level=l1" class="exam-card" style="--card-glow:rgba(29,78,216,0.12);--card-border:rgba(29,78,216,0.4);border-top-color:#1D4ED8" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l1');else localStorage.setItem('selectedExam','cfa_l1')">
+        <span class="ec-icon">📊</span>
+        <div class="ec-name">CFA Level 1</div>
+        <div class="ec-desc">Ethics, FSA, Fixed Income, Equity, Derivatives, Alts, PM, Quant, Eco</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D4ED8">${cfa1Pct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D4ED8">${cfa1Done}</div><div class="ec-stat-lbl">of 58</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cfa1Days < 30 ? '#EF4444' : '#1D4ED8'}">${cfa1Days > 0 ? cfa1Days : '🎯'}</div><div class="ec-stat-lbl">${cfa1Days > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(29,78,216,0.15);color:#1D4ED8;border:1px solid rgba(29,78,216,0.3)">10 Topics · 58 Chapters</span>
+        <button class="ec-enter" style="background:#1D4ED8">Start Level 1 →</button>
+      </a>
+
+      <a href="dashboard-cfa.html?level=l2" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l2');else localStorage.setItem('selectedExam','cfa_l2')">
+        <span class="ec-icon">🏛️</span>
+        <div class="ec-name">CFA Level 2</div>
+        <div class="ec-desc">Asset Valuation focus: Vignette-based item sets across all topics</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cfa2Pct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cfa2Done}</div><div class="ec-stat-lbl">of 56</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cfa2Days < 30 ? '#EF4444' : '#059669'}">${cfa2Days > 0 ? cfa2Days : '🎯'}</div><div class="ec-stat-lbl">${cfa2Days > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(5,150,105,0.15);color:#059669;border:1px solid rgba(5,150,105,0.3)">10 Topics · 56 Chapters</span>
+        <button class="ec-enter" style="background:#059669">Start Level 2 →</button>
+      </a>
+
+      <a href="dashboard-cfa.html?level=l3" class="exam-card" style="--card-glow:rgba(124,58,237,0.12);--card-border:rgba(124,58,237,0.4);border-top-color:#7C3AED" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l3');else localStorage.setItem('selectedExam','cfa_l3')">
+        <span class="ec-icon">👑</span>
+        <div class="ec-name">CFA Level 3</div>
+        <div class="ec-desc">Portfolio Mgmt Focus: Vignette MCQs + Constructed Response Essays</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#7C3AED">${cfa3Pct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#7C3AED">${cfa3Done}</div><div class="ec-stat-lbl">of 47</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${cfa3Days < 30 ? '#EF4444' : '#7C3AED'}">${cfa3Days > 0 ? cfa3Days : '🎯'}</div><div class="ec-stat-lbl">${cfa3Days > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(124,58,237,0.15);color:#7C3AED;border:1px solid rgba(124,58,237,0.3)">10 Topics · 47 Chapters</span>
+        <button class="ec-enter" style="background:#7C3AED">Start Level 3 →</button>
       </a>
     `;
   </script>

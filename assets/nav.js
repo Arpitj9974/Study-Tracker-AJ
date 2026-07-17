@@ -207,6 +207,39 @@ const KEYS = {
   cma_fnd_acc:  { prefix: 'cma_fnd_acc_',  total: 15, p1: 15 },
   cma_fnd_math: { prefix: 'cma_fnd_math_', total: 15, p1: 15 },
   cma_fnd_eco:  { prefix: 'cma_fnd_eco_',  total: 15, p1: 15 },
+  // CFA Level 1
+  cfa1_pm:  { prefix: 'cfa1_pm_',  total: 5, p1: 5 },
+  cfa1_fsa: { prefix: 'cfa1_fsa_', total: 8, p1: 8 },
+  cfa1_fi:  { prefix: 'cfa1_fi_',  total: 6, p1: 6 },
+  cfa1_eq:  { prefix: 'cfa1_eq_',  total: 6, p1: 6 },
+  cfa1_eth: { prefix: 'cfa1_eth_', total: 6, p1: 6 },
+  cfa1_qm:  { prefix: 'cfa1_qm_',  total: 7, p1: 7 },
+  cfa1_eco: { prefix: 'cfa1_eco_', total: 7, p1: 7 },
+  cfa1_ci:  { prefix: 'cfa1_ci_',  total: 5, p1: 5 },
+  cfa1_ai:  { prefix: 'cfa1_ai_',  total: 4, p1: 4 },
+  cfa1_der: { prefix: 'cfa1_der_', total: 4, p1: 4 },
+  // CFA Level 2
+  cfa2_eq:  { prefix: 'cfa2_eq_',  total: 7, p1: 7 },
+  cfa2_fsa: { prefix: 'cfa2_fsa_', total: 7, p1: 7 },
+  cfa2_fi:  { prefix: 'cfa2_fi_',  total: 7, p1: 7 },
+  cfa2_eth: { prefix: 'cfa2_eth_', total: 4, p1: 4 },
+  cfa2_pm:  { prefix: 'cfa2_pm_',  total: 6, p1: 6 },
+  cfa2_der: { prefix: 'cfa2_der_', total: 6, p1: 6 },
+  cfa2_ci:  { prefix: 'cfa2_ci_',  total: 5, p1: 5 },
+  cfa2_eco: { prefix: 'cfa2_eco_', total: 4, p1: 4 },
+  cfa2_qm:  { prefix: 'cfa2_qm_',  total: 6, p1: 6 },
+  cfa2_ai:  { prefix: 'cfa2_ai_',  total: 4, p1: 4 },
+  // CFA Level 3
+  cfa3_pm:  { prefix: 'cfa3_pm_',  total: 6, p1: 6 },
+  cfa3_aa:  { prefix: 'cfa3_aa_',  total: 6, p1: 6 },
+  cfa3_rm:  { prefix: 'cfa3_rm_',  total: 5, p1: 5 },
+  cfa3_fi:  { prefix: 'cfa3_fi_',  total: 5, p1: 5 },
+  cfa3_eq:  { prefix: 'cfa3_eq_',  total: 5, p1: 5 },
+  cfa3_eth: { prefix: 'cfa3_eth_', total: 4, p1: 4 },
+  cfa3_bf:  { prefix: 'cfa3_bf_',  total: 4, p1: 4 },
+  cfa3_der: { prefix: 'cfa3_der_', total: 4, p1: 4 },
+  cfa3_tpm: { prefix: 'cfa3_tpm_', total: 4, p1: 4 },
+  cfa3_pw:  { prefix: 'cfa3_pw_',  total: 4, p1: 4 },
   // CA Inter
   cain_acc:   { prefix: 'cain_acc_',   total: 15, p1: 15 },
   cain_law:   { prefix: 'cain_law_',   total: 15, p1: 15 },
@@ -455,6 +488,72 @@ const EXAM_CONFIG = {
       { page: 'tracker-cds.html?subj=cds_gk', href: 'tracker-cds.html?subj=cds_gk', icon: '🌍', label: 'General Knowledge' },
       { page: 'tracker-cds.html?subj=cds_en', href: 'tracker-cds.html?subj=cds_en', icon: '📝', label: 'English' },
       { page: 'tracker-cds.html?subj=cds_ma', href: 'tracker-cds.html?subj=cds_ma', icon: '📐', label: 'Elementary Maths (IMA/INA/AFA)' }
+    ]
+  },
+  cfa_l1: {
+    label: 'CFA Level 1',
+    color: '#1D4ED8',
+    icon: '📊',
+    subjects: ['cfa1_pm', 'cfa1_fsa', 'cfa1_fi', 'cfa1_eq', 'cfa1_eth', 'cfa1_qm', 'cfa1_eco', 'cfa1_ci', 'cfa1_ai', 'cfa1_der'],
+    countMode: 'all',
+    examDate: '2026-11-19',
+    totalChapters: 58,
+    links: [
+      { page: 'dashboard-cfa.html?level=l1', href: 'dashboard-cfa.html?level=l1', icon: '📊', label: 'Level 1 Dashboard' },
+      { page: 'tracker-cfa.html?level=l1&subj=pm', href: 'tracker-cfa.html?level=l1&subj=pm', icon: '📊', label: 'Portfolio Management' },
+      { page: 'tracker-cfa.html?level=l1&subj=fsa', href: 'tracker-cfa.html?level=l1&subj=fsa', icon: '📑', label: 'Financial Statement Analysis' },
+      { page: 'tracker-cfa.html?level=l1&subj=fi', href: 'tracker-cfa.html?level=l1&subj=fi', icon: '🏦', label: 'Fixed Income' },
+      { page: 'tracker-cfa.html?level=l1&subj=eq', href: 'tracker-cfa.html?level=l1&subj=eq', icon: '📈', label: 'Equity Investments' },
+      { page: 'tracker-cfa.html?level=l1&subj=eth', href: 'tracker-cfa.html?level=l1&subj=eth', icon: '⚖️', label: 'Ethical & Prof Standards' },
+      { page: 'tracker-cfa.html?level=l1&subj=qm', href: 'tracker-cfa.html?level=l1&subj=qm', icon: '📐', label: 'Quantitative Methods' },
+      { page: 'tracker-cfa.html?level=l1&subj=eco', href: 'tracker-cfa.html?level=l1&subj=eco', icon: '🌍', label: 'Economics' },
+      { page: 'tracker-cfa.html?level=l1&subj=ci', href: 'tracker-cfa.html?level=l1&subj=ci', icon: '🏢', label: 'Corporate Issuers' },
+      { page: 'tracker-cfa.html?level=l1&subj=ai', href: 'tracker-cfa.html?level=l1&subj=ai', icon: '🏠', label: 'Alternative Investments' },
+      { page: 'tracker-cfa.html?level=l1&subj=der', href: 'tracker-cfa.html?level=l1&subj=der', icon: '🔁', label: 'Derivatives' }
+    ]
+  },
+  cfa_l2: {
+    label: 'CFA Level 2',
+    color: '#059669',
+    icon: '🏛️',
+    subjects: ['cfa2_eq', 'cfa2_fsa', 'cfa2_fi', 'cfa2_eth', 'cfa2_pm', 'cfa2_der', 'cfa2_ci', 'cfa2_eco', 'cfa2_qm', 'cfa2_ai'],
+    countMode: 'all',
+    examDate: '2027-05-20',
+    totalChapters: 56,
+    links: [
+      { page: 'dashboard-cfa.html?level=l2', href: 'dashboard-cfa.html?level=l2', icon: '📊', label: 'Level 2 Dashboard' },
+      { page: 'tracker-cfa.html?level=l2&subj=eq', href: 'tracker-cfa.html?level=l2&subj=eq', icon: '📈', label: 'Equity Valuation' },
+      { page: 'tracker-cfa.html?level=l2&subj=fsa', href: 'tracker-cfa.html?level=l2&subj=fsa', icon: '📑', label: 'Financial Statement Analysis' },
+      { page: 'tracker-cfa.html?level=l2&subj=fi', href: 'tracker-cfa.html?level=l2&subj=fi', icon: '🏦', label: 'Fixed Income' },
+      { page: 'tracker-cfa.html?level=l2&subj=eth', href: 'tracker-cfa.html?level=l2&subj=eth', icon: '⚖️', label: 'Ethical & Prof Standards' },
+      { page: 'tracker-cfa.html?level=l2&subj=pm', href: 'tracker-cfa.html?level=l2&subj=pm', icon: '📊', label: 'Portfolio Management' },
+      { page: 'tracker-cfa.html?level=l2&subj=der', href: 'tracker-cfa.html?level=l2&subj=der', icon: '🔁', label: 'Derivatives' },
+      { page: 'tracker-cfa.html?level=l2&subj=ci', href: 'tracker-cfa.html?level=l2&subj=ci', icon: '🏢', label: 'Corporate Issuers' },
+      { page: 'tracker-cfa.html?level=l2&subj=eco', href: 'tracker-cfa.html?level=l2&subj=eco', icon: '🌍', label: 'Economics' },
+      { page: 'tracker-cfa.html?level=l2&subj=qm', href: 'tracker-cfa.html?level=l2&subj=qm', icon: '📐', label: 'Quantitative Methods' },
+      { page: 'tracker-cfa.html?level=l2&subj=ai', href: 'tracker-cfa.html?level=l2&subj=ai', icon: '🏠', label: 'Alternative Investments' }
+    ]
+  },
+  cfa_l3: {
+    label: 'CFA Level 3',
+    color: '#7C3AED',
+    icon: '👑',
+    subjects: ['cfa3_pm', 'cfa3_aa', 'cfa3_rm', 'cfa3_fi', 'cfa3_eq', 'cfa3_eth', 'cfa3_bf', 'cfa3_der', 'cfa3_tpm', 'cfa3_pw'],
+    countMode: 'all',
+    examDate: '2027-08-21',
+    totalChapters: 47,
+    links: [
+      { page: 'dashboard-cfa.html?level=l3', href: 'dashboard-cfa.html?level=l3', icon: '📊', label: 'Level 3 Dashboard' },
+      { page: 'tracker-cfa.html?level=l3&subj=pm', href: 'tracker-cfa.html?level=l3&subj=pm', icon: '📊', label: 'Portfolio Mgmt — Core' },
+      { page: 'tracker-cfa.html?level=l3&subj=aa', href: 'tracker-cfa.html?level=l3&subj=aa', icon: '🥧', label: 'Asset Allocation' },
+      { page: 'tracker-cfa.html?level=l3&subj=rm', href: 'tracker-cfa.html?level=l3&subj=rm', icon: '🛡️', label: 'Risk Management' },
+      { page: 'tracker-cfa.html?level=l3&subj=fi', href: 'tracker-cfa.html?level=l3&subj=fi', icon: '🏦', label: 'Fixed Income — Active' },
+      { page: 'tracker-cfa.html?level=l3&subj=eq', href: 'tracker-cfa.html?level=l3&subj=eq', icon: '📈', label: 'Equity — Active' },
+      { page: 'tracker-cfa.html?level=l3&subj=eth', href: 'tracker-cfa.html?level=l3&subj=eth', icon: '⚖️', label: 'Ethical & Prof Standards' },
+      { page: 'tracker-cfa.html?level=l3&subj=bf', href: 'tracker-cfa.html?level=l3&subj=bf', icon: '🧠', label: 'Behavioral Finance' },
+      { page: 'tracker-cfa.html?level=l3&subj=der', href: 'tracker-cfa.html?level=l3&subj=der', icon: '🔁', label: 'Derivatives in PM' },
+      { page: 'tracker-cfa.html?level=l3&subj=tpm', href: 'tracker-cfa.html?level=l3&subj=tpm', icon: '🎯', label: 'Trading & Performance' },
+      { page: 'tracker-cfa.html?level=l3&subj=pw', href: 'tracker-cfa.html?level=l3&subj=pw', icon: '💼', label: 'Specialized Pathway' }
     ]
   },
   cma_foundation: {
@@ -765,6 +864,13 @@ function getCurrentExam() {
     const ex = params.get('exam');
     if (ex === 'group_d') return 'rrb_group_d';
     return 'rrb_ntpc';
+  }
+  if (page.includes('cfa')) {
+    const params = new URLSearchParams(window.location.search);
+    const lvl = params.get('level');
+    if (lvl === 'l2') return 'cfa_l2';
+    if (lvl === 'l3') return 'cfa_l3';
+    return 'cfa_l1';
   }
   if (page.includes('cma')) return 'cma_foundation';
   if (page.includes('ca')) {
