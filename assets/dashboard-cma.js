@@ -23,6 +23,9 @@
   }
 
   // Master stats counts
+  let totalDoneOnly = 0;
+  let totalRevised = 0;
+  let totalMock = 0;
   let totalDoneAll = 0;
   let totalChAll = 0;
   const subjStats = [];
@@ -31,8 +34,15 @@
     let done = 0;
     for (let i = 1; i <= subj.totalChapters; i++) {
       const val = localStorage.getItem(subj.prefix + i);
-      if (val === '1' || val === '2' || val === '3') {
+      if (val === '1') {
         done++;
+        totalDoneOnly++;
+      } else if (val === '2') {
+        done++;
+        totalRevised++;
+      } else if (val === '3') {
+        done++;
+        totalMock++;
       }
     }
     totalDoneAll += done;
@@ -66,6 +76,49 @@
               transform="rotate(-90 60 60)"/>
       <text x="60" y="66" text-anchor="middle" fill="var(--text-primary)" font-family="JetBrains Mono" font-size="20" font-weight="700">${overallPct}%</text>
     `;
+  }
+
+  // Render Stacked Progress Bar in donut-wrap
+  const donutWrap = document.querySelector('.donut-wrap');
+  if (donutWrap) {
+    const untouched = totalChAll - totalDoneAll;
+    const mockPct = totalChAll > 0 ? Math.round((totalMock / totalChAll) * 100) : 0;
+    const revisedPct = totalChAll > 0 ? Math.round((totalRevised / totalChAll) * 100) : 0;
+    const donePct = totalChAll > 0 ? Math.round((totalDoneOnly / totalChAll) * 100) : 0;
+    const untouchedPct = 100 - mockPct - revisedPct - donePct;
+
+    // Remove any existing stacked bar first
+    const existingBar = document.getElementById('stacked-progress-bar');
+    if (existingBar) existingBar.remove();
+
+    const barHtml = `
+      <div id="stacked-progress-bar" style="margin-top: 16px; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+        <div style="font: 600 10px 'JetBrains Mono'; color: var(--text-secondary); text-transform: uppercase; display: flex; justify-content: space-between">
+          <span>Stage Breakdown</span>
+        </div>
+        <div style="height: 10px; width: 100%; display: flex; border-radius: 5px; overflow: hidden; background: var(--bg-hover)">
+          <div style="width: ${mockPct}%; background: #EC4899" title="Mock Tested (${mockPct}%)"></div>
+          <div style="width: ${revisedPct}%; background: #F59E0B" title="Revised (${revisedPct}%)"></div>
+          <div style="width: ${donePct}%; background: #16A085" title="Done (${donePct}%)"></div>
+          <div style="width: ${untouchedPct}%; background: var(--border-subtle)" title="Untouched (${untouchedPct}%)"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 10px; font-family: 'DM Sans'; color: var(--text-secondary); width: 100%">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; background: #EC4899; border-radius: 2px"></span>🏆 Mock Tested</span>
+            <span style="font-family: 'JetBrains Mono'">${totalMock} (${mockPct}%)</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; background: #F59E0B; border-radius: 2px"></span>⭐ Revised</span>
+            <span style="font-family: 'JetBrains Mono'">${totalRevised} (${revisedPct}%)</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; background: #16A085; border-radius: 2px"></span>✓ Done Only</span>
+            <span style="font-family: 'JetBrains Mono'">${totalDoneOnly} (${donePct}%)</span>
+          </div>
+        </div>
+      </div>
+    `;
+    donutWrap.insertAdjacentHTML('beforeend', barHtml);
   }
 
   // Render Subject Cards

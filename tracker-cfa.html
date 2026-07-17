@@ -195,18 +195,28 @@
             if (val === '2') { checkIcon = '⭐'; extraClass = ' revised'; }
             else if (val === '3') { checkIcon = '🏆'; extraClass = ' mock'; }
             
+            const savedNote = localStorage.getItem('note_' + ch.key) || '';
+            const hasNote = savedNote.trim() !== '';
+
             return `
-              <div class="ch-card ${isDone ? 'done' : ''}${extraClass}" onclick="toggleChapter('${ch.key}')">
-                <div class="ck-box">${checkIcon}</div>
-                <span class="ch-num">${ch.index}</span>
-                <div class="ch-info">
-                  <span class="ch-title">${ch.data.name}</span>
-                  <div class="ch-meta">
-                    <span class="badge-pri pri-${ch.data.priority}">${ch.data.priority}</span>
-                    <span class="meta-tag">📊 ${ch.data.prelimsWeight}</span>
-                    <span class="meta-tag">⏱ ${ch.data.days}</span>
-                    <span class="meta-tag" style="color:var(--text-secondary)">${ch.data.stage}</span>
+              <div class="ch-card-container" style="display:flex; flex-direction:column; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:10px 12px; gap:8px;">
+                <div class="ch-card ${isDone ? 'done' : ''}${extraClass}" onclick="toggleChapter('${ch.key}')" style="border:none; padding:0; background:transparent; display:flex; align-items:flex-start; gap:12px; width:100%; cursor:pointer;">
+                  <div class="ck-box">${checkIcon}</div>
+                  <span class="ch-num">${ch.index}</span>
+                  <div class="ch-info">
+                    <span class="ch-title">${ch.data.name}</span>
+                    <div class="ch-meta">
+                      <span class="badge-pri pri-${ch.data.priority}">${ch.data.priority}</span>
+                      <span class="meta-tag">📊 ${ch.data.prelimsWeight}</span>
+                      <span class="meta-tag">⏱ ${ch.data.days}</span>
+                      <span class="meta-tag" style="color:var(--text-secondary)">${ch.data.stage}</span>
+                      <button class="ch-note-btn${hasNote ? ' active' : ''}" onclick="event.stopPropagation(); toggleNotesDrawer('${ch.key}')" title="Add Study Notes">📝</button>
+                    </div>
                   </div>
+                </div>
+                <div id="drawer-${ch.key}" class="note-drawer" style="display:none;" onclick="event.stopPropagation();">
+                  <textarea id="note-txt-${ch.key}" class="note-textarea" placeholder="Add study notes or key formulae...">${savedNote}</textarea>
+                  <button onclick="saveNote('${ch.key}')" class="note-save-btn">Save Note</button>
                 </div>
               </div>
             `;
@@ -215,6 +225,25 @@
       </div>
     `).join('');
   }
+
+  window.toggleNotesDrawer = function(key) {
+    const drawer = document.getElementById('drawer-' + key);
+    if (drawer) {
+      drawer.style.display = drawer.style.display === 'none' ? 'flex' : 'none';
+    }
+  };
+
+  window.saveNote = function(key) {
+    const txt = document.getElementById('note-txt-' + key).value;
+    if (txt.trim()) {
+      localStorage.setItem('note_' + key, txt);
+    } else {
+      localStorage.removeItem('note_' + key);
+    }
+    // Bump streak for writing notes too!
+    if (window.bumpStreak) window.bumpStreak();
+    renderTracker();
+  };
 
   window.toggleChapter = function(key) {
     const current = localStorage.getItem(key);
@@ -227,6 +256,7 @@
     } else {
       localStorage.setItem(key, '1');
     }
+    if (window.bumpStreak) window.bumpStreak();
     window.dispatchEvent(new Event('storage'));
     renderTracker();
   };

@@ -1009,6 +1009,7 @@ function buildNav() {
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <a href="index.html?select=true" class="switch-exam-btn">🔄 Switch Exam</a>
+        <button onclick="window.openSettingsModal()" class="switch-exam-btn" style="background:rgba(255,255,255,0.05);border-color:var(--border-subtle);color:var(--text-secondary);cursor:pointer">⚙️ Settings</button>
         ${adminBtnHTML}
       </div>
       <div class="sidebar-divider"></div>
@@ -1055,6 +1056,7 @@ function buildNav() {
       </div>
       <div class="mh-actions">
         ${isAdminUser ? `<a href="admin.html" class="switch-exam-btn mh-btn" style="background:rgba(245,158,11,0.15);color:#F59E0B">🛡️ Admin</a>` : ''}
+        <button onclick="window.openSettingsModal()" class="switch-exam-btn mh-btn" style="background:rgba(255,255,255,0.05);border-color:var(--border-subtle);color:var(--text-secondary);cursor:pointer">⚙️ Settings</button>
         <a href="index.html?select=true" class="switch-exam-btn mh-btn">🔄 Switch</a>
         <button class="logout-btn-trigger mh-btn logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}">Log Out</button>
       </div>
@@ -1233,9 +1235,88 @@ if (typeof window !== 'undefined') {
   window.KEYS = KEYS;
   window.readExamStats = readExamStats;
   window.getCurrentExam = getCurrentExam;
+
+  // Streak implementation
+  window.updateStreak = function() {
+    const lastCheckDate = localStorage.getItem('lastCheckDate');
+    if (!lastCheckDate) return;
+    const today = new Date().toISOString().split('T')[0];
+    const lastDate = new Date(lastCheckDate + 'T00:00:00');
+    const todayDate = new Date(today + 'T00:00:00');
+    const diffDays = Math.round((todayDate - lastDate) / 86400000);
+    if (diffDays > 1) {
+      localStorage.setItem('currentStreak', '0');
+    }
+  };
+
+  window.bumpStreak = function() {
+    const today = new Date().toISOString().split('T')[0];
+    const lastCheckDate = localStorage.getItem('lastCheckDate');
+    let currentStreak = parseInt(localStorage.getItem('currentStreak') || '0', 10);
+    if (!lastCheckDate) {
+      currentStreak = 1;
+    } else {
+      const lastDate = new Date(lastCheckDate + 'T00:00:00');
+      const todayDate = new Date(today + 'T00:00:00');
+      const diffDays = Math.round((todayDate - lastDate) / 86400000);
+      if (diffDays === 1) {
+        currentStreak += 1;
+      } else if (diffDays > 1) {
+        currentStreak = 1;
+      }
+    }
+    localStorage.setItem('currentStreak', currentStreak.toString());
+    localStorage.setItem('lastCheckDate', today);
+    buildNav();
+  };
+
+  // Settings Modal functions
+  window.openSettingsModal = function() {
+    let modal = document.getElementById('settings-modal');
+    if (!modal) {
+      const modalHtml = `
+        <div id="settings-modal" style="display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+          <div style="background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:14px; padding:24px; width:90%; max-width:400px; box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+            <div style="font:700 18px 'DM Sans'; color:var(--text-primary); margin-bottom:16px; display:flex; align-items:center; justify-content:space-between">
+              <span>⚙️ Settings</span>
+              <button onclick="window.closeSettingsModal()" style="background:transparent; border:none; color:var(--text-tertiary); font-size:18px; cursor:pointer">&times;</button>
+            </div>
+            <div style="margin-bottom:16px">
+              <label style="font:600 12px 'JetBrains Mono'; color:var(--text-secondary); text-transform:uppercase; display:block; margin-bottom:6px">Target Exam Date</label>
+              <input type="date" id="settings-target-date" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; color:var(--text-primary); font-family:'JetBrains Mono'" />
+            </div>
+            <button onclick="window.saveSettings()" style="width:100%; background:#7F77DD; color:white; font-weight:600; padding:10px; border-radius:8px; border:none; cursor:pointer">Save & Apply</button>
+          </div>
+        </div>`;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      modal = document.getElementById('settings-modal');
+    }
+    modal.style.display = 'flex';
+    const savedDate = localStorage.getItem('targetExamDate') || '';
+    document.getElementById('settings-target-date').value = savedDate;
+  };
+
+  window.closeSettingsModal = function() {
+    const modal = document.getElementById('settings-modal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  window.saveSettings = function() {
+    const val = document.getElementById('settings-target-date').value;
+    if (val) {
+      localStorage.setItem('targetExamDate', val);
+    } else {
+      localStorage.removeItem('targetExamDate');
+    }
+    window.closeSettingsModal();
+    location.reload();
+  };
 }
 
-document.addEventListener('DOMContentLoaded', buildNav);
+document.addEventListener('DOMContentLoaded', () => {
+  window.updateStreak();
+  buildNav();
+});
 
 window.addEventListener('cloudDataSynced', () => {
   buildNav();
