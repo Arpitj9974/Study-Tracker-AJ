@@ -22,6 +22,9 @@
     .p-LOW { background:rgba(107,114,128,0.15); color:#9CA3AF; border:1px solid rgba(107,114,128,0.3); }
     .check-btn { width:24px; height:24px; border-radius:6px; border:2px solid var(--border-medium); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0; }
     .check-btn.checked { background:var(--accent-green, #10B981); border-color:var(--accent-green, #10B981); color:white; }
+  
+    .check-btn.revised { background:#F59E0B !important; border-color:#F59E0B !important; color:white !important; }
+    .check-btn.mock { background:#EC4899 !important; border-color:#EC4899 !important; color:white !important; }
   </style>
 </head>
 <body>
@@ -108,7 +111,13 @@
 
       let catDone = 0;
       let itemsHTML = chList.map(ch => {
-        const isDone = localStorage.getItem(ch.key) === '1';
+        const val = localStorage.getItem(ch.key);
+        const isDone = val === '1' || val === '2' || val === '3';
+        let checkIcon = '✓';
+        let checkClass = '';
+        if (val === '2') { checkIcon = '⭐'; checkClass = ' revised'; }
+        else if (val === '3') { checkIcon = '🏆'; checkClass = ' mock'; }
+        else if (val === '1') { checkIcon = '✓'; checkClass = ' checked'; }
         if (isDone) { catDone++; totalDone++; }
 
         const topicItems = ch.topics ? ch.topics.map(t => `<li>${t}</li>`).join('') : '';
@@ -124,8 +133,8 @@
                   <span>📊 ${ch.unitWeight}</span>
                 </div>
               </div>
-              <button class="check-btn${isDone ? ' checked' : ''}" onclick="toggleChapter('${ch.key}')">
-                ${isDone ? '✓' : ''}
+              <button class="check-btn${checkClass}" onclick="toggleChapter('${ch.key}')">
+                ${isDone ? checkIcon : ''}
               </button>
             </div>
             ${topicItems ? `<ul class="topic-list">${topicItems}</ul>` : ''}
@@ -156,11 +165,14 @@
   window.toggleChapter = function(key) {
     const cur = localStorage.getItem(key);
     if (cur === '1') {
+      localStorage.setItem(key, '2');
+    } else if (cur === '2') {
+      localStorage.setItem(key, '3');
+    } else if (cur === '3') {
       localStorage.removeItem(key);
     } else {
       localStorage.setItem(key, '1');
     }
-    window.dispatchEvent(new CustomEvent('storageChange', { detail: { key, value: localStorage.getItem(key) } }));
     window.dispatchEvent(new Event('storage'));
     renderChecklist();
   };

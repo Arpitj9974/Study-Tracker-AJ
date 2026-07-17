@@ -46,6 +46,9 @@
     .pri-LOW       { background: rgba(148,163,184,0.1); color: #94A3B8; border: 1px solid rgba(148,163,184,0.2); }
 
     .meta-tag { font: 400 10px/1 'DM Sans'; color: var(--text-tertiary); background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); padding: 2px 6px; border-radius: 4px; }
+  
+    .ch-card.done.revised .ck-box { background:#F59E0B !important; border-color:#F59E0B !important; color:white !important; }
+    .ch-card.done.mock .ck-box { background:#EC4899 !important; border-color:#EC4899 !important; color:white !important; }
   </style>
 </head>
 <body style="--page-accent:#B7791F">
@@ -115,7 +118,8 @@
   function renderTracker() {
     let doneCount = 0;
     chapters.forEach(ch => {
-      if (localStorage.getItem(ch.key) === '1') doneCount++;
+      const val = localStorage.getItem(ch.key);
+      if (val === '1' || val === '2' || val === '3') doneCount++;
     });
 
     const total = chapters.length;
@@ -155,10 +159,11 @@
         <div class="cat-header">📂 ${catName}</div>
         <div class="chapter-grid">
           ${list.map(ch => {
-            const isDone = localStorage.getItem(ch.key) === '1';
+            const val = localStorage.getItem(ch.key);
+            const isDone = val === '1' || val === '2' || val === '3';
             return `
-              <div class="ch-card ${isDone ? 'done' : ''}" onclick="toggleChapter('${ch.key}')">
-                <div class="ck-box">✓</div>
+              <div class="ch-card ${isDone ? 'done' : ''}${val === '2' ? ' revised' : val === '3' ? ' mock' : ''}" onclick="toggleChapter('${ch.key}')">
+                <div class="ck-box">${val === '2' ? '⭐' : val === '3' ? '🏆' : '✓'}</div>
                 <span class="ch-num">${ch.index}</span>
                 <div class="ch-info">
                   <span class="ch-title">${ch.data.name}</span>
@@ -180,6 +185,10 @@
   window.toggleChapter = function(key) {
     const current = localStorage.getItem(key);
     if (current === '1') {
+      localStorage.setItem(key, '2');
+    } else if (current === '2') {
+      localStorage.setItem(key, '3');
+    } else if (current === '3') {
       localStorage.removeItem(key);
     } else {
       localStorage.setItem(key, '1');
