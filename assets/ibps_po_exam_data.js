@@ -36,12 +36,12 @@ const EXAM_CONFIG_IBPS_PO = {
     }
   },
   subjects: [
-    { key: "quant",               name: "Quantitative Aptitude",                          icon: "🔢", color: "#B7791F", examStage: "Prelims + Mains", prefix: "ibps_qnt_", totalChapters: 16 },
-    { key: "reasoning",           name: "Reasoning Ability",                              icon: "🧩", color: "#5F5AA2", examStage: "Prelims + Mains", prefix: "ibps_rea_", totalChapters: 15 },
-    { key: "english",             name: "English Language",                               icon: "📖", color: "#B04A2F", examStage: "Prelims + Mains", prefix: "ibps_eng_", totalChapters: 12 },
-    { key: "data_interpretation", name: "Data Analysis & Interpretation",                 icon: "📊", color: "#2C7A9E", examStage: "Prelims + Mains", prefix: "ibps_dia_", totalChapters: 8 },
-    { key: "banking_awareness",   name: "General, Economy & Banking Awareness (incl. Digital/Financial)", icon: "🏦", color: "#2B8A6E", examStage: "Mains Only", prefix: "ibps_gab_", totalChapters: 13 },
-    { key: "descriptive",         name: "Descriptive English (Essay + Comprehension)",    icon: "✍️", color: "#A64D9C", examStage: "Mains Only",      prefix: "ibps_dsc_", totalChapters: 4 }
+    { key: "ibps_qnt",           name: "Quantitative Aptitude",                          icon: "🔢", color: "#B7791F", examStage: "Prelims + Mains", prefix: "ibps_qnt_", totalChapters: 16 },
+    { key: "ibps_rea",           name: "Reasoning Ability",                              icon: "🧩", color: "#5F5AA2", examStage: "Prelims + Mains", prefix: "ibps_rea_", totalChapters: 15 },
+    { key: "ibps_eng",           name: "English Language",                               icon: "📖", color: "#B04A2F", examStage: "Prelims + Mains", prefix: "ibps_eng_", totalChapters: 12 },
+    { key: "ibps_dia", name: "Data Analysis & Interpretation",                 icon: "📊", color: "#2C7A9E", examStage: "Prelims + Mains", prefix: "ibps_dia_", totalChapters: 8 },
+    { key: "ibps_gab",   name: "General, Economy & Banking Awareness (incl. Digital/Financial)", icon: "🏦", color: "#2B8A6E", examStage: "Mains Only", prefix: "ibps_gab_", totalChapters: 13 },
+    { key: "ibps_dsc",         name: "Descriptive English (Essay + Comprehension)",    icon: "✍️", color: "#A64D9C", examStage: "Mains Only",      prefix: "ibps_dsc_", totalChapters: 4 }
   ]
 };
 

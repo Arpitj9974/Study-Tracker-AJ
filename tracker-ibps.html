@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="assets/style.css"/>
   <script src="./assets/ibps_po_exam_data.js"></script>
   <script src="./assets/ibps_clerk_exam_data.js"></script>
+  <script src="./assets/ibps_so_exam_data.js"></script>
+  <script src="./assets/ibps_so_it_officer_exam_data.js"></script>
   <style>
     .wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0; }
     .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
@@ -83,27 +85,31 @@
 <script>
   // Dynamic IBPS PO / Clerk Subject Tracker Engine
   const params = new URLSearchParams(window.location.search);
-  const examMode = params.get('exam') === 'clerk' ? 'clerk' : 'po';
+  const examMode = params.get('exam') || 'po';
   const isClerk = examMode === 'clerk';
-  const rawSubj = params.get('subj') || (isClerk ? 'ibps_clerk_qa' : 'ibps_qnt');
+  const isSO = examMode === 'so';
+  const isSOIT = examMode === 'so_it';
+  const rawSubj = params.get('subj') || ((isSO || isSOIT) ? 'iso_pk' : (isClerk ? 'ibps_clerk_qa' : 'ibps_qnt'));
 
-  localStorage.setItem('selectedExam', isClerk ? 'ibps_clerk' : 'ibps_po');
+  localStorage.setItem('selectedExam', isSOIT ? 'ibps_so_it_2026' : (isSO ? 'ibps_so_2026' : (isClerk ? 'ibps_clerk' : 'ibps_po')));
 
-  const configData = isClerk ? EXAM_CONFIG_IBPS_CLERK : EXAM_CONFIG_IBPS_PO;
-  const priorityData = isClerk ? IBPS_CLERK_PRIORITY_DATA : IBPS_PO_PRIORITY_DATA;
+  const configData = isSOIT ? EXAM_CONFIG_IBPS_SO_IT : (isSO ? EXAM_CONFIG_IBPS_SO : (isClerk ? EXAM_CONFIG_IBPS_CLERK : EXAM_CONFIG_IBPS_PO));
+  const priorityData = isSOIT ? IBPS_SO_IT_PRIORITY_DATA : (isSO ? IBPS_SO_PRIORITY_DATA : (isClerk ? IBPS_CLERK_PRIORITY_DATA : IBPS_PO_PRIORITY_DATA));
 
-  const cleanSubjKey = rawSubj.startsWith('ibps_') ? rawSubj.replace('ibps_', '').replace('clerk_', '') : rawSubj;
+  const cleanSubjKey = rawSubj.startsWith('ibps_') ? rawSubj.replace('ibps_', '').replace('clerk_', '') : (rawSubj.startsWith('iso_') ? rawSubj.replace('iso_', '') : rawSubj);
 
-  const subjConfig = configData.subjects.find(s => s.key === cleanSubjKey || s.key === rawSubj || s.prefix.includes(cleanSubjKey)) 
+  const subjConfig = configData.subjects.find(s => s.key === rawSubj || s.key === cleanSubjKey || s.prefix.includes(cleanSubjKey) || s.prefix.includes(rawSubj)) 
                    || configData.subjects[0];
 
   document.body.style.setProperty('--page-accent', subjConfig.color);
   document.getElementById('subject-title').innerHTML = `${subjConfig.icon} ${subjConfig.name}`;
-  document.getElementById('stage-badge').textContent = `${isClerk ? 'IBPS Clerk' : 'IBPS PO'} · ${subjConfig.examStage}`;
+  
+  const examLabel = isSOIT ? 'IBPS SO IT' : (isSO ? 'IBPS SO' : (isClerk ? 'IBPS Clerk' : 'IBPS PO'));
+  document.getElementById('stage-badge').textContent = `${examLabel} · ${subjConfig.examStage}`;
   document.getElementById('stage-badge').style.background = subjConfig.color + '22';
   document.getElementById('stage-badge').style.color = subjConfig.color;
   document.getElementById('stage-badge').style.borderColor = subjConfig.color + '44';
-  document.title = `${subjConfig.name} — ${isClerk ? 'IBPS Clerk' : 'IBPS PO'} Tracker`;
+  document.title = `${subjConfig.name} — ${examLabel} Tracker`;
 
   // Filter chapters for this subject
   const chapters = [];
@@ -168,11 +174,12 @@
                 <div class="ch-info">
                   <span class="ch-title">${ch.data.name}</span>
                   <div class="ch-meta">
-                    <span class="badge-pri pri-${ch.data.priority}">${ch.data.priority}</span>
-                    <span class="meta-tag">📊 ${ch.data.prelimsWeight}</span>
-                    <span class="meta-tag">⏱ ${ch.data.days}</span>
-                    <span class="meta-tag" style="color:var(--text-secondary)">${ch.data.stage}</span>
-                  </div>
+                      <span class="badge-pri pri-${ch.data.priority.replace(/ /g,'-')}">${ch.data.priority}</span>
+                      ${ch.data.difficulty ? `<span class="meta-tag" title="Difficulty">${ch.data.difficulty}</span>` : ''}
+                      <span class="meta-tag">📊 ${ch.data.prelimsWeight}</span>
+                      <span class="meta-tag">⏱ ${ch.data.days}</span>
+                      <span class="meta-tag" style="color:var(--text-secondary)">${ch.data.stage}</span>
+                    </div>
                 </div>
               </div>
             `;

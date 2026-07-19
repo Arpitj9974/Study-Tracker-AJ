@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="assets/style.css"/>
   <script src="./assets/ibps_po_exam_data.js"></script>
   <script src="./assets/ibps_clerk_exam_data.js"></script>
+  <script src="./assets/ibps_so_exam_data.js"></script>
+  <script src="./assets/ibps_so_it_officer_exam_data.js"></script>
   <style>
     .page-content { padding: 28px 32px 60px; display: flex; flex-direction: column; gap: 24px; }
     
@@ -72,11 +74,7 @@
   <div class="content-wrapper">
   <div class="page-content">
 
-    <!-- TAB BAR -->
-    <div class="tab-bar">
-      <button id="tab-po" class="exam-tab active" onclick="switchIBPSExam('po')">🏦 IBPS PO / MT</button>
-      <button id="tab-clerk" class="exam-tab" onclick="switchIBPSExam('clerk')">📋 IBPS Clerk (CSA)</button>
-    </div>
+    <!-- No Tab Bar - Standalone Exam Mode -->
 
     <!-- ① HEADER -->
     <div class="hub-header" id="ibps-hub-header">

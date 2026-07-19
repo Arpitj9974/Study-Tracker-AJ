@@ -8,7 +8,10 @@
   <script src="assets/ssc_chsl_exam_data.js"></script>
   <script src="assets/ssc_mts_exam_data.js"></script>
   <script src="assets/ugcnet_exam_data.js"></script>
+  <script src="assets/ibps_po_exam_data.js"></script>
   <script src="assets/ibps_clerk_exam_data.js"></script>
+  <script src="assets/ibps_so_exam_data.js"></script>
+  <script src="assets/ibps_so_it_officer_exam_data.js"></script>
   <script src="assets/nda_exam_data.js"></script>
   <script src="assets/xat_exam_data.js"></script>
   <script src="assets/clat_ug_exam_data.js"></script>
@@ -227,6 +230,20 @@
     const clerkPct = Math.round((clerkDone / EXAM_CONFIG.ibps_clerk.totalChapters) * 100);
     const clerkDays = Math.ceil((new Date(EXAM_CONFIG.ibps_clerk.examDate + 'T00:00:00') - new Date()) / 86400000);
 
+    // IBPS SO stats
+    const soStats = readExamStats('ibps_so_2026');
+    const soDone = Object.values(soStats).reduce((s, v) => s + v.done, 0);
+    const soTotalChapters = EXAM_CONFIG_IBPS_SO.subjects.reduce((sum, s) => sum + s.totalChapters, 0);
+    const soPct = Math.round((soDone / soTotalChapters) * 100);
+    const soDays = Math.ceil((new Date(EXAM_CONFIG_IBPS_SO.prelimsDate + 'T00:00:00') - new Date()) / 86400000);
+
+    // IBPS SO IT stats
+    const soitStats = readExamStats('ibps_so_it_2026');
+    const soitDone = Object.values(soitStats).reduce((s, v) => s + v.done, 0);
+    const soitTotalChapters = EXAM_CONFIG_IBPS_SO_IT.subjects.reduce((sum, s) => sum + s.totalChapters, 0);
+    const soitPct = Math.round((soitDone / soitTotalChapters) * 100);
+    const soitDays = Math.ceil((new Date(EXAM_CONFIG_IBPS_SO_IT.prelimsDate + 'T00:00:00') - new Date()) / 86400000);
+
     // NDA stats
     const ndaStats = readExamStats('nda');
     const ndaDone = Object.values(ndaStats).reduce((s, v) => s + v.done, 0);
@@ -263,7 +280,7 @@
         <span>🎯</span> Corporate Placement & IT Aptitude
       </div>
 
-      <a href="dashboard-nqt.html" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="if(window.setSelectedExam)window.setSelectedExam('nqt');else localStorage.setItem('selectedExam','nqt')">
+      <a href="dashboard-nqt.html" id="card-nqt" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="if(window.setSelectedExam)window.setSelectedExam('nqt');else localStorage.setItem('selectedExam','nqt')">
         <span class="ec-icon">🎯</span>
         <div class="ec-name">TCS NQT</div>
         <div class="ec-desc">Speed Math, Quant, Reasoning, English & Coding</div>
@@ -281,7 +298,7 @@
         <span>🏦</span> Banking Recruitment Examinations (IBPS)
       </div>
 
-      <a href="dashboard-ibps.html" class="exam-card" style="--card-glow:rgba(183,121,31,0.12);--card-border:rgba(183,121,31,0.4);border-top-color:#B7791F" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_po');else localStorage.setItem('selectedExam','ibps_po')">
+      <a href="dashboard-ibps.html" id="card-ibps_po" class="exam-card" style="--card-glow:rgba(183,121,31,0.12);--card-border:rgba(183,121,31,0.4);border-top-color:#B7791F" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_po');else localStorage.setItem('selectedExam','ibps_po')">
         <span class="ec-icon">🏦</span>
         <div class="ec-name">IBPS PO</div>
         <div class="ec-desc">Quant, Reasoning, English, DI, Banking & Descriptive</div>
@@ -294,7 +311,7 @@
         <button class="ec-enter" style="background:#B7791F">Start PO Prep →</button>
       </a>
 
-      <a href="dashboard-ibps.html?exam=clerk" class="exam-card" style="--card-glow:rgba(225,29,72,0.12);--card-border:rgba(225,29,72,0.4);border-top-color:#E11D48" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_clerk');else localStorage.setItem('selectedExam','ibps_clerk')">
+      <a href="dashboard-ibps.html?exam=clerk" id="card-ibps_clerk" class="exam-card" style="--card-glow:rgba(225,29,72,0.12);--card-border:rgba(225,29,72,0.4);border-top-color:#E11D48" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_clerk');else localStorage.setItem('selectedExam','ibps_clerk')">
         <span class="ec-icon">📋</span>
         <div class="ec-name">IBPS Clerk (CSA)</div>
         <div class="ec-desc">Numerical, Reasoning, English, Financial & Computer</div>
@@ -307,12 +324,38 @@
         <button class="ec-enter" style="background:#E11D48">Start Clerk Prep →</button>
       </a>
 
+      <a href="dashboard-ibps.html?exam=so" id="card-ibps_so_2026" class="exam-card" style="--card-glow:rgba(31,97,141,0.12);--card-border:rgba(31,97,141,0.4);border-top-color:#1F618D" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_so_2026');else localStorage.setItem('selectedExam','ibps_so_2026')">
+        <span class="ec-icon">🏛️</span>
+        <div class="ec-name">IBPS SO (General)</div>
+        <div class="ec-desc">Professional Knowledge (Generic), Quant, Reasoning & English</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#1F618D">${soPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#1F618D">${soDone}</div><div class="ec-stat-lbl">of ${soTotalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${soDays < 30 ? '#EF4444' : '#1F618D'}">${soDays > 0 ? soDays : '🎯'}</div><div class="ec-stat-lbl">${soDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(31,97,141,0.15);color:#1F618D;border:1px solid rgba(31,97,141,0.3)">${EXAM_CONFIG_IBPS_SO.subjects.length} Subjects · ${soTotalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#1F618D">Start SO Prep →</button>
+      </a>
+
+      <a href="dashboard-ibps.html?exam=so_it" id="card-ibps_so_it_2026" class="exam-card" style="--card-glow:rgba(20,110,120,0.12);--card-border:rgba(20,110,120,0.4);border-top-color:#146E78" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_so_it_2026');else localStorage.setItem('selectedExam','ibps_so_it_2026')">
+        <span class="ec-icon">💻</span>
+        <div class="ec-name">IBPS SO IT Officer</div>
+        <div class="ec-desc">Professional Knowledge (IT), Quant, Reasoning & English</div>
+        <div class="ec-stats">
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#146E78">${soitPct}%</div><div class="ec-stat-lbl">complete</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:#146E78">${soitDone}</div><div class="ec-stat-lbl">of ${soitTotalChapters}</div></div>
+          <div class="ec-stat"><div class="ec-stat-val" style="color:${soitDays < 30 ? '#EF4444' : '#146E78'}">${soitDays > 0 ? soitDays : '🎯'}</div><div class="ec-stat-lbl">${soitDays > 0 ? 'days left' : 'exam day!'}</div></div>
+        </div>
+        <span class="ec-badge" style="background:rgba(20,110,120,0.15);color:#146E78;border:1px solid rgba(20,110,120,0.3)">${EXAM_CONFIG_IBPS_SO_IT.subjects.length} Subjects · ${soitTotalChapters} Chapters</span>
+        <button class="ec-enter" style="background:#146E78">Start SO IT Prep →</button>
+      </a>
+
       <!-- Union Public Service Commission (UPSC) Section -->
       <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#3B5BDB;display:flex;align-items:center;gap:10px">
         <span>🏛️</span> Union Public Service Commission (UPSC)
       </div>
 
-      <a href="dashboard-upsc.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('upsc');else localStorage.setItem('selectedExam','upsc')">
+      <a href="dashboard-upsc.html" id="card-upsc" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('upsc');else localStorage.setItem('selectedExam','upsc')">
         <span class="ec-icon">🏛️</span>
         <div class="ec-name">UPSC CSE</div>
         <div class="ec-desc">Polity, History, Geography, Economy, Ethics & CSAT</div>
@@ -325,7 +368,7 @@
         <button class="ec-enter" style="background:#3B5BDB">Start CSE Prep →</button>
       </a>
 
-      <a href="dashboard-cds.html" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="if(window.setSelectedExam)window.setSelectedExam('cds');else localStorage.setItem('selectedExam','cds')">
+      <a href="dashboard-cds.html" id="card-cds" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="if(window.setSelectedExam)window.setSelectedExam('cds');else localStorage.setItem('selectedExam','cds')">
         <span class="ec-icon">🎖️</span>
         <div class="ec-name">UPSC CDS</div>
         <div class="ec-desc">General Knowledge, English & Elementary Maths</div>
@@ -338,7 +381,7 @@
         <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
       </a>
 
-      <a href="dashboard-nda.html" class="exam-card" style="--card-glow:rgba(245,158,11,0.12);--card-border:rgba(245,158,11,0.4);border-top-color:#F59E0B" onclick="if(window.setSelectedExam)window.setSelectedExam('nda');else localStorage.setItem('selectedExam','nda')">
+      <a href="dashboard-nda.html" id="card-nda" class="exam-card" style="--card-glow:rgba(245,158,11,0.12);--card-border:rgba(245,158,11,0.4);border-top-color:#F59E0B" onclick="if(window.setSelectedExam)window.setSelectedExam('nda');else localStorage.setItem('selectedExam','nda')">
         <span class="ec-icon">🎖️</span>
         <div class="ec-name">UPSC NDA & NA</div>
         <div class="ec-desc">General Ability Test (GAT 600M) & Mathematics (300M)</div>
@@ -356,7 +399,7 @@
         <span>🎓</span> University Grants Commission (UGC NET)
       </div>
 
-      <a href="dashboard-ugcnet.html" class="exam-card" style="--card-glow:rgba(79,70,229,0.12);--card-border:rgba(79,70,229,0.4);border-top-color:#4F46E5" onclick="if(window.setSelectedExam)window.setSelectedExam('ugcnet');else localStorage.setItem('selectedExam','ugcnet')">
+      <a href="dashboard-ugcnet.html" id="card-ugcnet" class="exam-card" style="--card-glow:rgba(79,70,229,0.12);--card-border:rgba(79,70,229,0.4);border-top-color:#4F46E5" onclick="if(window.setSelectedExam)window.setSelectedExam('ugcnet');else localStorage.setItem('selectedExam','ugcnet')">
         <span class="ec-icon">🎓</span>
         <div class="ec-name">UGC NET</div>
         <div class="ec-desc">Paper 1 Teaching & Research Aptitude + Paper 2 Subject</div>
@@ -374,7 +417,7 @@
         <span>📋</span> Staff Selection Commission (SSC)
       </div>
 
-      <a href="dashboard-ssc.html?exam=cgl" class="exam-card" style="--card-glow:rgba(29,158,117,0.12);--card-border:rgba(29,158,117,0.4);border-top-color:#1D9E75" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc');else localStorage.setItem('selectedExam','ssc')">
+      <a href="dashboard-ssc.html?exam=cgl" id="card-ssc" class="exam-card" style="--card-glow:rgba(29,158,117,0.12);--card-border:rgba(29,158,117,0.4);border-top-color:#1D9E75" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc');else localStorage.setItem('selectedExam','ssc')">
         <span class="ec-icon">📋</span>
         <div class="ec-name">SSC CGL</div>
         <div class="ec-desc">Quant, Reasoning, English & General Knowledge</div>
@@ -387,7 +430,7 @@
         <button class="ec-enter" style="background:#1D9E75">Start CGL Prep →</button>
       </a>
 
-      <a href="dashboard-ssc.html?exam=chsl" class="exam-card" style="--card-glow:rgba(142,68,173,0.12);--card-border:rgba(142,68,173,0.4);border-top-color:#8E44AD" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_chsl');else localStorage.setItem('selectedExam','ssc_chsl')">
+      <a href="dashboard-ssc.html?exam=chsl" id="card-ssc_chsl" class="exam-card" style="--card-glow:rgba(142,68,173,0.12);--card-border:rgba(142,68,173,0.4);border-top-color:#8E44AD" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_chsl');else localStorage.setItem('selectedExam','ssc_chsl')">
         <span class="ec-icon">📝</span>
         <div class="ec-name">SSC CHSL</div>
         <div class="ec-desc">English, Reasoning, Quant, GA & Computer Knowledge</div>
@@ -400,7 +443,7 @@
         <button class="ec-enter" style="background:#8E44AD">Start CHSL Prep →</button>
       </a>
 
-      <a href="dashboard-ssc.html?exam=mts" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_mts');else localStorage.setItem('selectedExam','ssc_mts')">
+      <a href="dashboard-ssc.html?exam=mts" id="card-ssc_mts" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_mts');else localStorage.setItem('selectedExam','ssc_mts')">
         <span class="ec-icon">🎖️</span>
         <div class="ec-name">SSC MTS</div>
         <div class="ec-desc">GA, English, Numerical & Reasoning Ability</div>
@@ -418,7 +461,7 @@
         <span>🚆</span> Railway Recruitment Board (RRB)
       </div>
 
-      <a href="dashboard-rrb.html?exam=ntpc" class="exam-card" style="--card-glow:rgba(108,52,131,0.12);--card-border:rgba(108,52,131,0.4);border-top-color:#6C3483" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_ntpc');else localStorage.setItem('selectedExam','rrb_ntpc')">
+      <a href="dashboard-rrb.html?exam=ntpc" id="card-rrb_ntpc" class="exam-card" style="--card-glow:rgba(108,52,131,0.12);--card-border:rgba(108,52,131,0.4);border-top-color:#6C3483" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_ntpc');else localStorage.setItem('selectedExam','rrb_ntpc')">
         <span class="ec-icon">🚆</span>
         <div class="ec-name">RRB NTPC</div>
         <div class="ec-desc">GA, Reasoning & Mathematics (Graduate & UG)</div>
@@ -431,7 +474,7 @@
         <button class="ec-enter" style="background:#6C3483">Start NTPC Prep →</button>
       </a>
 
-      <a href="dashboard-rrb.html?exam=group_d" class="exam-card" style="--card-glow:rgba(34,153,84,0.12);--card-border:rgba(34,153,84,0.4);border-top-color:#229954" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_group_d');else localStorage.setItem('selectedExam','rrb_group_d')">
+      <a href="dashboard-rrb.html?exam=group_d" id="card-rrb_group_d" class="exam-card" style="--card-glow:rgba(34,153,84,0.12);--card-border:rgba(34,153,84,0.4);border-top-color:#229954" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_group_d');else localStorage.setItem('selectedExam','rrb_group_d')">
         <span class="ec-icon">🛠️</span>
         <div class="ec-name">RRB Group D</div>
         <div class="ec-desc">Reasoning, General Science, Math & GA (CEN 09/2025)</div>
@@ -449,7 +492,7 @@
         <span>🔬</span> Engineering & Medical Entrance
       </div>
 
-      <a href="dashboard-jee.html" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('jee');else localStorage.setItem('selectedExam','jee')">
+      <a href="dashboard-jee.html" id="card-jee" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('jee');else localStorage.setItem('selectedExam','jee')">
         <span class="ec-icon">⚛️</span>
         <div class="ec-name">JEE Main & Adv</div>
         <div class="ec-desc">Physics, Chemistry & Mathematics (PCM)</div>
@@ -462,7 +505,7 @@
         <button class="ec-enter" style="background:#3B5BDB">Start JEE Prep →</button>
       </a>
 
-      <a href="dashboard-neet.html" class="exam-card" style="--card-glow:rgba(76,154,63,0.12);--card-border:rgba(76,154,63,0.4);border-top-color:#4C9A3F" onclick="if(window.setSelectedExam)window.setSelectedExam('neet_ug');else localStorage.setItem('selectedExam','neet_ug')">
+      <a href="dashboard-neet.html" id="card-neet_ug" class="exam-card" style="--card-glow:rgba(76,154,63,0.12);--card-border:rgba(76,154,63,0.4);border-top-color:#4C9A3F" onclick="if(window.setSelectedExam)window.setSelectedExam('neet_ug');else localStorage.setItem('selectedExam','neet_ug')">
         <span class="ec-icon">🩺</span>
         <div class="ec-name">NEET UG</div>
         <div class="ec-desc">Botany, Zoology, Chemistry & Physics (PCB)</div>
@@ -480,7 +523,7 @@
         <span>📈</span> Management Entrance (MBA)
       </div>
 
-      <a href="dashboard-cat.html" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('cat');else localStorage.setItem('selectedExam','cat')">
+      <a href="dashboard-cat.html" id="card-cat" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('cat');else localStorage.setItem('selectedExam','cat')">
         <span class="ec-icon">📈</span>
         <div class="ec-name">CAT (MBA)</div>
         <div class="ec-desc">Quantitative Ability, DILR & VARC</div>
@@ -493,7 +536,7 @@
         <button class="ec-enter" style="background:#E67E22">Start CAT Prep →</button>
       </a>
 
-      <a href="dashboard-cmat.html" class="exam-card" style="--card-glow:rgba(239,68,68,0.12);--card-border:rgba(239,68,68,0.4);border-top-color:#EF4444" onclick="if(window.setSelectedExam)window.setSelectedExam('cmat');else localStorage.setItem('selectedExam','cmat')">
+      <a href="dashboard-cmat.html" id="card-cmat" class="exam-card" style="--card-glow:rgba(239,68,68,0.12);--card-border:rgba(239,68,68,0.4);border-top-color:#EF4444" onclick="if(window.setSelectedExam)window.setSelectedExam('cmat');else localStorage.setItem('selectedExam','cmat')">
         <span class="ec-icon">🚀</span>
         <div class="ec-name">CMAT (MBA)</div>
         <div class="ec-desc">Quant & DI, LR, Language, GA, Innovation & Entr</div>
@@ -506,7 +549,7 @@
         <button class="ec-enter" style="background:#EF4444">Start CMAT Prep →</button>
       </a>
 
-      <a href="dashboard-xat.html" class="exam-card" style="--card-glow:rgba(148,49,38,0.12);--card-border:rgba(148,49,38,0.4);border-top-color:#943126" onclick="if(window.setSelectedExam)window.setSelectedExam('xat');else localStorage.setItem('selectedExam','xat')">
+      <a href="dashboard-xat.html" id="card-xat" class="exam-card" style="--card-glow:rgba(148,49,38,0.12);--card-border:rgba(148,49,38,0.4);border-top-color:#943126" onclick="if(window.setSelectedExam)window.setSelectedExam('xat');else localStorage.setItem('selectedExam','xat')">
         <span class="ec-icon">⚖️</span>
         <div class="ec-name">XAT (XLRI)</div>
         <div class="ec-desc">Decision Making, VALR, QA & DI, General Knowledge</div>
@@ -524,7 +567,7 @@
         <span>⚖️</span> Law Entrance Examinations (NLU / CLAT)
       </div>
 
-      <a href="dashboard-clat.html" class="exam-card" style="--card-glow:rgba(123,36,28,0.12);--card-border:rgba(123,36,28,0.4);border-top-color:#7B241C" onclick="if(window.setSelectedExam)window.setSelectedExam('clat_ug');else localStorage.setItem('selectedExam','clat_ug')">
+      <a href="dashboard-clat.html" id="card-clat_ug" class="exam-card" style="--card-glow:rgba(123,36,28,0.12);--card-border:rgba(123,36,28,0.4);border-top-color:#7B241C" onclick="if(window.setSelectedExam)window.setSelectedExam('clat_ug');else localStorage.setItem('selectedExam','clat_ug')">
         <span class="ec-icon">⚖️</span>
         <div class="ec-name">CLAT UG</div>
         <div class="ec-desc">Legal Reasoning, Current Affairs, English, LR & Quant</div>
@@ -542,7 +585,7 @@
         <span>🎓</span> Central & State University Entrance (CUET UG & PG)
       </div>
 
-      <a href="dashboard-cuet-ug.html" class="exam-card" style="--card-glow:rgba(59,130,246,0.12);--card-border:rgba(59,130,246,0.4);border-top-color:#3B82F6" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_ug');else localStorage.setItem('selectedExam','cuet_ug')">
+      <a href="dashboard-cuet-ug.html" id="card-cuet_ug" class="exam-card" style="--card-glow:rgba(59,130,246,0.12);--card-border:rgba(59,130,246,0.4);border-top-color:#3B82F6" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_ug');else localStorage.setItem('selectedExam','cuet_ug')">
         <span class="ec-icon">🎓</span>
         <div class="ec-name">CUET UG</div>
         <div class="ec-desc">Languages, General Aptitude & 23 NCERT Domain Subjects</div>
@@ -555,7 +598,7 @@
         <button class="ec-enter" style="background:#3B82F6">Start CUET UG Prep →</button>
       </a>
 
-      <a href="dashboard-cuet-pg.html" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_pg_general');else localStorage.setItem('selectedExam','cuet_pg_general')">
+      <a href="dashboard-cuet-pg.html" id="card-cuet_pg_general" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_pg_general');else localStorage.setItem('selectedExam','cuet_pg_general')">
         <span class="ec-icon">🏛️</span>
         <div class="ec-name">CUET PG (COQP11)</div>
         <div class="ec-desc">General Paper for MBA, DU LLB, MA Social Work & Policy</div>
@@ -573,7 +616,7 @@
         <span>🎓</span> Chartered Accountancy & Cost Management (CA & CMA)
       </div>
 
-      <a href="dashboard-ca.html?level=foundation" class="exam-card" style="--card-glow:rgba(192,57,43,0.12);--card-border:rgba(192,57,43,0.4);border-top-color:#C0392B" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_foundation');else localStorage.setItem('selectedExam','ca_foundation')">
+      <a href="dashboard-ca.html?level=foundation" id="card-ca_foundation" class="exam-card" style="--card-glow:rgba(192,57,43,0.12);--card-border:rgba(192,57,43,0.4);border-top-color:#C0392B" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_foundation');else localStorage.setItem('selectedExam','ca_foundation')">
         <span class="ec-icon">🎓</span>
         <div class="ec-name">CA Foundation</div>
         <div class="ec-desc">Accounting, Business Laws, QA & Economics</div>
@@ -586,7 +629,7 @@
         <button class="ec-enter" style="background:#C0392B">Start Foundation →</button>
       </a>
 
-      <a href="dashboard-ca.html?level=inter" class="exam-card" style="--card-glow:rgba(176,58,46,0.12);--card-border:rgba(176,58,46,0.4);border-top-color:#B03A2E" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_inter');else localStorage.setItem('selectedExam','ca_inter')">
+      <a href="dashboard-ca.html?level=inter" id="card-ca_inter" class="exam-card" style="--card-glow:rgba(176,58,46,0.12);--card-border:rgba(176,58,46,0.4);border-top-color:#B03A2E" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_inter');else localStorage.setItem('selectedExam','ca_inter')">
         <span class="ec-icon">🏛️</span>
         <div class="ec-name">CA Intermediate</div>
         <div class="ec-desc">Adv Acc, Corporate Laws, Tax, Costing, Audit, FM-SM</div>
@@ -599,7 +642,7 @@
         <button class="ec-enter" style="background:#B03A2E">Start Inter Prep →</button>
       </a>
 
-      <a href="dashboard-ca.html?level=final" class="exam-card" style="--card-glow:rgba(146,43,33,0.12);--card-border:rgba(146,43,33,0.4);border-top-color:#922B21" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_final');else localStorage.setItem('selectedExam','ca_final')">
+      <a href="dashboard-ca.html?level=final" id="card-ca_final" class="exam-card" style="--card-glow:rgba(146,43,33,0.12);--card-border:rgba(146,43,33,0.4);border-top-color:#922B21" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_final');else localStorage.setItem('selectedExam','ca_final')">
         <span class="ec-icon">👑</span>
         <div class="ec-name">CA Final</div>
         <div class="ec-desc">FR, AFM, Auditing, Direct Tax, IDT, Open Book IBS</div>
@@ -612,7 +655,7 @@
         <button class="ec-enter" style="background:#922B21">Start Final Prep →</button>
       </a>
 
-      <a href="dashboard-cma.html" class="exam-card" style="--card-glow:rgba(22,160,133,0.12);--card-border:rgba(22,160,133,0.4);border-top-color:#16A085" onclick="if(window.setSelectedExam)window.setSelectedExam('cma_foundation');else localStorage.setItem('selectedExam','cma_foundation')">
+      <a href="dashboard-cma.html" id="card-cma_foundation" class="exam-card" style="--card-glow:rgba(22,160,133,0.12);--card-border:rgba(22,160,133,0.4);border-top-color:#16A085" onclick="if(window.setSelectedExam)window.setSelectedExam('cma_foundation');else localStorage.setItem('selectedExam','cma_foundation')">
         <span class="ec-icon">🎓</span>
         <div class="ec-name">CMA Foundation</div>
         <div class="ec-desc">Laws & Comm, Financial & Cost Accounting, Math & Stats, Economics & Mgmt</div>
@@ -630,7 +673,7 @@
         <span>📊</span> Chartered Financial Analyst (CFA Institute)
       </div>
 
-      <a href="dashboard-cfa.html?level=l1" class="exam-card" style="--card-glow:rgba(29,78,216,0.12);--card-border:rgba(29,78,216,0.4);border-top-color:#1D4ED8" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l1');else localStorage.setItem('selectedExam','cfa_l1')">
+      <a href="dashboard-cfa.html?level=l1" id="card-cfa_l1" class="exam-card" style="--card-glow:rgba(29,78,216,0.12);--card-border:rgba(29,78,216,0.4);border-top-color:#1D4ED8" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l1');else localStorage.setItem('selectedExam','cfa_l1')">
         <span class="ec-icon">📊</span>
         <div class="ec-name">CFA Level 1</div>
         <div class="ec-desc">Ethics, FSA, Fixed Income, Equity, Derivatives, Alts, PM, Quant, Eco</div>
@@ -643,7 +686,7 @@
         <button class="ec-enter" style="background:#1D4ED8">Start Level 1 →</button>
       </a>
 
-      <a href="dashboard-cfa.html?level=l2" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l2');else localStorage.setItem('selectedExam','cfa_l2')">
+      <a href="dashboard-cfa.html?level=l2" id="card-cfa_l2" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l2');else localStorage.setItem('selectedExam','cfa_l2')">
         <span class="ec-icon">🏛️</span>
         <div class="ec-name">CFA Level 2</div>
         <div class="ec-desc">Asset Valuation focus: Vignette-based item sets across all topics</div>
@@ -656,7 +699,7 @@
         <button class="ec-enter" style="background:#059669">Start Level 2 →</button>
       </a>
 
-      <a href="dashboard-cfa.html?level=l3" class="exam-card" style="--card-glow:rgba(124,58,237,0.12);--card-border:rgba(124,58,237,0.4);border-top-color:#7C3AED" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l3');else localStorage.setItem('selectedExam','cfa_l3')">
+      <a href="dashboard-cfa.html?level=l3" id="card-cfa_l3" class="exam-card" style="--card-glow:rgba(124,58,237,0.12);--card-border:rgba(124,58,237,0.4);border-top-color:#7C3AED" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l3');else localStorage.setItem('selectedExam','cfa_l3')">
         <span class="ec-icon">👑</span>
         <div class="ec-name">CFA Level 3</div>
         <div class="ec-desc">Portfolio Mgmt Focus: Vignette MCQs + Constructed Response Essays</div>
@@ -669,6 +712,29 @@
         <button class="ec-enter" style="background:#7C3AED">Start Level 3 →</button>
       </a>
     `;
+
+    // ── SCROLL RESTORATION & AUTO-FOCUS LOGIC ───────────────────
+    const savedScrollY = sessionStorage.getItem('hubScrollY');
+    const lastExamKey = sessionStorage.getItem('lastExamKey') || localStorage.getItem('selectedExam');
+
+    if (savedScrollY !== null) {
+      window.scrollTo({ top: parseInt(savedScrollY, 10), behavior: 'instant' });
+    } else if (lastExamKey) {
+      const card = document.getElementById('card-' + lastExamKey);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Attach click handlers to all exam cards to save scroll Y & active card key
+    document.querySelectorAll('.exam-card').forEach(card => {
+      card.addEventListener('click', () => {
+        sessionStorage.setItem('hubScrollY', window.scrollY.toString());
+        if (card.id) {
+          sessionStorage.setItem('lastExamKey', card.id.replace('card-', ''));
+        }
+      });
+    });
   </script>
   <script type="module" src="assets/auth-sync.js?v=21"></script>
 </body>

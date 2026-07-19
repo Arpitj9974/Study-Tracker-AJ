@@ -236,7 +236,7 @@ const EXAM_CONFIG_IBPS_CLERK = {
 
   subjects: [
     {
-      key:           "quantitative",
+      key:           "ibps_clerk_qa",
       name:          "Quantitative / Numerical Aptitude",
       icon:          "🔢",
       color:         "#E11D48",             // rose — numbers, energy
@@ -245,7 +245,7 @@ const EXAM_CONFIG_IBPS_CLERK = {
       totalChapters: 13
     },
     {
-      key:           "reasoning",
+      key:           "ibps_clerk_ra",
       name:          "Reasoning Ability",
       icon:          "🧠",
       color:         "#1D4ED8",             // blue — analytical
@@ -254,7 +254,7 @@ const EXAM_CONFIG_IBPS_CLERK = {
       totalChapters: 12
     },
     {
-      key:           "gfa",
+      key:           "ibps_clerk_gfa",
       name:          "General / Financial Awareness",
       icon:          "🏦",
       color:         "#92400E",             // amber-brown — banking/finance
@@ -263,7 +263,7 @@ const EXAM_CONFIG_IBPS_CLERK = {
       totalChapters: 8
     },
     {
-      key:           "english",
+      key:           "ibps_clerk_eng",
       name:          "English Language",
       icon:          "📚",
       color:         "#0D9488",             // teal — language
@@ -272,7 +272,7 @@ const EXAM_CONFIG_IBPS_CLERK = {
       totalChapters: 10
     },
     {
-      key:           "computer",
+      key:           "ibps_clerk_comp",
       name:          "Computer Aptitude",
       icon:          "💻",
       color:         "#6B21A8",             // deep purple — tech

@@ -17,56 +17,68 @@ const IBPS_CLERK_SUBJECTS = [
   { key: "ibps_clerk_comp", label: "Computer Aptitude",           icon: "💻", color: "#6B21A8", link: "tracker-ibps.html?exam=clerk&subj=ibps_clerk_comp" }
 ];
 
+const IBPS_SO_SUBJECTS = [
+  { key: "iso_pk",   label: "Professional Knowledge", icon: "💻", color: "#1F618D", link: "tracker-ibps.html?exam=so&subj=iso_pk" },
+  { key: "iso_qa",   label: "Quantitative Aptitude",  icon: "🔢", color: "#B9770E", link: "tracker-ibps.html?exam=so&subj=iso_qa" },
+  { key: "iso_reas", label: "Reasoning Ability",      icon: "🧩", color: "#6C3483", link: "tracker-ibps.html?exam=so&subj=iso_reas" },
+  { key: "iso_eng",  label: "English Language",       icon: "📖", color: "#117A65", link: "tracker-ibps.html?exam=so&subj=iso_eng" }
+];
+
+const IBPS_SO_IT_SUBJECTS = [
+  { key: "iso_pk",   label: "Professional Knowledge (IT)", icon: "💻", color: "#1F618D", link: "tracker-ibps.html?exam=so_it&subj=iso_pk" },
+  { key: "iso_qa",   label: "Quantitative Aptitude",  icon: "🔢", color: "#B9770E", link: "tracker-ibps.html?exam=so_it&subj=iso_qa" },
+  { key: "iso_reas", label: "Reasoning Ability",      icon: "🧩", color: "#6C3483", link: "tracker-ibps.html?exam=so_it&subj=iso_reas" },
+  { key: "iso_eng",  label: "English Language",       icon: "📖", color: "#117A65", link: "tracker-ibps.html?exam=so_it&subj=iso_eng" }
+];
+
 function getActiveIBPSExam() {
   const params = new URLSearchParams(window.location.search);
   const ex = params.get('exam');
   if (ex === 'clerk') return 'ibps_clerk';
+  if (ex === 'so') return 'ibps_so_2026';
+  if (ex === 'so_it') return 'ibps_so_it_2026';
   return 'ibps_po';
 }
 
-window.switchIBPSExam = function(exam) {
-  const url = new URL(window.location.href);
-  if (exam === 'clerk') {
-    url.searchParams.set('exam', 'clerk');
-  } else {
-    url.searchParams.delete('exam');
-  }
-  window.history.pushState({}, '', url);
-  refreshIBPSUI();
-};
 
 function refreshIBPSUI() {
   const activeExam = getActiveIBPSExam();
   const isClerk = activeExam === 'ibps_clerk';
+  const isSO = activeExam === 'ibps_so_2026';
+  const isSOIT = activeExam === 'ibps_so_it_2026';
 
   localStorage.setItem('selectedExam', activeExam);
 
-  // Update tabs
-  const tabPo = document.getElementById('tab-po');
-  const tabClerk = document.getElementById('tab-clerk');
-  if (tabPo && tabClerk) {
-    tabPo.className = 'exam-tab' + (!isClerk ? ' active' : '');
-    tabClerk.className = 'exam-tab' + (isClerk ? ' active clerk' : '');
-  }
 
   // Config & Data
-  const examKey = isClerk ? 'ibps_clerk' : 'ibps_po';
-  const subjects = isClerk ? IBPS_CLERK_SUBJECTS : IBPS_PO_SUBJECTS;
-  const config = isClerk ? EXAM_CONFIG_IBPS_CLERK : EXAM_CONFIG.ibps_po;
-  const primaryColor = isClerk ? '#E11D48' : '#B7791F';
+  const examKey = activeExam;
+  const subjects = isSOIT ? IBPS_SO_IT_SUBJECTS : (isSO ? IBPS_SO_SUBJECTS : (isClerk ? IBPS_CLERK_SUBJECTS : IBPS_PO_SUBJECTS));
+  const config = isSOIT ? EXAM_CONFIG_IBPS_SO_IT : (isSO ? EXAM_CONFIG_IBPS_SO : (isClerk ? EXAM_CONFIG_IBPS_CLERK : EXAM_CONFIG_IBPS_PO));
+  const primaryColor = (isSO || isSOIT) ? '#1F618D' : (isClerk ? '#E11D48' : '#B7791F');
 
   // Header update
   const hubHeader = document.getElementById('ibps-hub-header');
   if (hubHeader) hubHeader.style.borderLeftColor = primaryColor;
 
   const hubName = document.getElementById('ibps-hub-name');
-  if (hubName) hubName.textContent = isClerk ? '📋 IBPS Clerk / CSA (CRP CSA-XVI)' : '🏦 IBPS PO / MT (CRP PO/MT-XVI)';
+  if (hubName) {
+    if (isSOIT) hubName.textContent = '💻 IBPS SO IT Officer (CRP SPL-XVI)';
+    else if (isSO) hubName.textContent = '🏛️ IBPS SO (CRP SPL-XVI)';
+    else if (isClerk) hubName.textContent = '📋 IBPS Clerk / CSA (CRP CSA-XVI)';
+    else hubName.textContent = '🏦 IBPS PO / MT (CRP PO/MT-XVI)';
+  }
 
   const hubTag = document.getElementById('ibps-hub-tag');
   if (hubTag) {
-    hubTag.textContent = isClerk
-      ? 'Prelims (Qualifying) · Mains Objective (155 Qs / 200 Marks / 120 Min) · NO Interview'
-      : 'Prelims (Qualifying) · Mains Objective + Descriptive · Interview';
+    if (isSOIT) {
+      hubTag.textContent = 'Prelims (Qualifying) · Mains Objective PK + Descriptive · Interview';
+    } else if (isSO) {
+      hubTag.textContent = 'Prelims (Qualifying) · Mains Objective PK + Descriptive · Interview';
+    } else if (isClerk) {
+      hubTag.textContent = 'Prelims (Qualifying) · Mains Objective (155 Qs / 200 Marks / 120 Min) · NO Interview';
+    } else {
+      hubTag.textContent = 'Prelims (Qualifying) · Mains Objective + Descriptive · Interview';
+    }
     hubTag.style.color = primaryColor;
   }
 
@@ -74,7 +86,7 @@ function refreshIBPSUI() {
   const countdownBadge = document.getElementById('countdown-badge');
   const countdownLbl = document.getElementById('countdown-lbl');
 
-  const examDateStr = isClerk ? config.examDate : config.examDate;
+  const examDateStr = config.examDate || config.prelimsDate;
   const examDate = new Date(examDateStr + 'T00:00:00');
   const days = Math.ceil((examDate - new Date()) / 86400000);
 
@@ -87,25 +99,25 @@ function refreshIBPSUI() {
     countdownBadge.style.color = primaryColor;
   }
   if (countdownLbl) {
-    countdownLbl.textContent = isClerk ? 'Days until Clerk Prelims 2026' : 'Days until PO Prelims 2026';
+    countdownLbl.textContent = isSOIT ? 'Days until SO IT Prelims 2026' : (isSO ? 'Days until SO Prelims 2026' : (isClerk ? 'Days until Clerk Prelims 2026' : 'Days until PO Prelims 2026'));
   }
 
   // Read Stats
   const stats = readExamStats(examKey);
   const grandDone = Object.values(stats).reduce((s, v) => s + v.done, 0);
-  const totalChapters = isClerk ? 50 : 68;
-  const pct = Math.round((grandDone / totalChapters) * 100);
+  const totalChapters = (isSO || isSOIT) ? config.subjects.reduce((sum, s) => sum + s.totalChapters, 0) : (isClerk ? 50 : 68);
+  const pct = totalChapters > 0 ? Math.round((grandDone / totalChapters) * 100) : 0;
 
   // Stats Grid
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
-  set('ibps-stats-title', isClerk ? 'IBPS Clerk Stats' : 'IBPS PO Stats');
+  set('ibps-stats-title', isSOIT ? 'IBPS SO IT Stats' : (isSO ? 'IBPS SO Stats' : (isClerk ? 'IBPS Clerk Stats' : 'IBPS PO Stats')));
   set('ms-total-done', grandDone);
   set('ms-total-chapters', totalChapters);
-  set('ms-syllabus-sub', isClerk ? 'IBPS Clerk syllabus' : 'IBPS PO syllabus');
+  set('ms-syllabus-sub', isSOIT ? 'IBPS SO IT syllabus' : (isSO ? 'IBPS SO syllabus' : (isClerk ? 'IBPS Clerk syllabus' : 'IBPS PO syllabus')));
   set('ms-overall-pct', pct + '%');
   set('ms-subj-count', subjects.length);
-  set('ms-target-date', isClerk ? '10 Oct 2026' : '22 Aug 2026');
-  set('ms-target-label', isClerk ? 'Clerk Prelims' : 'PO Prelims');
+  set('ms-target-date', (isSO || isSOIT) ? '29 Aug 2026' : (isClerk ? '10 Oct 2026' : '22 Aug 2026'));
+  set('ms-target-label', (isSO || isSOIT) ? 'SO Prelims' : (isClerk ? 'Clerk Prelims' : 'PO Prelims'));
 
   const cardDone = document.getElementById('ms-card-done');
   if (cardDone) cardDone.style.borderLeftColor = primaryColor;
@@ -175,10 +187,12 @@ function refreshIBPSUI() {
     }));
     const weak = items.filter(s => s.pct < 50).sort((a, b) => a.pct - b.pct);
     const allStrong = items.every(s => s.pct >= 80);
+    const labelName = isSOIT ? 'IBPS SO IT' : (isSO ? 'IBPS SO' : (isClerk ? 'IBPS Clerk' : 'IBPS PO'));
+    const modulesCount = (isSO || isSOIT) ? 4 : (isClerk ? 5 : 6);
     if (allStrong) {
-      focusBox.innerHTML = `<div class="focus-on-track">🚀 Outstanding! All ${isClerk ? '5 IBPS Clerk' : '6 IBPS PO'} modules above 80%. Shift to timed full-length mocks!</div>`;
+      focusBox.innerHTML = `<div class="focus-on-track">🚀 Outstanding! All ${modulesCount} ${labelName} modules above 80%. Shift to timed full-length mocks!</div>`;
     } else if (weak.length === 0) {
-      focusBox.innerHTML = `<div class="focus-on-track">✅ All ${isClerk ? 'IBPS Clerk' : 'IBPS PO'} modules above 50%. Focus on DI speed and Mains Financial Awareness!</div>`;
+      focusBox.innerHTML = `<div class="focus-on-track">✅ All ${labelName} modules above 50%. Focus on DI speed and Mains Financial Awareness!</div>`;
     } else {
       focusBox.innerHTML = `<div class="focus-title">⚡ High ROI Focus Areas (< 50% Complete)</div>
       <div class="focus-items">${weak.slice(0, 5).map(s => `
@@ -194,7 +208,11 @@ function refreshIBPSUI() {
   const smartBox = document.getElementById('smart-box');
   if (smartBox) {
     let msg = '', color = primaryColor;
-    if (isClerk) {
+    if (isSOIT) {
+      msg = `💡 <strong>SO IT Strategy Note:</strong> Professional Knowledge (IT) is 100% of the Mains weight! Clear sectional cut-offs in Quant/Reas/Eng, but put maximum time into your IT core subjects.`;
+    } else if (isSO) {
+      msg = `💡 <strong>SO Strategy Note:</strong> Professional Knowledge decides your merit! Focus on clearing sectional cut-offs in aptitude, then maximize score in your post-specific PK paper.`;
+    } else if (isClerk) {
       msg = `💡 <strong>Clerk Strategy Note:</strong> Mains Reasoning & Computer Aptitude carries <strong>1.5 Marks/Q</strong> (highest ratio). Simplification (4Q), Puzzles (10Q) & Financial Awareness (50M) form the core merit path. <strong>No Interview!</strong>`;
     } else {
       msg = `💡 <strong>PO Strategy Note:</strong> Speed & Accuracy First! Simplifications, Syllogisms & Basic Puzzles form ~70% of Prelims cutoff. Mains G.A. carries 60 heavy marks.`;

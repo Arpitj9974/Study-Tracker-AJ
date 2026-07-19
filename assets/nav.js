@@ -33,6 +33,11 @@ const SUBJECT_COLORS = {
   ibps_dia: { primary: '#2C7A9E' },
   ibps_gab: { primary: '#2B8A6E' },
   ibps_dsc: { primary: '#A64D9C' },
+  // IBPS SO colors
+  iso_pk:   { primary: '#1F618D' },
+  iso_qa:   { primary: '#B9770E' },
+  iso_reas: { primary: '#6C3483' },
+  iso_eng:  { primary: '#117A65' },
   // JEE colors
   jee_phy: { primary: '#3B5BDB' },
   jee_che: { primary: '#2B8A6E' },
@@ -290,6 +295,11 @@ const KEYS = {
   ibps_clerk_gfa:  { prefix: 'iclk_gfa_',  total: 8,  p1: 8  },
   ibps_clerk_eng:  { prefix: 'iclk_eng_',  total: 10, p1: 10 },
   ibps_clerk_comp: { prefix: 'iclk_comp_', total: 7,  p1: 7  },
+  // IBPS SO subjects
+  iso_pk:   { prefix: 'iso_pk_',   total: 13, p1: 13 },
+  iso_qa:   { prefix: 'iso_qa_',   total: 14, p1: 14 },
+  iso_reas: { prefix: 'iso_reas_', total: 14, p1: 14 },
+  iso_eng:  { prefix: 'iso_eng_',  total: 10, p1: 10 },
   // UPSC NDA subjects
   nda_gat: { prefix: 'nda_gat_', total: 14, p1: 14 },
   nda_ma:  { prefix: 'nda_ma_',  total: 9,  p1: 9  },
@@ -410,6 +420,38 @@ const EXAM_CONFIG = {
       { page: 'tracker-ibps.html?subj=ibps_dia', href: 'tracker-ibps.html?subj=ibps_dia', icon: '📊', label: 'Data Analysis & DI' },
       { page: 'tracker-ibps.html?subj=ibps_gab', href: 'tracker-ibps.html?subj=ibps_gab', icon: '🏦', label: 'Banking & GA' },
       { page: 'tracker-ibps.html?subj=ibps_dsc', href: 'tracker-ibps.html?subj=ibps_dsc', icon: '✍️', label: 'Descriptive English' }
+    ]
+  },
+  ibps_so_2026: {
+    label: 'IBPS SO',
+    color: '#1F618D',
+    icon: '🏛️',
+    subjects: ['iso_pk', 'iso_qa', 'iso_reas', 'iso_eng'],
+    countMode: 'all',
+    examDate: '2026-08-29',
+    totalChapters: 51,
+    links: [
+      { page: 'dashboard-ibps.html?exam=so', href: 'dashboard-ibps.html?exam=so', icon: '📊', label: 'IBPS SO Dashboard' },
+      { page: 'tracker-ibps.html?exam=so&subj=iso_pk', href: 'tracker-ibps.html?exam=so&subj=iso_pk', icon: '💻', label: 'Professional Knowledge' },
+      { page: 'tracker-ibps.html?exam=so&subj=iso_qa', href: 'tracker-ibps.html?exam=so&subj=iso_qa', icon: '🔢', label: 'Quant Aptitude' },
+      { page: 'tracker-ibps.html?exam=so&subj=iso_reas', href: 'tracker-ibps.html?exam=so&subj=iso_reas', icon: '🧩', label: 'Reasoning Ability' },
+      { page: 'tracker-ibps.html?exam=so&subj=iso_eng', href: 'tracker-ibps.html?exam=so&subj=iso_eng', icon: '📖', label: 'English Language' }
+    ]
+  },
+  ibps_so_it_2026: {
+    label: 'IBPS SO IT Officer',
+    color: '#1F618D',
+    icon: '💻',
+    subjects: ['iso_pk', 'iso_qa', 'iso_reas', 'iso_eng'],
+    countMode: 'all',
+    examDate: '2026-08-29',
+    totalChapters: 51,
+    links: [
+      { page: 'dashboard-ibps.html?exam=so_it', href: 'dashboard-ibps.html?exam=so_it', icon: '📊', label: 'IBPS SO IT Dashboard' },
+      { page: 'tracker-ibps.html?exam=so_it&subj=iso_pk', href: 'tracker-ibps.html?exam=so_it&subj=iso_pk', icon: '💻', label: 'IT Prof. Knowledge' },
+      { page: 'tracker-ibps.html?exam=so_it&subj=iso_qa', href: 'tracker-ibps.html?exam=so_it&subj=iso_qa', icon: '🔢', label: 'Quant Aptitude' },
+      { page: 'tracker-ibps.html?exam=so_it&subj=iso_reas', href: 'tracker-ibps.html?exam=so_it&subj=iso_reas', icon: '🧩', label: 'Reasoning Ability' },
+      { page: 'tracker-ibps.html?exam=so_it&subj=iso_eng', href: 'tracker-ibps.html?exam=so_it&subj=iso_eng', icon: '📖', label: 'English Language' }
     ]
   },
   jee: {
@@ -852,6 +894,8 @@ function getCurrentExam() {
     const params = new URLSearchParams(window.location.search);
     const ex = params.get('exam');
     if (ex === 'clerk') return 'ibps_clerk';
+    if (ex === 'so') return 'ibps_so_2026';
+    if (ex === 'so_it') return 'ibps_so_it_2026';
     return 'ibps_po';
   }
   if (page.includes('jee')) return 'jee';

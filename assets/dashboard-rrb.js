@@ -2,13 +2,6 @@
  * dashboard-rrb.js — Dashboard controller for RRB NTPC & Group D
  * ============================================================================ */
 
-function switchRRBExam(examType) {
-  const url = new URL(window.location.href);
-  url.searchParams.set('exam', examType);
-  window.history.pushState({}, '', url.toString());
-  localStorage.setItem('selectedExam', examType === 'group_d' ? 'rrb_group_d' : 'rrb_ntpc');
-  renderRRBDashboard();
-}
 
 function renderRRBDashboard() {
   const params = new URLSearchParams(window.location.search);
@@ -18,10 +11,6 @@ function renderRRBDashboard() {
   const priorityData = examType === 'group_d' ? RRB_GROUP_D_PRIORITY_DATA : RRB_NTPC_PRIORITY_DATA;
   const examKey = examType === 'group_d' ? 'rrb_group_d' : 'rrb_ntpc';
 
-  // Active Tab Highlight
-  document.querySelectorAll('#rrb-tabs button').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-exam') === examType);
-  });
 
   // Headers
   document.getElementById('rrb-exam-title').textContent = config.examName;

@@ -2,14 +2,6 @@
  * dashboard-ssc.js — Multi-exam controller for SSC CGL, CHSL, and MTS
  * ============================================================================ */
 
-function switchSSCExam(examType) {
-  const url = new URL(window.location.href);
-  url.searchParams.set('exam', examType);
-  window.history.pushState({}, '', url.toString());
-  const selectedKey = examType === 'chsl' ? 'ssc_chsl' : (examType === 'mts' ? 'ssc_mts' : 'ssc');
-  localStorage.setItem('selectedExam', selectedKey);
-  renderSSCDashboard();
-}
 
 function renderSSCDashboard() {
   const params = new URLSearchParams(window.location.search);
@@ -19,10 +11,6 @@ function renderSSCDashboard() {
   const examKey = examType === 'chsl' ? 'ssc_chsl' : (examType === 'mts' ? 'ssc_mts' : 'ssc');
   const config = EXAM_CONFIG[examKey];
 
-  // Active Tab Highlight
-  document.querySelectorAll('#ssc-tabs button').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-exam') === examType);
-  });
 
   // Headers
   if (examType === 'cgl') {
