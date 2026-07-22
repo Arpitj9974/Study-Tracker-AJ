@@ -83,6 +83,24 @@ async function syncCloudAndLocalStorage(uid) {
       });
     }
 
+    // Sync Active Exams List
+    const cloudActiveExams = userData.activeExams;
+    let localActiveExams = [];
+    try {
+      const raw = localStorage.getItem('activeExams');
+      if (raw) localActiveExams = JSON.parse(raw);
+    } catch(e){}
+
+    if (Array.isArray(cloudActiveExams)) {
+      localStorage.setItem('activeExams', JSON.stringify(cloudActiveExams));
+    } else if (Array.isArray(localActiveExams)) {
+      await updateDoc(userRef, { activeExams: localActiveExams }).catch(async (err) => {
+        if (err.code === 'not-found') {
+          await setDoc(userRef, { activeExams: localActiveExams }, { merge: true });
+        }
+      });
+    }
+
     if (userData.targetExamDate) {
       localStorage.setItem('targetExamDate', userData.targetExamDate);
     } else {
@@ -241,6 +259,7 @@ onAuthStateChanged(auth, async (user) => {
     const params = new URLSearchParams(window.location.search);
     const isSelectMode = params.get('select') === 'true';
 
+
     // -------------------------------------------------------------
     // ONBOARDING GUARD
     // -------------------------------------------------------------
@@ -262,12 +281,21 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     if ((page === 'index.html' || page === '') && !isSelectMode) {
-      const activeExam = localStorage.getItem('selectedExam');
-      const targetUrl = getDashboardUrl(activeExam);
-      if (targetUrl) {
-        window.location.href = targetUrl;
-        return;
+      let activeList = [];
+      try {
+        const raw = localStorage.getItem('activeExams');
+        if (raw) activeList = JSON.parse(raw);
+      } catch (e) {}
+
+      // If ONLY 1 active exam: Direct redirect to that exam's tracker dashboard!
+      if (Array.isArray(activeList) && activeList.length === 1) {
+        const targetUrl = getDashboardUrl(activeList[0]);
+        if (targetUrl) {
+          window.location.href = targetUrl;
+          return;
+        }
       }
+      // If 0 active exams or > 1 active exams: Stay on index.html
     }
 
   } else {

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Profile — AspirantFlow (ArpitPrep Hub)</title>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+
+  <style>
+    body {
+      background-color: #141218;
+      color: #e6e0e9;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .bg-ambient-orb {
+      position: fixed;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(103, 80, 164, 0.18) 0%, rgba(20, 18, 24, 0) 70%);
+      top: -100px;
+      right: -100px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bg-ambient-orb-2 {
+      position: fixed;
+      width: 550px;
+      height: 550px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(77, 68, 101, 0.15) 0%, rgba(20, 18, 24, 0) 70%);
+      bottom: 10%;
+      left: -150px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #141218;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    select option {
+      background-color: #1d1b20 !important;
+      color: #e6e0e9 !important;
+    }
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.1);
+      border-left-color: #cfbcff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin { 100% { transform:rotate(360deg); } }
+  </style>
+</head>
+
+<body class="bg-[#141218] text-[#e6e0e9] min-h-screen font-sans overflow-x-hidden flex relative pb-20 md:pb-0">
+  <div class="bg-ambient-orb"></div>
+  <div class="bg-ambient-orb-2"></div>
+
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="text-sm font-semibold text-white/80">Loading Profile...</div>
+  </div>
+
+  <!-- Desktop Sidebar Navigation -->
+  <nav class="hidden md:flex flex-col bg-[#1d1b20]/40 backdrop-blur-2xl border-r border-white/10 shadow-2xl h-full w-64 fixed left-0 top-0 py-8 z-40">
+    <div class="px-6 mb-8 flex items-center gap-3">
+      <span class="material-symbols-outlined text-[#cfbcff] text-3xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+      <div class="flex flex-col">
+        <span class="text-2xl font-bold bg-gradient-to-r from-[#cfbcff] to-[#e7c365] bg-clip-text text-transparent">AspirantFlow</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-[#cfbcff]">ArpitPrep Hub</span>
+      </div>
+    </div>
+    
+    <div class="flex-1 flex flex-col gap-2 w-full mt-4">
+      <a class="text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-colors" href="index.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-semibold text-sm">Dashboard</span>
+      </a>
+      <a class="text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-colors" href="index.html?select=true">
+        <span class="material-symbols-outlined">school</span>
+        <span class="font-semibold text-sm">All Exams (28)</span>
+      </a>
+      <a class="bg-[#6750a4]/20 text-[#cfbcff] border-l-4 border-[#cfbcff] px-6 py-4 flex items-center gap-4 transition-transform translate-x-1" href="profile.html">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+        <span class="font-semibold text-sm">Profile</span>
+      </a>
+      <a class="text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-colors" href="admin.html">
+        <span class="material-symbols-outlined">admin_panel_settings</span>
+        <span class="font-semibold text-sm">Admin Panel</span>
+      </a>
+    </div>
+
+    <div class="px-6 mt-auto">
+      <button onclick="window.handleLogout && window.handleLogout()" class="w-full py-3 rounded-lg bg-[#36343a] text-white/80 hover:bg-red-500/20 hover:text-red-400 transition-colors border border-white/10 flex items-center justify-center gap-2 font-semibold text-sm">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Log Out
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 ml-0 md:ml-64 min-h-screen overflow-y-auto relative z-10">
+    
+    <!-- Top Bar Header -->
+    <header class="fixed top-0 left-0 md:left-64 right-0 h-16 md:h-20 bg-[#141218]/60 backdrop-blur-xl border-b border-white/10 shadow-lg flex justify-between items-center px-4 md:px-10 z-50">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#cfbcff] text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+        <span class="text-lg md:text-xl font-bold text-[#cfbcff]">AspirantFlow</span>
+      </div>
+      
+      <div class="hidden md:block">
+        <h1 class="text-2xl font-bold text-white tracking-tight">Student Profile</h1>
+        <p class="text-xs font-mono text-[#cfbcff] uppercase tracking-wider">ArpitPrep Hub</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 glass-panel px-3 py-1.5 rounded-full border border-white/10 text-xs font-semibold text-white/90 hover:bg-white/5">
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          Back to Hub
+        </a>
+      </div>
+    </header>
+
+    <div class="pt-20 md:pt-28 pb-16 px-4 md:px-10 max-w-[800px] mx-auto">
+      
+      <div class="glass-panel rounded-2xl p-6 md:p-8 border border-white/10 shadow-2xl relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#6750a4]/10 via-transparent to-transparent pointer-events-none"></div>
+        
+        <div class="relative z-10">
+          <h2 class="text-2xl md:text-3xl font-extrabold mb-2 text-white tracking-tight">Edit Student Profile</h2>
+          <p class="text-xs md:text-sm text-white/60 mb-8">Update your profile info, target exam date, and select a profile picture.</p>
+
+          <form id="profile-form" class="space-y-6">
+            
+            <!-- Profile Picture Section -->
+            <div class="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-xl bg-white/5 border border-white/5">
+              <div class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#cfbcff] shadow-lg bg-surface-container shrink-0">
+                <img id="profile-preview-img" alt="Student avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWB8WYQvQon7e7AGI4jCJQ9KHZ3A9TMiWVb9-2KPyM1Gs2fc8Z2J4aJTw0-4A-L9L-C3LTnw66NmgDZOP18mqLHidZy4Ua8IVMt0RaTNGRfQgIw6fHz0YCEEpjQ2P47lJbZKl49kWWytQBfvF9YSAOBktXZL-FhN_NeKlFUqgQlQVC-Oz1CI_Jc7iamsFY7wJhtg_M5X60aEdHKHhhGWICydqmVTAxA0NQewduzZreQS60shxnENzItv01Ed_EO_lZavgCUCuZ7OtL"/>
+              </div>
+              <div class="flex-1 space-y-3 w-full text-center sm:text-left">
+                <label class="block text-xs font-mono uppercase tracking-wider text-white/70">Profile Avatar</label>
+                <div class="flex flex-col gap-2">
+                  <input type="file" id="profile-file-input" accept="image/*" class="hidden"/>
+                  <button type="button" onclick="document.getElementById('profile-file-input').click()" class="px-4 py-2 bg-[#cfbcff] text-[#22005d] font-bold text-xs rounded-lg hover:shadow-lg transition-all inline-flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">cloud_upload</span>
+                    Upload Custom Picture
+                  </button>
+                  <p class="text-[10px] text-white/50">Supports JPG, PNG (Max 500KB converted to Base64)</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Info Form Fields -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-2">
+                <label for="prof-email" class="text-xs font-mono uppercase tracking-wider text-white/70">Email Address (Read-only)</label>
+                <input type="email" id="prof-email" disabled class="bg-white/5 border border-white/10 rounded-lg p-3 text-white/50 text-sm outline-none cursor-not-allowed"/>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="prof-name" class="text-xs font-mono uppercase tracking-wider text-white/70">Full Name <span style="color:#EF4444">*</span></label>
+                <input type="text" id="prof-name" required class="bg-white/5 border border-white/10 rounded-lg p-3 text-white text-sm outline-none focus:border-[#cfbcff] transition-all"/>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="prof-age" class="text-xs font-mono uppercase tracking-wider text-white/70">Age <span style="color:#EF4444">*</span></label>
+                <input type="number" id="prof-age" required min="10" max="99" class="bg-white/5 border border-white/10 rounded-lg p-3 text-white text-sm outline-none focus:border-[#cfbcff] transition-all"/>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="prof-mobile" class="text-xs font-mono uppercase tracking-wider text-white/70">Mobile Number <span style="color:#EF4444">*</span></label>
+                <input type="tel" id="prof-mobile" required class="bg-white/5 border border-white/10 rounded-lg p-3 text-white text-sm outline-none focus:border-[#cfbcff] transition-all"/>
+              </div>
+
+
+
+              <div class="flex flex-col gap-2">
+                <label for="prof-status" class="text-xs font-mono uppercase tracking-wider text-white/70">Current Status <span style="color:#EF4444">*</span></label>
+                <select id="prof-status" required class="bg-white/5 border border-white/10 rounded-lg p-3 text-white text-sm outline-none focus:border-[#cfbcff] transition-all">
+                  <option value="" disabled selected class="bg-[#1d1b20] text-[#e6e0e9]">Select your status...</option>
+                  <option value="School" class="bg-[#1d1b20] text-[#e6e0e9]">School Student</option>
+                  <option value="Graduation" class="bg-[#1d1b20] text-[#e6e0e9]">Undergraduate / College</option>
+                  <option value="Job" class="bg-[#1d1b20] text-[#e6e0e9]">Working Professional (Job)</option>
+                  <option value="Dropper" class="bg-[#1d1b20] text-[#e6e0e9]">Dropper / Full-time Aspirant</option>
+                  <option value="Other" class="bg-[#1d1b20] text-[#e6e0e9]">Other</option>
+                </select>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="prof-stream" class="text-xs font-mono uppercase tracking-wider text-white/70">Academic Stream <span style="color:#EF4444">*</span></label>
+                <select id="prof-stream" required class="bg-white/5 border border-white/10 rounded-lg p-3 text-white text-sm outline-none focus:border-[#cfbcff] transition-all">
+                  <option value="" disabled selected class="bg-[#1d1b20] text-[#e6e0e9]">Select your stream...</option>
+                  <option value="Science (PCM/PCB)" class="bg-[#1d1b20] text-[#e6e0e9]">Science (PCM/PCB)</option>
+                  <option value="Commerce" class="bg-[#1d1b20] text-[#e6e0e9]">Commerce</option>
+                  <option value="Arts/Humanities" class="bg-[#1d1b20] text-[#e6e0e9]">Arts / Humanities</option>
+                  <option value="Engineering" class="bg-[#1d1b20] text-[#e6e0e9]">Engineering</option>
+                  <option value="MBA" class="bg-[#1d1b20] text-[#e6e0e9]">MBA</option>
+                  <option value="Medical" class="bg-[#1d1b20] text-[#e6e0e9]">Medical</option>
+                  <option value="Other" class="bg-[#1d1b20] text-[#e6e0e9]">Other</option>
+                </select>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="prof-state" class="text-xs font-mono uppercase tracking-wider text-white/70">State <span style="color:#EF4444">*</span></label>
+                <input type="text" id="prof-state" required placeholder="e.g. Gujarat" class="bg-white/5 border border-white/10 rounded-lg p-3 text-white text-sm outline-none focus:border-[#cfbcff] transition-all"/>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="prof-city" class="text-xs font-mono uppercase tracking-wider text-white/70">City <span style="color:#EF4444">*</span></label>
+                <input type="text" id="prof-city" required placeholder="e.g. Surat" class="bg-white/5 border border-white/10 rounded-lg p-3 text-white text-sm outline-none focus:border-[#cfbcff] transition-all"/>
+              </div>
+            </div>
+
+            <div id="prof-message" class="text-xs font-semibold min-h-[16px] text-center"></div>
+
+            <button type="submit" id="save-btn" class="w-full py-3.5 bg-[#cfbcff] text-[#22005d] font-bold rounded-xl hover:shadow-[0_0_20px_rgba(207,188,255,0.4)] transition-all flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-sm">save</span>
+              Save Profile Changes
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Tab Navigation -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#1d1b20]/80 backdrop-blur-2xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] md:hidden">
+    <a class="flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors" href="index.html">
+      <span class="material-symbols-outlined text-xl">dashboard</span>
+      <span class="text-[10px] tracking-tight">Dashboard</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors" href="index.html?select=true">
+      <span class="material-symbols-outlined text-xl">school</span>
+      <span class="text-[10px] tracking-tight">All Exams</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-[#cfbcff] font-bold" href="profile.html">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">person</span>
+      <span class="text-[10px] tracking-tight">Profile</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors" href="admin.html">
+      <span class="material-symbols-outlined text-xl">admin_panel_settings</span>
+      <span class="text-[10px] tracking-tight">Admin</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { auth, db } from "./assets/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const previewImg = document.getElementById('profile-preview-img');
+    const fileInput = document.getElementById('profile-file-input');
+    const form = document.getElementById('profile-form');
+    
+    const emailInput = document.getElementById('prof-email');
+    const nameInput = document.getElementById('prof-name');
+    const ageInput = document.getElementById('prof-age');
+    const mobileInput = document.getElementById('prof-mobile');
+    const statusInput = document.getElementById('prof-status');
+    const streamInput = document.getElementById('prof-stream');
+    const stateInput = document.getElementById('prof-state');
+    const cityInput = document.getElementById('prof-city');
+    const saveBtn = document.getElementById('save-btn');
+    const message = document.getElementById('prof-message');
+
+    let currentUid = null;
+    let base64Image = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUid = user.uid;
+        emailInput.value = user.email || '';
+        
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const userSnap = await getDoc(userRef);
+          
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            nameInput.value = data.name || '';
+            ageInput.value = data.age || '';
+            mobileInput.value = data.mobile || '';
+            statusInput.value = data.status || '';
+            streamInput.value = data.stream || '';
+            stateInput.value = data.state || '';
+            cityInput.value = data.city || '';
+            
+            if (data.profilePic) {
+              previewImg.src = data.profilePic;
+              base64Image = data.profilePic;
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching user profile data:", err);
+        }
+        loadingOverlay.style.display = 'none';
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+
+    // File Upload Handler (Convert to Base64)
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 512000) {
+        alert("File size is too large! Please upload a file smaller than 500KB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        base64Image = reader.result;
+        previewImg.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Save Action
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUid) return;
+
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner text-xs w-4 h-4 inline-block align-middle mr-2"></span>Saving Changes...';
+      message.textContent = '';
+
+      const payload = {
+        name: nameInput.value.trim(),
+        age: parseInt(ageInput.value, 10),
+        mobile: mobileInput.value.trim() || null,
+        status: statusInput.value,
+        stream: streamInput.value,
+        state: stateInput.value.trim(),
+        city: cityInput.value.trim(),
+      };
+
+      if (base64Image) {
+        payload.profilePic = base64Image;
+      }
+
+      try {
+        const userRef = doc(db, "users", currentUid);
+        await setDoc(userRef, payload, { merge: true });
+        
+        // Sync changes
+        localStorage.removeItem('targetExamDate');
+
+        // Notify storage change
+        window.dispatchEvent(new Event('storage'));
+
+        message.className = "text-emerald-400 text-xs font-semibold";
+        message.textContent = "Profile updated successfully! ✓";
+        
+        setTimeout(() => {
+          message.textContent = '';
+        }, 3000);
+      } catch (err) {
+        console.error("Error saving profile changes:", err);
+        message.className = "text-red-400 text-xs font-semibold";
+        message.textContent = "Failed to save changes. Please try again.";
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-sm">save</span>Save Profile Changes';
+      }
+    });
+  </script>
+</body>
+</html>

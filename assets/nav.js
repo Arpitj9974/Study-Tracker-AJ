@@ -872,6 +872,85 @@ if (customTargetDate && customTargetDate.trim() !== '') {
   });
 }
 
+// ── Active Exams Management ───────────────────────────────────────────────────
+function getActiveExams() {
+  try {
+    const raw = localStorage.getItem('activeExams');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.error("Error reading activeExams:", e);
+  }
+  return [];
+}
+
+function setActiveExams(examsList) {
+  const cleanList = Array.from(new Set(examsList || []));
+  localStorage.setItem('activeExams', JSON.stringify(cleanList));
+  
+  // Keep selectedExam in sync with activeExams
+  const currentSelected = localStorage.getItem('selectedExam');
+  if (cleanList.length === 0) {
+    localStorage.removeItem('selectedExam');
+  } else if (!currentSelected || !cleanList.includes(currentSelected)) {
+    localStorage.setItem('selectedExam', cleanList[0]);
+  }
+  
+  if (window.auth && window.auth.currentUser && window.db && window.setDoc && window.doc) {
+    window.setDoc(window.doc(window.db, "users", window.auth.currentUser.uid), {
+      activeExams: cleanList,
+      selectedExam: localStorage.getItem('selectedExam') || null,
+      updatedAt: new Date().toISOString()
+    }, { merge: true }).catch(err => console.error("Cloud activeExams sync error:", err));
+  }
+}
+
+function addActiveExam(examKey) {
+  if (!examKey) return;
+  const current = getActiveExams();
+  if (!current.includes(examKey)) {
+    current.push(examKey);
+  }
+  localStorage.setItem('selectedExam', examKey);
+  setActiveExams(current);
+}
+
+function removeActiveExam(examKey) {
+  if (!examKey) return;
+  const current = getActiveExams();
+  const filtered = current.filter(k => k !== examKey);
+  setActiveExams(filtered);
+}
+
+function isActiveExam(examKey) {
+  return getActiveExams().includes(examKey);
+}
+
+function toggleActiveExamState(examKey) {
+  const targetKey = examKey || getCurrentExam();
+  if (!targetKey) return;
+  if (isActiveExam(targetKey)) {
+    removeActiveExam(targetKey);
+  } else {
+    addActiveExam(targetKey);
+  }
+  buildNav();
+  if (typeof renderDashboard === 'function') {
+    renderDashboard();
+  }
+}
+
+window.getActiveExams = getActiveExams;
+window.setActiveExams = setActiveExams;
+window.addActiveExam = addActiveExam;
+window.removeActiveExam = removeActiveExam;
+window.isActiveExam = isActiveExam;
+window.toggleActiveExamState = toggleActiveExamState;
+
 // Detect current exam context from URL
 function getCurrentExam() {
   const page = window.location.pathname.split('/').pop() || '';
@@ -979,8 +1058,8 @@ function getTimelineProgress() {
 function buildNav() {
   const page = window.location.pathname.split('/').pop() || 'index.html';
   
-  // Don't show sidebar on the exam selector (index.html)
-  if (page === 'index.html' || page === '') return;
+  // Don't show sidebar on these general/home pages
+  if (page === 'index.html' || page === '' || page === 'admin.html' || page === 'profile.html' || page === 'onboarding.html' || page === 'login.html') return;
 
   // Remove any existing navigation elements before re-building
   const existingSidebar = document.getElementById('sidebar');
@@ -1052,9 +1131,8 @@ function buildNav() {
         ${streakHTML}
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <a href="index.html?select=true" class="switch-exam-btn">🔄 Switch Exam</a>
+        <a href="index.html?select=true" class="switch-exam-btn">🏠 Home</a>
         <button onclick="window.openSettingsModal()" class="switch-exam-btn" style="background:rgba(255,255,255,0.05);border-color:var(--border-subtle);color:var(--text-secondary);cursor:pointer">⚙️ Settings</button>
-        ${adminBtnHTML}
       </div>
       <div class="sidebar-divider"></div>
     </div>
@@ -1099,9 +1177,8 @@ function buildNav() {
         </div>
       </div>
       <div class="mh-actions">
-        ${isAdminUser ? `<a href="admin.html" class="switch-exam-btn mh-btn" style="background:rgba(245,158,11,0.15);color:#F59E0B">🛡️ Admin</a>` : ''}
         <button onclick="window.openSettingsModal()" class="switch-exam-btn mh-btn" style="background:rgba(255,255,255,0.05);border-color:var(--border-subtle);color:var(--text-secondary);cursor:pointer">⚙️ Settings</button>
-        <a href="index.html?select=true" class="switch-exam-btn mh-btn">🔄 Switch</a>
+        <a href="index.html?select=true" class="switch-exam-btn mh-btn">🏠 Home</a>
         <button class="logout-btn-trigger mh-btn logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}">Log Out</button>
       </div>
     </div>
@@ -1156,6 +1233,8 @@ function buildNav() {
     if (activeTab) {
       activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
+    // Smoothly reveal the page once nav rendering and initial layout is complete
+    document.body.classList.remove('nav-loading');
   }, 100);
 }
 
@@ -1317,25 +1396,40 @@ if (typeof window !== 'undefined') {
   // Settings Modal functions
   window.openSettingsModal = function() {
     let modal = document.getElementById('settings-modal');
-    if (!modal) {
-      const modalHtml = `
-        <div id="settings-modal" style="display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; backdrop-filter:blur(4px);">
-          <div style="background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:14px; padding:24px; width:90%; max-width:400px; box-shadow:0 10px 30px rgba(0,0,0,0.5)">
-            <div style="font:700 18px 'DM Sans'; color:var(--text-primary); margin-bottom:16px; display:flex; align-items:center; justify-content:space-between">
-              <span>⚙️ Settings</span>
-              <button onclick="window.closeSettingsModal()" style="background:transparent; border:none; color:var(--text-tertiary); font-size:18px; cursor:pointer">&times;</button>
-            </div>
-            <div style="margin-bottom:16px">
-              <label style="font:600 12px 'JetBrains Mono'; color:var(--text-secondary); text-transform:uppercase; display:block; margin-bottom:6px">Target Exam Date</label>
-              <input type="date" id="settings-target-date" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; color:var(--text-primary); font-family:'JetBrains Mono'" />
-            </div>
-            <button onclick="window.saveSettings()" style="width:100%; background:#7F77DD; color:white; font-weight:600; padding:10px; border-radius:8px; border:none; cursor:pointer">Save & Apply</button>
+    if (modal) modal.remove();
+    
+    const currentExam = window.getCurrentExam() || 'nqt';
+    const isActive = window.isActiveExam(currentExam);
+    const activeBtnText = isActive ? '❌ Remove from Active Prep' : '➕ Add to Active Prep';
+    const activeBtnColor = isActive ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)';
+    const activeBtnBorder = isActive ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)';
+    const activeBtnTextColor = isActive ? '#EF4444' : '#10B981';
+
+    const modalHtml = `
+      <div id="settings-modal" style="display:flex; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+        <div style="background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:14px; padding:24px; width:90%; max-width:400px; box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+          <div style="font:700 18px 'DM Sans'; color:var(--text-primary); margin-bottom:16px; display:flex; align-items:center; justify-content:space-between">
+            <span>⚙️ Settings</span>
+            <button onclick="window.closeSettingsModal()" style="background:transparent; border:none; color:var(--text-tertiary); font-size:18px; cursor:pointer">&times;</button>
           </div>
-        </div>`;
-      document.body.insertAdjacentHTML('beforeend', modalHtml);
-      modal = document.getElementById('settings-modal');
-    }
-    modal.style.display = 'flex';
+          
+          <div style="margin-bottom:16px">
+            <label style="font:600 12px 'JetBrains Mono'; color:var(--text-secondary); text-transform:uppercase; display:block; margin-bottom:6px">Active Prep Status</label>
+            <button onclick="window.toggleActiveExamState('${currentExam}'); window.openSettingsModal();" style="width:100%; background:${activeBtnColor}; border:1px solid ${activeBtnBorder}; color:${activeBtnTextColor}; font-weight:600; padding:12px; border-radius:8px; cursor:pointer; font-family:'DM Sans'; transition:all 0.2s">
+              ${activeBtnText}
+            </button>
+          </div>
+
+          <div style="margin-bottom:16px">
+            <label style="font:600 12px 'JetBrains Mono'; color:var(--text-secondary); text-transform:uppercase; display:block; margin-bottom:6px">Target Exam Date</label>
+            <input type="date" id="settings-target-date" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; color:var(--text-primary); font-family:'JetBrains Mono'" />
+          </div>
+          <button onclick="window.saveSettings()" style="width:100%; background:#7F77DD; color:white; font-weight:600; padding:10px; border-radius:8px; border:none; cursor:pointer">Save & Apply</button>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    modal = document.getElementById('settings-modal');
+
     const savedDate = localStorage.getItem('targetExamDate') || '';
     document.getElementById('settings-target-date').value = savedDate;
   };
@@ -1360,6 +1454,10 @@ if (typeof window !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
   window.updateStreak();
   buildNav();
+  // Safety fallback: Always reveal the body after 1 second under all circumstances
+  setTimeout(() => {
+    document.body.classList.remove('nav-loading');
+  }, 1000);
 });
 
 window.addEventListener('cloudDataSynced', () => {

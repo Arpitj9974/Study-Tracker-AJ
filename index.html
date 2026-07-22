@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>ExamPulse — ArpitPrep Hub | Choose Your Exam</title>
-  <meta name="description" content="ExamPulse (ArpitPrep Hub) — Track your preparation for TCS NQT, SSC CGL/CHSL/MTS, UPSC CSE/NDA/CDS, IBPS PO/Clerk, JEE, NEET, CAT, CMAT, XAT, UGC NET, CLAT, CUET, RRB NTPC/Group D, CA, and more."/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AspirantFlow — ArpitPrep Hub | Interactive Study Hub</title>
+  <meta name="description" content="AspirantFlow (ArpitPrep Hub) — Track your preparation for TCS NQT, SSC CGL/CHSL/MTS, UPSC CSE/NDA/CDS, IBPS PO/Clerk/SO, JEE, NEET, CAT, CMAT, XAT, UGC NET, CLAT, CUET, RRB NTPC/Group D, CA, CMA, CFA, and more."/>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
+
+  <!-- Subject exam data scripts for dynamic stats reading -->
   <script src="assets/ssc_chsl_exam_data.js"></script>
   <script src="assets/ssc_mts_exam_data.js"></script>
   <script src="assets/ugcnet_exam_data.js"></script>
@@ -17,725 +24,629 @@
   <script src="assets/clat_ug_exam_data.js"></script>
   <script src="assets/cuet_ug_exam_data.js"></script>
   <script src="assets/cuet_pg_general_exam_data.js"></script>
+
   <style>
-    body { display:flex; align-items:center; justify-content:flex-start; min-height:100vh; padding:32px 24px 48px; flex-direction:column; overflow-y:auto; }
-    .selector-page { width:100%; max-width:960px; text-align:center; animation:fadeUp .4s ease; margin:auto; }
-    .sel-brand { margin-bottom:48px; }
-    .sel-icon { font-size:56px; margin-bottom:14px; display:block; }
-    .sel-title { font:700 32px/1.2 'DM Sans'; color:var(--text-primary); margin-bottom:8px; }
-    .sel-sub { font:500 13px/1.5 'JetBrains Mono'; color:var(--accent-purple); text-transform:uppercase; letter-spacing:.08em; }
-    .sel-desc { font:400 14px/1.6 'DM Sans'; color:var(--text-secondary); margin-top:12px; max-width:500px; margin-left:auto; margin-right:auto; }
-
-    .exam-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:48px; }
-    @media(max-width:700px){ .exam-grid{ grid-template-columns:1fr; max-width:360px; margin-left:auto; margin-right:auto; } }
-
-    .exam-card {
-      position:relative; background:var(--bg-elevated); border:1px solid var(--border-medium);
-      border-radius:var(--radius-lg); padding:32px 24px 28px; text-align:center;
-      text-decoration:none; display:flex; flex-direction:column; align-items:center; gap:14px;
-      transition:all .25s ease; cursor:pointer; overflow:hidden;
-      border-top:3px solid transparent;
-    }
-    .exam-card::before {
-      content:''; position:absolute; inset:0; border-radius:inherit;
-      background:radial-gradient(ellipse at 50% 0%, var(--card-glow, rgba(127,119,221,0.08)) 0%, transparent 70%);
-      opacity:0; transition:opacity .3s;
-    }
-    .exam-card:hover { transform:translateY(-6px); border-color:var(--card-border, var(--border-medium));
-      box-shadow:0 12px 40px rgba(0,0,0,.4), 0 0 0 1px var(--card-border, var(--border-medium)); }
-    .exam-card:hover::before { opacity:1; }
-    .exam-card.disabled { opacity:.5; cursor:not-allowed; pointer-events:none; }
-
-    .ec-icon { font-size:48px; position:relative; z-index:1; }
-    .ec-name { font:700 20px/1.2 'DM Sans'; color:var(--text-primary); position:relative; z-index:1; }
-    .ec-desc { font:400 12px/1.5 'DM Sans'; color:var(--text-secondary); position:relative; z-index:1; }
-    .ec-stats { display:flex; gap:14px; justify-content:center; position:relative; z-index:1; margin-top:4px; }
-    .ec-stat { text-align:center; }
-    .ec-stat-val { font:600 18px/1 'JetBrains Mono'; }
-    .ec-stat-lbl { font:400 10px/1 'DM Sans'; color:var(--text-tertiary); margin-top:3px; }
-    .ec-badge {
-      font:600 10px/1 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.06em;
-      padding:4px 10px; border-radius:20px; position:relative; z-index:1;
-    }
-    .ec-enter {
-      font:600 13px/1 'DM Sans'; color:white; padding:10px 24px; border-radius:8px;
-      border:none; cursor:pointer; position:relative; z-index:1; transition:all .2s;
-      margin-top:4px;
-    }
-    .ec-enter:hover { filter:brightness(1.15); transform:scale(1.02); }
-
-    .ec-coming {
-      font:600 11px/1 'DM Sans'; color:var(--text-tertiary); padding:8px 16px;
-      border:1px dashed var(--border-medium); border-radius:8px; position:relative; z-index:1;
+    body {
+      background-color: #141218;
+      color: #e6e0e9;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Footer */
-    .sel-footer { font:400 12px/1.5 'DM Sans'; color:var(--text-tertiary); }
-    .sel-footer a { color:var(--accent-purple); text-decoration:none; }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glow-hover {
+      transition: all 0.3s ease;
+    }
+
+    .glow-hover:hover {
+      box-shadow: 0 0 20px rgba(207, 188, 255, 0.15);
+      border-color: rgba(207, 188, 255, 0.35);
+      transform: translateY(-4px);
+    }
+
+    .bg-ambient-orb {
+      position: fixed;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(103, 80, 164, 0.18) 0%, rgba(20, 18, 24, 0) 70%);
+      top: -100px;
+      right: -100px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bg-ambient-orb-2 {
+      position: fixed;
+      width: 550px;
+      height: 550px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(77, 68, 101, 0.15) 0%, rgba(20, 18, 24, 0) 70%);
+      bottom: 10%;
+      left: -150px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #141218; }
+    ::-webkit-scrollbar-thumb { background: #36343a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #494551; }
   </style>
 </head>
-<body>
 
-  <div class="selector-page">
-    <div class="sel-brand">
-      <span class="sel-icon">⚡</span>
-      <div class="sel-title">ExamPulse</div>
-      <div class="sel-sub">ArpitPrep Hub</div>
-      <div class="sel-desc">Welcome Aspirants! Select the exam you want to prepare for. Each exam has its own dashboard, subjects, and progress tracker.</div>
+<body class="bg-[#141218] text-[#e6e0e9] min-h-screen font-sans overflow-x-hidden flex relative pb-20 md:pb-0">
+  <div class="bg-ambient-orb"></div>
+  <div class="bg-ambient-orb-2"></div>
+
+  <!-- Desktop Sidebar Navigation -->
+  <nav class="hidden md:flex flex-col bg-[#1d1b20]/40 backdrop-blur-2xl border-r border-white/10 shadow-2xl h-full w-64 fixed left-0 top-0 py-8 z-40">
+    <div class="px-6 mb-8 flex items-center gap-3">
+      <span class="material-symbols-outlined text-[#cfbcff] text-3xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+      <div class="flex flex-col">
+        <span class="text-2xl font-bold bg-gradient-to-r from-[#cfbcff] to-[#e7c365] bg-clip-text text-transparent">AspirantFlow</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-[#cfbcff]">ArpitPrep Hub</span>
+      </div>
+    </div>
+    
+    <div class="flex-1 flex flex-col gap-2 w-full mt-4">
+      <a id="nav-btn-dashboard" href="index.html" class="w-full text-left px-6 py-4 flex items-center gap-4 transition-all">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">track_changes</span>
+        <span class="font-semibold text-sm">PrepTrack</span>
+      </a>
+      <button id="nav-btn-exams" onclick="switchView('all')" class="w-full text-left text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined">school</span>
+        <span class="font-semibold text-sm">All Exams (28)</span>
+      </button>
+      <a class="text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-colors" href="profile.html">
+        <span class="material-symbols-outlined">person</span>
+        <span class="font-semibold text-sm">Profile</span>
+      </a>
+      <a class="text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-colors" href="admin.html">
+        <span class="material-symbols-outlined">admin_panel_settings</span>
+        <span class="font-semibold text-sm">Admin Panel</span>
+      </a>
     </div>
 
-    <div class="exam-grid" id="exam-grid">
-      <!-- Cards injected by JS -->
+    <div class="px-6 mt-auto">
+      <button onclick="window.handleLogout && window.handleLogout()" class="w-full py-3 rounded-lg bg-[#36343a] text-white/80 hover:bg-red-500/20 hover:text-red-400 transition-colors border border-white/10 flex items-center justify-center gap-2 font-semibold text-sm">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Log Out
+      </button>
     </div>
+  </nav>
 
-    <div class="sel-footer">
-      Progress is shared across exams — study once, benefit everywhere.
+  <!-- Main Content Area -->
+  <main class="flex-1 ml-0 md:ml-64 min-h-screen overflow-y-auto relative z-10">
+    
+    <!-- Top Bar Header -->
+    <header class="fixed top-0 left-0 md:left-64 right-0 h-16 md:h-20 bg-[#141218]/60 backdrop-blur-xl border-b border-white/10 shadow-lg flex justify-between items-center px-4 md:px-10 z-50">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#cfbcff] text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+        <span class="text-lg md:text-xl font-bold text-[#cfbcff]">AspirantFlow</span>
+      </div>
+      
+      <div class="hidden md:block">
+        <h1 class="text-2xl font-bold text-white tracking-tight">AspirantFlow Interactive Study Hub</h1>
+        <p class="text-xs font-mono text-[#cfbcff] uppercase tracking-wider">ArpitPrep Hub</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div id="user-display-badge" class="flex items-center gap-2 glass-panel px-3 py-1.5 rounded-full border border-white/10">
+          <span class="material-symbols-outlined text-[#cfbcff] text-sm md:text-base">account_circle</span>
+          <span id="header-user-email" class="text-xs font-semibold text-white/90">Aspirant</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="pt-20 md:pt-24 pb-16 px-4 md:px-10 max-w-[1600px] mx-auto">
+
+      <!-- View Switcher Tab Bar -->
+      <div class="flex items-center justify-between gap-4 mb-6 bg-[#1d1b20]/60 p-2 rounded-2xl border border-white/10">
+        <div class="flex items-center gap-2">
+          <button id="tab-active-prep" onclick="switchView('active')" class="px-4 md:px-5 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center gap-2 bg-[#6750a4] text-white shadow-lg">
+            <span class="material-symbols-outlined text-base">track_changes</span>
+            <span>PrepTrack</span>
+          </button>
+          <button id="tab-all-exams" onclick="switchView('all')" class="px-4 md:px-5 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center gap-2 text-white/70 hover:text-white hover:bg-white/5">
+            <span class="material-symbols-outlined text-base">school</span>
+            <span>All Exams (28)</span>
+          </button>
+        </div>
+
+        <div id="view-mode-badge" class="hidden sm:flex items-center gap-2 text-xs font-mono text-[#cfbcff] px-3 py-1 rounded-lg bg-white/5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="view-mode-text">PrepTrack — Active Prep</span>
+        </div>
+      </div>
+      
+      <!-- DASHBOARD VIEW: ACTIVE PREP EXAM SECTION -->
+      <div id="dashboard-active-section" style="display: none;">
+        
+        <!-- Hero / Streak Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+          
+          <!-- Welcome Banner -->
+          <div class="glass-panel rounded-2xl p-5 md:p-8 lg:col-span-2 relative overflow-hidden flex flex-col justify-center border border-white/10 shadow-2xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-[#6750a4]/20 via-transparent to-transparent pointer-events-none"></div>
+            <div class="relative z-10">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-amber-400 text-2xl md:text-3xl animate-bounce">local_fire_department</span>
+                <span id="hero-streak-text" class="text-amber-400 font-mono text-xs md:text-sm font-semibold uppercase tracking-wider">🔥 Active Study Streak</span>
+              </div>
+              <h2 class="text-2xl md:text-4xl font-extrabold mb-2 text-white tracking-tight">PrepTrack — Active Prep</h2>
+              <p class="text-xs md:text-base text-white/70 mb-4 max-w-xl">Welcome back to <strong class="text-[#cfbcff]">AspirantFlow — ArpitPrep Hub</strong>! Monitor and track your active preparation exams and daily study progress.</p>
+              <div class="flex flex-wrap gap-4">
+                <button id="resume-btn" onclick="resumeLastExam()" class="bg-[#cfbcff] text-[#22005d] font-bold text-xs md:text-sm px-5 py-2.5 md:px-6 md:py-3 rounded-xl hover:shadow-[0_0_20px_rgba(207,188,255,0.5)] transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                  Open PrepTrack
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily Goal Radial Widget -->
+          <div class="glass-panel rounded-2xl p-5 md:p-6 flex flex-row lg:flex-col items-center justify-between lg:justify-center relative glow-hover border border-white/10">
+            <div class="text-left w-full lg:mb-4">
+              <p class="text-[10px] md:text-xs font-mono uppercase tracking-wider text-white/60">Welcome, Aspirant!</p>
+              <h3 class="text-base md:text-lg font-bold text-white leading-tight">Daily Target Progress</h3>
+            </div>
+            
+            <div class="relative w-14 h-14 md:w-36 md:h-36 flex items-center justify-center shrink-0">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"></circle>
+                <circle id="goal-svg-circle" class="text-[#cfbcff] transition-all duration-1000 ease-out" cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-dasharray="251" stroke-dashoffset="125" stroke-linecap="round" stroke-width="8"></circle>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span id="goal-done-count" class="text-base md:text-3xl font-extrabold font-mono text-white">0</span>
+                <span id="goal-total-count" class="hidden md:block text-[10px] font-mono text-white/60">Chapters Done</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Active Prep Exam Card Display -->
+        <section class="mb-10">
+          <div class="flex items-center justify-between mb-4 md:mb-6">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-xl md:text-2xl">history</span>
+              <h3 class="text-xl md:text-2xl font-bold text-white tracking-tight">Your Active Prep Exam</h3>
+            </div>
+            <button onclick="switchView('all')" class="text-xs text-[#cfbcff] hover:underline flex items-center gap-1">
+              <span>Switch / Change Exam</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+          <div id="active-prep-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+            <!-- Dynamically populated active cards -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- EXAMS VIEW: ALL 28 EXAM CARDS GROUPED BY CATEGORIES -->
+      <div id="categories-container" class="space-y-10 md:space-y-12" style="display: none;">
+        <!-- Rendered dynamically via JS below -->
+      </div>
+
+      <!-- Footer -->
+      <footer class="w-full py-8 md:py-10 text-center text-white/50 border-t border-white/10 mt-12 md:mt-16">
+        <p class="text-xs md:text-sm mb-2">AspirantFlow — ArpitPrep Hub · Progress is shared across exams · Study once, benefit everywhere.</p>
+        <p class="text-[10px] font-mono text-white/40">© 2026 AspirantFlow · Built for Competitive Exam Aspirants</p>
+      </footer>
+
     </div>
-  </div>
+  </main>
 
-  <script src="assets/nav.js?v=21"></script>
+  <!-- Mobile Bottom Tab Navigation -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#1d1b20]/80 backdrop-blur-2xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] md:hidden">
+    <a id="mobile-nav-dashboard" href="index.html" class="flex flex-col items-center justify-center text-[#cfbcff] font-bold">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">track_changes</span>
+      <span class="text-[10px] tracking-tight">PrepTrack</span>
+    </a>
+    <button id="mobile-nav-exams" onclick="switchView('all')" class="flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors">
+      <span class="material-symbols-outlined text-xl">school</span>
+      <span class="text-[10px] tracking-tight">All Exams (28)</span>
+    </button>
+    <a class="flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors" href="profile.html">
+      <span class="material-symbols-outlined text-xl">person</span>
+      <span class="text-[10px] tracking-tight">Profile</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors" href="admin.html">
+      <span class="material-symbols-outlined text-xl">admin_panel_settings</span>
+      <span class="text-[10px] tracking-tight">Admin</span>
+    </a>
+  </nav>
+
+  <script src="assets/nav.js?v=22"></script>
   <script>
-    // Render exam cards
-    const grid = document.getElementById('exam-grid');
-
-    // NQT stats
-    const nqtStats = readExamStats('nqt');
-    const nqtDone = Object.values(nqtStats).reduce((s, v) => s + v.done, 0);
-    const nqtPct = Math.round((nqtDone / EXAM_CONFIG.nqt.totalChapters) * 100);
-    const nqtDays = Math.ceil((new Date(EXAM_CONFIG.nqt.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // SSC stats
-    const sscStats = readExamStats('ssc');
-    const sscDone = Object.values(sscStats).reduce((s, v) => s + v.done, 0);
-    const sscPct = Math.round((sscDone / EXAM_CONFIG.ssc.totalChapters) * 100);
-    const sscDays = Math.ceil((new Date(EXAM_CONFIG.ssc.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // UPSC stats
-    const upscStats = readExamStats('upsc');
-    const upscDone = Object.values(upscStats).reduce((s, v) => s + v.done, 0);
-    const upscPct = Math.round((upscDone / EXAM_CONFIG.upsc.totalChapters) * 100);
-    const upscDays = Math.ceil((new Date(EXAM_CONFIG.upsc.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // IBPS PO stats
-    const ibpsStats = readExamStats('ibps_po');
-    const ibpsDone = Object.values(ibpsStats).reduce((s, v) => s + v.done, 0);
-    const ibpsPct = Math.round((ibpsDone / EXAM_CONFIG.ibps_po.totalChapters) * 100);
-    const ibpsDays = Math.ceil((new Date(EXAM_CONFIG.ibps_po.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // JEE stats
-    const jeeStats = readExamStats('jee');
-    const jeeDone = Object.values(jeeStats).reduce((s, v) => s + v.done, 0);
-    const jeePct = Math.round((jeeDone / EXAM_CONFIG.jee.totalChapters) * 100);
-    const jeeDays = Math.ceil((new Date(EXAM_CONFIG.jee.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // NEET UG stats
-    const neetStats = readExamStats('neet_ug');
-    const neetDone = Object.values(neetStats).reduce((s, v) => s + v.done, 0);
-    const neetPct = Math.round((neetDone / EXAM_CONFIG.neet_ug.totalChapters) * 100);
-    const neetDays = Math.ceil((new Date(EXAM_CONFIG.neet_ug.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CAT stats
-    const catStats = readExamStats('cat');
-    const catDone = Object.values(catStats).reduce((s, v) => s + v.done, 0);
-    const catPct = Math.round((catDone / EXAM_CONFIG.cat.totalChapters) * 100);
-    const catDays = Math.ceil((new Date(EXAM_CONFIG.cat.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CMAT stats
-    const cmatStats = readExamStats('cmat');
-    const cmatDone = Object.values(cmatStats).reduce((s, v) => s + v.done, 0);
-    const cmatPct = Math.round((cmatDone / EXAM_CONFIG.cmat.totalChapters) * 100);
-    const cmatDays = Math.ceil((new Date(EXAM_CONFIG.cmat.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CDS stats
-    const cdsStats = readExamStats('cds');
-    const cdsDone = Object.values(cdsStats).reduce((s, v) => s + v.done, 0);
-    const cdsPct = Math.round((cdsDone / EXAM_CONFIG.cds.totalChapters) * 100);
-    const cdsDays = Math.ceil((new Date(EXAM_CONFIG.cds.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CMA Foundation stats
-    const cmaStats = readExamStats('cma_foundation');
-    const cmaDone = Object.values(cmaStats).reduce((s, v) => s + v.done, 0);
-    const cmaPct = Math.round((cmaDone / EXAM_CONFIG.cma_foundation.totalChapters) * 100);
-    const cmaDays = Math.ceil((new Date(EXAM_CONFIG.cma_foundation.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CFA Level 1 stats
-    const cfa1Stats = readExamStats('cfa_l1');
-    const cfa1Done = Object.values(cfa1Stats).reduce((s, v) => s + v.done, 0);
-    const cfa1Pct = Math.round((cfa1Done / EXAM_CONFIG.cfa_l1.totalChapters) * 100);
-    const cfa1Days = Math.ceil((new Date(EXAM_CONFIG.cfa_l1.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CFA Level 2 stats
-    const cfa2Stats = readExamStats('cfa_l2');
-    const cfa2Done = Object.values(cfa2Stats).reduce((s, v) => s + v.done, 0);
-    const cfa2Pct = Math.round((cfa2Done / EXAM_CONFIG.cfa_l2.totalChapters) * 100);
-    const cfa2Days = Math.ceil((new Date(EXAM_CONFIG.cfa_l2.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CFA Level 3 stats
-    const cfa3Stats = readExamStats('cfa_l3');
-    const cfa3Done = Object.values(cfa3Stats).reduce((s, v) => s + v.done, 0);
-    const cfa3Pct = Math.round((cfa3Done / EXAM_CONFIG.cfa_l3.totalChapters) * 100);
-    const cfa3Days = Math.ceil((new Date(EXAM_CONFIG.cfa_l3.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CA Foundation stats
-    const cafndStats = readExamStats('ca_foundation');
-    const cafndDone = Object.values(cafndStats).reduce((s, v) => s + v.done, 0);
-    const cafndPct = Math.round((cafndDone / EXAM_CONFIG.ca_foundation.totalChapters) * 100);
-    const cafndDays = Math.ceil((new Date(EXAM_CONFIG.ca_foundation.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CA Inter stats
-    const cainStats = readExamStats('ca_inter');
-    const cainDone = Object.values(cainStats).reduce((s, v) => s + v.done, 0);
-    const cainPct = Math.round((cainDone / EXAM_CONFIG.ca_inter.totalChapters) * 100);
-    const cainDays = Math.ceil((new Date(EXAM_CONFIG.ca_inter.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CA Final stats
-    const cafinStats = readExamStats('ca_final');
-    const cafinDone = Object.values(cafinStats).reduce((s, v) => s + v.done, 0);
-    const cafinPct = Math.round((cafinDone / EXAM_CONFIG.ca_final.totalChapters) * 100);
-    const cafinDays = Math.ceil((new Date(EXAM_CONFIG.ca_final.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // RRB NTPC stats
-    const ntpcStats = readExamStats('rrb_ntpc');
-    const ntpcDone = Object.values(ntpcStats).reduce((s, v) => s + v.done, 0);
-    const ntpcPct = Math.round((ntpcDone / EXAM_CONFIG.rrb_ntpc.totalChapters) * 100);
-    const ntpcDays = Math.ceil((new Date(EXAM_CONFIG.rrb_ntpc.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // RRB Group D stats
-    const rrbdStats = readExamStats('rrb_group_d');
-    const rrbdDone = Object.values(rrbdStats).reduce((s, v) => s + v.done, 0);
-    const rrbdPct = Math.round((rrbdDone / EXAM_CONFIG.rrb_group_d.totalChapters) * 100);
-    const rrbdDays = Math.ceil((new Date(EXAM_CONFIG.rrb_group_d.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // SSC CHSL stats
-    const chslStats = readExamStats('ssc_chsl');
-    const chslDone = Object.values(chslStats).reduce((s, v) => s + v.done, 0);
-    const chslPct = Math.round((chslDone / EXAM_CONFIG.ssc_chsl.totalChapters) * 100);
-    const chslDays = Math.ceil((new Date(EXAM_CONFIG.ssc_chsl.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // SSC MTS stats
-    const mtsStats = readExamStats('ssc_mts');
-    const mtsDone = Object.values(mtsStats).reduce((s, v) => s + v.done, 0);
-    const mtsPct = Math.round((mtsDone / EXAM_CONFIG.ssc_mts.totalChapters) * 100);
-    const mtsDays = Math.ceil((new Date(EXAM_CONFIG.ssc_mts.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // UGC NET stats
-    const ugcnetStats = readExamStats('ugcnet');
-    const ugcnetDone = Object.values(ugcnetStats).reduce((s, v) => s + v.done, 0);
-    const ugcnetPct = Math.round((ugcnetDone / EXAM_CONFIG.ugcnet.totalChapters) * 100);
-    const ugcnetDays = Math.ceil((new Date(EXAM_CONFIG.ugcnet.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // IBPS Clerk stats
-    const clerkStats = readExamStats('ibps_clerk');
-    const clerkDone = Object.values(clerkStats).reduce((s, v) => s + v.done, 0);
-    const clerkPct = Math.round((clerkDone / EXAM_CONFIG.ibps_clerk.totalChapters) * 100);
-    const clerkDays = Math.ceil((new Date(EXAM_CONFIG.ibps_clerk.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // IBPS SO stats
-    const soStats = readExamStats('ibps_so_2026');
-    const soDone = Object.values(soStats).reduce((s, v) => s + v.done, 0);
-    const soTotalChapters = EXAM_CONFIG_IBPS_SO.subjects.reduce((sum, s) => sum + s.totalChapters, 0);
-    const soPct = Math.round((soDone / soTotalChapters) * 100);
-    const soDays = Math.ceil((new Date(EXAM_CONFIG_IBPS_SO.prelimsDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // IBPS SO IT stats
-    const soitStats = readExamStats('ibps_so_it_2026');
-    const soitDone = Object.values(soitStats).reduce((s, v) => s + v.done, 0);
-    const soitTotalChapters = EXAM_CONFIG_IBPS_SO_IT.subjects.reduce((sum, s) => sum + s.totalChapters, 0);
-    const soitPct = Math.round((soitDone / soitTotalChapters) * 100);
-    const soitDays = Math.ceil((new Date(EXAM_CONFIG_IBPS_SO_IT.prelimsDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // NDA stats
-    const ndaStats = readExamStats('nda');
-    const ndaDone = Object.values(ndaStats).reduce((s, v) => s + v.done, 0);
-    const ndaPct = Math.round((ndaDone / EXAM_CONFIG.nda.totalChapters) * 100);
-    const ndaDays = Math.ceil((new Date(EXAM_CONFIG.nda.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // XAT stats
-    const xatStats = readExamStats('xat');
-    const xatDone = Object.values(xatStats).reduce((s, v) => s + v.done, 0);
-    const xatPct = Math.round((xatDone / EXAM_CONFIG.xat.totalChapters) * 100);
-    const xatDays = Math.ceil((new Date(EXAM_CONFIG.xat.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CLAT UG stats
-    const clatStats = readExamStats('clat_ug');
-    const clatDone = Object.values(clatStats).reduce((s, v) => s + v.done, 0);
-    const clatPct = Math.round((clatDone / EXAM_CONFIG.clat_ug.totalChapters) * 100);
-    const clatDays = Math.ceil((new Date(EXAM_CONFIG.clat_ug.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CUET UG stats
-    const cuetugStats = readExamStats('cuet_ug');
-    const cuetugDone = Object.values(cuetugStats).reduce((s, v) => s + v.done, 0);
-    const cuetugPct = Math.round((cuetugDone / EXAM_CONFIG.cuet_ug.totalChapters) * 100);
-    const cuetugDays = Math.ceil((new Date(EXAM_CONFIG.cuet_ug.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    // CUET PG General stats
-    const cuetpgStats = readExamStats('cuet_pg_general');
-    const cuetpgDone = Object.values(cuetpgStats).reduce((s, v) => s + v.done, 0);
-    const cuetpgPct = Math.round((cuetpgDone / EXAM_CONFIG.cuet_pg_general.totalChapters) * 100);
-    const cuetpgDays = Math.ceil((new Date(EXAM_CONFIG.cuet_pg_general.examDate + 'T00:00:00') - new Date()) / 86400000);
-
-    grid.innerHTML = `
-      <!-- Corporate Placement & Aptitude -->
-      <div style="grid-column:1/-1;text-align:left;margin:12px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
-        <span>🎯</span> Corporate Placement & IT Aptitude
-      </div>
-
-      <a href="dashboard-nqt.html" id="card-nqt" class="exam-card" style="--card-glow:rgba(127,119,221,0.12);--card-border:rgba(127,119,221,0.4);border-top-color:#7F77DD" onclick="if(window.setSelectedExam)window.setSelectedExam('nqt');else localStorage.setItem('selectedExam','nqt')">
-        <span class="ec-icon">🎯</span>
-        <div class="ec-name">TCS NQT</div>
-        <div class="ec-desc">Speed Math, Quant, Reasoning, English & Coding</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#7F77DD">${nqtPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#7F77DD">${nqtDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.nqt.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${nqtDays < 30 ? '#EF4444' : '#1D9E75'}">${nqtDays > 0 ? nqtDays : '🎯'}</div><div class="ec-stat-lbl">${nqtDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(127,119,221,0.15);color:#7F77DD;border:1px solid rgba(127,119,221,0.3)">${EXAM_CONFIG.nqt.subjects.length} Subjects · ${EXAM_CONFIG.nqt.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#7F77DD">Start NQT Prep →</button>
-      </a>
-
-      <!-- Banking Recruitment Examinations (IBPS) Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#B7791F;display:flex;align-items:center;gap:10px">
-        <span>🏦</span> Banking Recruitment Examinations (IBPS)
-      </div>
-
-      <a href="dashboard-ibps.html" id="card-ibps_po" class="exam-card" style="--card-glow:rgba(183,121,31,0.12);--card-border:rgba(183,121,31,0.4);border-top-color:#B7791F" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_po');else localStorage.setItem('selectedExam','ibps_po')">
-        <span class="ec-icon">🏦</span>
-        <div class="ec-name">IBPS PO</div>
-        <div class="ec-desc">Quant, Reasoning, English, DI, Banking & Descriptive</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#B7791F">${ibpsPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#B7791F">${ibpsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ibps_po.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${ibpsDays < 30 ? '#EF4444' : '#B7791F'}">${ibpsDays > 0 ? ibpsDays : '🎯'}</div><div class="ec-stat-lbl">${ibpsDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(183,121,31,0.15);color:#B7791F;border:1px solid rgba(183,121,31,0.3)">${EXAM_CONFIG.ibps_po.subjects.length} Subjects · ${EXAM_CONFIG.ibps_po.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#B7791F">Start PO Prep →</button>
-      </a>
-
-      <a href="dashboard-ibps.html?exam=clerk" id="card-ibps_clerk" class="exam-card" style="--card-glow:rgba(225,29,72,0.12);--card-border:rgba(225,29,72,0.4);border-top-color:#E11D48" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_clerk');else localStorage.setItem('selectedExam','ibps_clerk')">
-        <span class="ec-icon">📋</span>
-        <div class="ec-name">IBPS Clerk (CSA)</div>
-        <div class="ec-desc">Numerical, Reasoning, English, Financial & Computer</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E11D48">${clerkPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E11D48">${clerkDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ibps_clerk.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${clerkDays < 30 ? '#EF4444' : '#E11D48'}">${clerkDays > 0 ? clerkDays : '🎯'}</div><div class="ec-stat-lbl">${clerkDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(225,29,72,0.15);color:#E11D48;border:1px solid rgba(225,29,72,0.3)">5 Subjects · 50 Chapters</span>
-        <button class="ec-enter" style="background:#E11D48">Start Clerk Prep →</button>
-      </a>
-
-      <a href="dashboard-ibps.html?exam=so" id="card-ibps_so_2026" class="exam-card" style="--card-glow:rgba(31,97,141,0.12);--card-border:rgba(31,97,141,0.4);border-top-color:#1F618D" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_so_2026');else localStorage.setItem('selectedExam','ibps_so_2026')">
-        <span class="ec-icon">🏛️</span>
-        <div class="ec-name">IBPS SO (General)</div>
-        <div class="ec-desc">Professional Knowledge (Generic), Quant, Reasoning & English</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1F618D">${soPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1F618D">${soDone}</div><div class="ec-stat-lbl">of ${soTotalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${soDays < 30 ? '#EF4444' : '#1F618D'}">${soDays > 0 ? soDays : '🎯'}</div><div class="ec-stat-lbl">${soDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(31,97,141,0.15);color:#1F618D;border:1px solid rgba(31,97,141,0.3)">${EXAM_CONFIG_IBPS_SO.subjects.length} Subjects · ${soTotalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#1F618D">Start SO Prep →</button>
-      </a>
-
-      <a href="dashboard-ibps.html?exam=so_it" id="card-ibps_so_it_2026" class="exam-card" style="--card-glow:rgba(20,110,120,0.12);--card-border:rgba(20,110,120,0.4);border-top-color:#146E78" onclick="if(window.setSelectedExam)window.setSelectedExam('ibps_so_it_2026');else localStorage.setItem('selectedExam','ibps_so_it_2026')">
-        <span class="ec-icon">💻</span>
-        <div class="ec-name">IBPS SO IT Officer</div>
-        <div class="ec-desc">Professional Knowledge (IT), Quant, Reasoning & English</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#146E78">${soitPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#146E78">${soitDone}</div><div class="ec-stat-lbl">of ${soitTotalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${soitDays < 30 ? '#EF4444' : '#146E78'}">${soitDays > 0 ? soitDays : '🎯'}</div><div class="ec-stat-lbl">${soitDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(20,110,120,0.15);color:#146E78;border:1px solid rgba(20,110,120,0.3)">${EXAM_CONFIG_IBPS_SO_IT.subjects.length} Subjects · ${soitTotalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#146E78">Start SO IT Prep →</button>
-      </a>
-
-      <!-- Union Public Service Commission (UPSC) Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#3B5BDB;display:flex;align-items:center;gap:10px">
-        <span>🏛️</span> Union Public Service Commission (UPSC)
-      </div>
-
-      <a href="dashboard-upsc.html" id="card-upsc" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('upsc');else localStorage.setItem('selectedExam','upsc')">
-        <span class="ec-icon">🏛️</span>
-        <div class="ec-name">UPSC CSE</div>
-        <div class="ec-desc">Polity, History, Geography, Economy, Ethics & CSAT</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${upscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.upsc.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${upscDays < 30 ? '#EF4444' : '#3B5BDB'}">${upscDays > 0 ? upscDays : '🎯'}</div><div class="ec-stat-lbl">${upscDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.upsc.subjects.length} Subjects · ${EXAM_CONFIG.upsc.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#3B5BDB">Start CSE Prep →</button>
-      </a>
-
-      <a href="dashboard-cds.html" id="card-cds" class="exam-card" style="--card-glow:rgba(16,185,129,0.12);--card-border:rgba(16,185,129,0.4);border-top-color:#10B981" onclick="if(window.setSelectedExam)window.setSelectedExam('cds');else localStorage.setItem('selectedExam','cds')">
-        <span class="ec-icon">🎖️</span>
-        <div class="ec-name">UPSC CDS</div>
-        <div class="ec-desc">General Knowledge, English & Elementary Maths</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#10B981">${cdsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cds.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cdsDays < 30 ? '#EF4444' : '#10B981'}">${cdsDays > 0 ? cdsDays : '🎯'}</div><div class="ec-stat-lbl">${cdsDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)">${EXAM_CONFIG.cds.subjects.length} Subjects · ${EXAM_CONFIG.cds.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#10B981">Start CDS Prep →</button>
-      </a>
-
-      <a href="dashboard-nda.html" id="card-nda" class="exam-card" style="--card-glow:rgba(245,158,11,0.12);--card-border:rgba(245,158,11,0.4);border-top-color:#F59E0B" onclick="if(window.setSelectedExam)window.setSelectedExam('nda');else localStorage.setItem('selectedExam','nda')">
-        <span class="ec-icon">🎖️</span>
-        <div class="ec-name">UPSC NDA & NA</div>
-        <div class="ec-desc">General Ability Test (GAT 600M) & Mathematics (300M)</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#F59E0B">${ndaPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#F59E0B">${ndaDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.nda.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${ndaDays < 30 ? '#EF4444' : '#F59E0B'}">${ndaDays > 0 ? ndaDays : '🎯'}</div><div class="ec-stat-lbl">${ndaDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(245,158,11,0.15);color:#F59E0B;border:1px solid rgba(245,158,11,0.3)">2 Papers · 23 Chapters</span>
-        <button class="ec-enter" style="background:#F59E0B">Start NDA Prep →</button>
-      </a>
-
-      <!-- UGC NET Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#4F46E5;display:flex;align-items:center;gap:10px">
-        <span>🎓</span> University Grants Commission (UGC NET)
-      </div>
-
-      <a href="dashboard-ugcnet.html" id="card-ugcnet" class="exam-card" style="--card-glow:rgba(79,70,229,0.12);--card-border:rgba(79,70,229,0.4);border-top-color:#4F46E5" onclick="if(window.setSelectedExam)window.setSelectedExam('ugcnet');else localStorage.setItem('selectedExam','ugcnet')">
-        <span class="ec-icon">🎓</span>
-        <div class="ec-name">UGC NET</div>
-        <div class="ec-desc">Paper 1 Teaching & Research Aptitude + Paper 2 Subject</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#4F46E5">${ugcnetPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#4F46E5">${ugcnetDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ugcnet.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${ugcnetDays < 30 ? '#EF4444' : '#4F46E5'}">${ugcnetDays > 0 ? ugcnetDays : '🎯'}</div><div class="ec-stat-lbl">${ugcnetDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(79,70,229,0.15);color:#4F46E5;border:1px solid rgba(79,70,229,0.3)">9 Units · 10 Paper 1 Modules</span>
-        <button class="ec-enter" style="background:#4F46E5">Start UGC NET Prep →</button>
-      </a>
-
-      <!-- Staff Selection Commission (SSC) Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#1D9E75;display:flex;align-items:center;gap:10px">
-        <span>📋</span> Staff Selection Commission (SSC)
-      </div>
-
-      <a href="dashboard-ssc.html?exam=cgl" id="card-ssc" class="exam-card" style="--card-glow:rgba(29,158,117,0.12);--card-border:rgba(29,158,117,0.4);border-top-color:#1D9E75" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc');else localStorage.setItem('selectedExam','ssc')">
-        <span class="ec-icon">📋</span>
-        <div class="ec-name">SSC CGL</div>
-        <div class="ec-desc">Quant, Reasoning, English & General Knowledge</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D9E75">${sscDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${sscDays < 30 ? '#EF4444' : '#1D9E75'}">${sscDays > 0 ? sscDays : '🎯'}</div><div class="ec-stat-lbl">${sscDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(29,158,117,0.15);color:#1D9E75;border:1px solid rgba(29,158,117,0.3)">5 Subjects · ${EXAM_CONFIG.ssc.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#1D9E75">Start CGL Prep →</button>
-      </a>
-
-      <a href="dashboard-ssc.html?exam=chsl" id="card-ssc_chsl" class="exam-card" style="--card-glow:rgba(142,68,173,0.12);--card-border:rgba(142,68,173,0.4);border-top-color:#8E44AD" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_chsl');else localStorage.setItem('selectedExam','ssc_chsl')">
-        <span class="ec-icon">📝</span>
-        <div class="ec-name">SSC CHSL</div>
-        <div class="ec-desc">English, Reasoning, Quant, GA & Computer Knowledge</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#8E44AD">${chslPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#8E44AD">${chslDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc_chsl.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${chslDays < 30 ? '#EF4444' : '#8E44AD'}">${chslDays > 0 ? chslDays : '🎯'}</div><div class="ec-stat-lbl">${chslDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(142,68,173,0.15);color:#8E44AD;border:1px solid rgba(142,68,173,0.3)">5 Subjects · 54 Chapters</span>
-        <button class="ec-enter" style="background:#8E44AD">Start CHSL Prep →</button>
-      </a>
-
-      <a href="dashboard-ssc.html?exam=mts" id="card-ssc_mts" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('ssc_mts');else localStorage.setItem('selectedExam','ssc_mts')">
-        <span class="ec-icon">🎖️</span>
-        <div class="ec-name">SSC MTS</div>
-        <div class="ec-desc">GA, English, Numerical & Reasoning Ability</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${mtsPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${mtsDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ssc_mts.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${mtsDays < 30 ? '#EF4444' : '#E67E22'}">${mtsDays > 0 ? mtsDays : '🎯'}</div><div class="ec-stat-lbl">${mtsDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(230,126,34,0.15);color:#E67E22;border:1px solid rgba(230,126,34,0.3)">4 Subjects · 45 Chapters</span>
-        <button class="ec-enter" style="background:#E67E22">Start MTS Prep →</button>
-      </a>
-
-      <!-- Railway Recruitment Board (RRB) Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#6C3483;display:flex;align-items:center;gap:10px">
-        <span>🚆</span> Railway Recruitment Board (RRB)
-      </div>
-
-      <a href="dashboard-rrb.html?exam=ntpc" id="card-rrb_ntpc" class="exam-card" style="--card-glow:rgba(108,52,131,0.12);--card-border:rgba(108,52,131,0.4);border-top-color:#6C3483" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_ntpc');else localStorage.setItem('selectedExam','rrb_ntpc')">
-        <span class="ec-icon">🚆</span>
-        <div class="ec-name">RRB NTPC</div>
-        <div class="ec-desc">GA, Reasoning & Mathematics (Graduate & UG)</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#6C3483">${ntpcPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#6C3483">${ntpcDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.rrb_ntpc.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${ntpcDays < 30 ? '#EF4444' : '#6C3483'}">${ntpcDays > 0 ? ntpcDays : '🎯'}</div><div class="ec-stat-lbl">${ntpcDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(108,52,131,0.15);color:#6C3483;border:1px solid rgba(108,52,131,0.3)">3 Subjects · 62 Chapters</span>
-        <button class="ec-enter" style="background:#6C3483">Start NTPC Prep →</button>
-      </a>
-
-      <a href="dashboard-rrb.html?exam=group_d" id="card-rrb_group_d" class="exam-card" style="--card-glow:rgba(34,153,84,0.12);--card-border:rgba(34,153,84,0.4);border-top-color:#229954" onclick="if(window.setSelectedExam)window.setSelectedExam('rrb_group_d');else localStorage.setItem('selectedExam','rrb_group_d')">
-        <span class="ec-icon">🛠️</span>
-        <div class="ec-name">RRB Group D</div>
-        <div class="ec-desc">Reasoning, General Science, Math & GA (CEN 09/2025)</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#229954">${rrbdPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#229954">${rrbdDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.rrb_group_d.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${rrbdDays < 30 ? '#EF4444' : '#229954'}">${rrbdDays > 0 ? rrbdDays : '🎯'}</div><div class="ec-stat-lbl">${rrbdDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(34,153,84,0.15);color:#229954;border:1px solid rgba(34,153,84,0.3)">4 Subjects · 71 Chapters</span>
-        <button class="ec-enter" style="background:#229954">Start Group D Prep →</button>
-      </a>
-
-      <!-- Engineering & Medical Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:20px 0 4px;font:700 16px/1 'DM Sans';color:var(--text-secondary);display:flex;align-items:center;gap:8px">
-        <span>🔬</span> Engineering & Medical Entrance
-      </div>
-
-      <a href="dashboard-jee.html" id="card-jee" class="exam-card" style="--card-glow:rgba(59,91,219,0.12);--card-border:rgba(59,91,219,0.4);border-top-color:#3B5BDB" onclick="if(window.setSelectedExam)window.setSelectedExam('jee');else localStorage.setItem('selectedExam','jee')">
-        <span class="ec-icon">⚛️</span>
-        <div class="ec-name">JEE Main & Adv</div>
-        <div class="ec-desc">Physics, Chemistry & Mathematics (PCM)</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${jeePct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B5BDB">${jeeDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.jee.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${jeeDays < 30 ? '#EF4444' : '#3B5BDB'}">${jeeDays > 0 ? jeeDays : '🎯'}</div><div class="ec-stat-lbl">${jeeDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(59,91,219,0.15);color:#3B5BDB;border:1px solid rgba(59,91,219,0.3)">${EXAM_CONFIG.jee.subjects.length} Subjects · ${EXAM_CONFIG.jee.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#3B5BDB">Start JEE Prep →</button>
-      </a>
-
-      <a href="dashboard-neet.html" id="card-neet_ug" class="exam-card" style="--card-glow:rgba(76,154,63,0.12);--card-border:rgba(76,154,63,0.4);border-top-color:#4C9A3F" onclick="if(window.setSelectedExam)window.setSelectedExam('neet_ug');else localStorage.setItem('selectedExam','neet_ug')">
-        <span class="ec-icon">🩺</span>
-        <div class="ec-name">NEET UG</div>
-        <div class="ec-desc">Botany, Zoology, Chemistry & Physics (PCB)</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#4C9A3F">${neetPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#4C9A3F">${neetDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.neet_ug.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${neetDays < 30 ? '#EF4444' : '#4C9A3F'}">${neetDays > 0 ? neetDays : '🎯'}</div><div class="ec-stat-lbl">${neetDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(76,154,63,0.15);color:#4C9A3F;border:1px solid rgba(76,154,63,0.3)">${EXAM_CONFIG.neet_ug.subjects.length} Subjects · ${EXAM_CONFIG.neet_ug.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#4C9A3F">Start NEET Prep →</button>
-      </a>
-
-      <!-- Management Section -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#E67E22;display:flex;align-items:center;gap:10px">
-        <span>📈</span> Management Entrance (MBA)
-      </div>
-
-      <a href="dashboard-cat.html" id="card-cat" class="exam-card" style="--card-glow:rgba(230,126,34,0.12);--card-border:rgba(230,126,34,0.4);border-top-color:#E67E22" onclick="if(window.setSelectedExam)window.setSelectedExam('cat');else localStorage.setItem('selectedExam','cat')">
-        <span class="ec-icon">📈</span>
-        <div class="ec-name">CAT (MBA)</div>
-        <div class="ec-desc">Quantitative Ability, DILR & VARC</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${catPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#E67E22">${catDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cat.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${catDays < 30 ? '#EF4444' : '#E67E22'}">${catDays > 0 ? catDays : '🎯'}</div><div class="ec-stat-lbl">${catDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(230,126,34,0.15);color:#E67E22;border:1px solid rgba(230,126,34,0.3)">${EXAM_CONFIG.cat.subjects.length} Subjects · ${EXAM_CONFIG.cat.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#E67E22">Start CAT Prep →</button>
-      </a>
-
-      <a href="dashboard-cmat.html" id="card-cmat" class="exam-card" style="--card-glow:rgba(239,68,68,0.12);--card-border:rgba(239,68,68,0.4);border-top-color:#EF4444" onclick="if(window.setSelectedExam)window.setSelectedExam('cmat');else localStorage.setItem('selectedExam','cmat')">
-        <span class="ec-icon">🚀</span>
-        <div class="ec-name">CMAT (MBA)</div>
-        <div class="ec-desc">Quant & DI, LR, Language, GA, Innovation & Entr</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#EF4444">${cmatPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#EF4444">${cmatDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cmat.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cmatDays < 30 ? '#EF4444' : '#EF4444'}">${cmatDays > 0 ? cmatDays : '🎯'}</div><div class="ec-stat-lbl">${cmatDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)">${EXAM_CONFIG.cmat.subjects.length} Subjects · ${EXAM_CONFIG.cmat.totalChapters} Chapters</span>
-        <button class="ec-enter" style="background:#EF4444">Start CMAT Prep →</button>
-      </a>
-
-      <a href="dashboard-xat.html" id="card-xat" class="exam-card" style="--card-glow:rgba(148,49,38,0.12);--card-border:rgba(148,49,38,0.4);border-top-color:#943126" onclick="if(window.setSelectedExam)window.setSelectedExam('xat');else localStorage.setItem('selectedExam','xat')">
-        <span class="ec-icon">⚖️</span>
-        <div class="ec-name">XAT (XLRI)</div>
-        <div class="ec-desc">Decision Making, VALR, QA & DI, General Knowledge</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#943126">${xatPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#943126">${xatDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.xat.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${xatDays < 30 ? '#EF4444' : '#943126'}">${xatDays > 0 ? xatDays : '🎯'}</div><div class="ec-stat-lbl">${xatDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(148,49,38,0.15);color:#943126;border:1px solid rgba(148,49,38,0.3)">4 Subjects · 52 Chapters</span>
-        <button class="ec-enter" style="background:#943126">Start XAT Prep →</button>
-      </a>
-
-      <!-- Law Entrance Examinations (NLU / CLAT) Section Header -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#7B241C;display:flex;align-items:center;gap:10px">
-        <span>⚖️</span> Law Entrance Examinations (NLU / CLAT)
-      </div>
-
-      <a href="dashboard-clat.html" id="card-clat_ug" class="exam-card" style="--card-glow:rgba(123,36,28,0.12);--card-border:rgba(123,36,28,0.4);border-top-color:#7B241C" onclick="if(window.setSelectedExam)window.setSelectedExam('clat_ug');else localStorage.setItem('selectedExam','clat_ug')">
-        <span class="ec-icon">⚖️</span>
-        <div class="ec-name">CLAT UG</div>
-        <div class="ec-desc">Legal Reasoning, Current Affairs, English, LR & Quant</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#7B241C">${clatPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#7B241C">${clatDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.clat_ug.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${clatDays < 30 ? '#EF4444' : '#7B241C'}">${clatDays > 0 ? clatDays : '🎯'}</div><div class="ec-stat-lbl">${clatDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(123,36,28,0.15);color:#7B241C;border:1px solid rgba(123,36,28,0.3)">5 Sections · 48 Chapters</span>
-        <button class="ec-enter" style="background:#7B241C">Start CLAT Prep →</button>
-      </a>
-
-      <!-- Central & State University Entrance (CUET) Section Header -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#3B82F6;display:flex;align-items:center;gap:10px">
-        <span>🎓</span> Central & State University Entrance (CUET UG & PG)
-      </div>
-
-      <a href="dashboard-cuet-ug.html" id="card-cuet_ug" class="exam-card" style="--card-glow:rgba(59,130,246,0.12);--card-border:rgba(59,130,246,0.4);border-top-color:#3B82F6" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_ug');else localStorage.setItem('selectedExam','cuet_ug')">
-        <span class="ec-icon">🎓</span>
-        <div class="ec-name">CUET UG</div>
-        <div class="ec-desc">Languages, General Aptitude & 23 NCERT Domain Subjects</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B82F6">${cuetugPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#3B82F6">${cuetugDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cuet_ug.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cuetugDays < 30 ? '#EF4444' : '#3B82F6'}">${cuetugDays > 0 ? cuetugDays : '🎯'}</div><div class="ec-stat-lbl">${cuetugDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(59,130,246,0.15);color:#3B82F6;border:1px solid rgba(59,130,246,0.3)">14 Subject Modules · 143 Chapters</span>
-        <button class="ec-enter" style="background:#3B82F6">Start CUET UG Prep →</button>
-      </a>
-
-      <a href="dashboard-cuet-pg.html" id="card-cuet_pg_general" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cuet_pg_general');else localStorage.setItem('selectedExam','cuet_pg_general')">
-        <span class="ec-icon">🏛️</span>
-        <div class="ec-name">CUET PG (COQP11)</div>
-        <div class="ec-desc">General Paper for MBA, DU LLB, MA Social Work & Policy</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cuetpgPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cuetpgDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.cuet_pg_general.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cuetpgDays < 30 ? '#EF4444' : '#059669'}">${cuetpgDays > 0 ? cuetpgDays : '🎯'}</div><div class="ec-stat-lbl">${cuetpgDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(5,150,105,0.15);color:#059669;border:1px solid rgba(5,150,105,0.3)">5 Sections · 56 Chapters</span>
-        <button class="ec-enter" style="background:#059669">Start CUET PG Prep →</button>
-      </a>
-
-      <!-- Chartered Accountancy & Cost Management (CA & CMA) Section Header -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#C0392B;display:flex;align-items:center;gap:10px">
-        <span>🎓</span> Chartered Accountancy & Cost Management (CA & CMA)
-      </div>
-
-      <a href="dashboard-ca.html?level=foundation" id="card-ca_foundation" class="exam-card" style="--card-glow:rgba(192,57,43,0.12);--card-border:rgba(192,57,43,0.4);border-top-color:#C0392B" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_foundation');else localStorage.setItem('selectedExam','ca_foundation')">
-        <span class="ec-icon">🎓</span>
-        <div class="ec-name">CA Foundation</div>
-        <div class="ec-desc">Accounting, Business Laws, QA & Economics</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#C0392B">${cafndPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#C0392B">${cafndDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ca_foundation.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cafndDays < 30 ? '#EF4444' : '#C0392B'}">${cafndDays > 0 ? cafndDays : '🎯'}</div><div class="ec-stat-lbl">${cafndDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(192,57,43,0.15);color:#C0392B;border:1px solid rgba(192,57,43,0.3)">4 Papers · 59 Chapters</span>
-        <button class="ec-enter" style="background:#C0392B">Start Foundation →</button>
-      </a>
-
-      <a href="dashboard-ca.html?level=inter" id="card-ca_inter" class="exam-card" style="--card-glow:rgba(176,58,46,0.12);--card-border:rgba(176,58,46,0.4);border-top-color:#B03A2E" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_inter');else localStorage.setItem('selectedExam','ca_inter')">
-        <span class="ec-icon">🏛️</span>
-        <div class="ec-name">CA Intermediate</div>
-        <div class="ec-desc">Adv Acc, Corporate Laws, Tax, Costing, Audit, FM-SM</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#B03A2E">${cainPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#B03A2E">${cainDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ca_inter.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cainDays < 30 ? '#EF4444' : '#B03A2E'}">${cainDays > 0 ? cainDays : '🎯'}</div><div class="ec-stat-lbl">${cainDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(176,58,46,0.15);color:#B03A2E;border:1px solid rgba(176,58,46,0.3)">6 Papers (Group 1 & 2) · 96 Chapters</span>
-        <button class="ec-enter" style="background:#B03A2E">Start Inter Prep →</button>
-      </a>
-
-      <a href="dashboard-ca.html?level=final" id="card-ca_final" class="exam-card" style="--card-glow:rgba(146,43,33,0.12);--card-border:rgba(146,43,33,0.4);border-top-color:#922B21" onclick="if(window.setSelectedExam)window.setSelectedExam('ca_final');else localStorage.setItem('selectedExam','ca_final')">
-        <span class="ec-icon">👑</span>
-        <div class="ec-name">CA Final</div>
-        <div class="ec-desc">FR, AFM, Auditing, Direct Tax, IDT, Open Book IBS</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#922B21">${cafinPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#922B21">${cafinDone}</div><div class="ec-stat-lbl">of ${EXAM_CONFIG.ca_final.totalChapters}</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cafinDays < 30 ? '#EF4444' : '#922B21'}">${cafinDays > 0 ? cafinDays : '🎯'}</div><div class="ec-stat-lbl">${cafinDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(146,43,33,0.15);color:#922B21;border:1px solid rgba(146,43,33,0.3)">6 Papers (Group 1 & 2) · 119 Chapters</span>
-        <button class="ec-enter" style="background:#922B21">Start Final Prep →</button>
-      </a>
-
-      <a href="dashboard-cma.html" id="card-cma_foundation" class="exam-card" style="--card-glow:rgba(22,160,133,0.12);--card-border:rgba(22,160,133,0.4);border-top-color:#16A085" onclick="if(window.setSelectedExam)window.setSelectedExam('cma_foundation');else localStorage.setItem('selectedExam','cma_foundation')">
-        <span class="ec-icon">🎓</span>
-        <div class="ec-name">CMA Foundation</div>
-        <div class="ec-desc">Laws & Comm, Financial & Cost Accounting, Math & Stats, Economics & Mgmt</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#16A085">${cmaPct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#16A085">${cmaDone}</div><div class="ec-stat-lbl">of 60</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cmaDays < 30 ? '#EF4444' : '#16A085'}">${cmaDays > 0 ? cmaDays : '🎯'}</div><div class="ec-stat-lbl">${cmaDays > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(22,160,133,0.15);color:#16A085;border:1px solid rgba(22,160,133,0.3)">4 Papers · 60 Chapters</span>
-        <button class="ec-enter" style="background:#16A085">Start CMA Prep →</button>
-      </a>
-
-      <!-- Chartered Financial Analyst (CFA) Section Header -->
-      <div style="grid-column:1/-1;text-align:left;margin:24px 0 8px;padding-top:16px;border-top:1px solid var(--border-medium);font:700 18px/1 'DM Sans';color:#1D4ED8;display:flex;align-items:center;gap:10px">
-        <span>📊</span> Chartered Financial Analyst (CFA Institute)
-      </div>
-
-      <a href="dashboard-cfa.html?level=l1" id="card-cfa_l1" class="exam-card" style="--card-glow:rgba(29,78,216,0.12);--card-border:rgba(29,78,216,0.4);border-top-color:#1D4ED8" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l1');else localStorage.setItem('selectedExam','cfa_l1')">
-        <span class="ec-icon">📊</span>
-        <div class="ec-name">CFA Level 1</div>
-        <div class="ec-desc">Ethics, FSA, Fixed Income, Equity, Derivatives, Alts, PM, Quant, Eco</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D4ED8">${cfa1Pct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#1D4ED8">${cfa1Done}</div><div class="ec-stat-lbl">of 58</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cfa1Days < 30 ? '#EF4444' : '#1D4ED8'}">${cfa1Days > 0 ? cfa1Days : '🎯'}</div><div class="ec-stat-lbl">${cfa1Days > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(29,78,216,0.15);color:#1D4ED8;border:1px solid rgba(29,78,216,0.3)">10 Topics · 58 Chapters</span>
-        <button class="ec-enter" style="background:#1D4ED8">Start Level 1 →</button>
-      </a>
-
-      <a href="dashboard-cfa.html?level=l2" id="card-cfa_l2" class="exam-card" style="--card-glow:rgba(5,150,105,0.12);--card-border:rgba(5,150,105,0.4);border-top-color:#059669" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l2');else localStorage.setItem('selectedExam','cfa_l2')">
-        <span class="ec-icon">🏛️</span>
-        <div class="ec-name">CFA Level 2</div>
-        <div class="ec-desc">Asset Valuation focus: Vignette-based item sets across all topics</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cfa2Pct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#059669">${cfa2Done}</div><div class="ec-stat-lbl">of 56</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cfa2Days < 30 ? '#EF4444' : '#059669'}">${cfa2Days > 0 ? cfa2Days : '🎯'}</div><div class="ec-stat-lbl">${cfa2Days > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(5,150,105,0.15);color:#059669;border:1px solid rgba(5,150,105,0.3)">10 Topics · 56 Chapters</span>
-        <button class="ec-enter" style="background:#059669">Start Level 2 →</button>
-      </a>
-
-      <a href="dashboard-cfa.html?level=l3" id="card-cfa_l3" class="exam-card" style="--card-glow:rgba(124,58,237,0.12);--card-border:rgba(124,58,237,0.4);border-top-color:#7C3AED" onclick="if(window.setSelectedExam)window.setSelectedExam('cfa_l3');else localStorage.setItem('selectedExam','cfa_l3')">
-        <span class="ec-icon">👑</span>
-        <div class="ec-name">CFA Level 3</div>
-        <div class="ec-desc">Portfolio Mgmt Focus: Vignette MCQs + Constructed Response Essays</div>
-        <div class="ec-stats">
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#7C3AED">${cfa3Pct}%</div><div class="ec-stat-lbl">complete</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:#7C3AED">${cfa3Done}</div><div class="ec-stat-lbl">of 47</div></div>
-          <div class="ec-stat"><div class="ec-stat-val" style="color:${cfa3Days < 30 ? '#EF4444' : '#7C3AED'}">${cfa3Days > 0 ? cfa3Days : '🎯'}</div><div class="ec-stat-lbl">${cfa3Days > 0 ? 'days left' : 'exam day!'}</div></div>
-        </div>
-        <span class="ec-badge" style="background:rgba(124,58,237,0.15);color:#7C3AED;border:1px solid rgba(124,58,237,0.3)">10 Topics · 47 Chapters</span>
-        <button class="ec-enter" style="background:#7C3AED">Start Level 3 →</button>
-      </a>
-    `;
-
-    // ── SCROLL RESTORATION & AUTO-FOCUS LOGIC ───────────────────
-    const savedScrollY = sessionStorage.getItem('hubScrollY');
-    const lastExamKey = sessionStorage.getItem('lastExamKey') || localStorage.getItem('selectedExam');
-
-    if (savedScrollY !== null) {
-      window.scrollTo({ top: parseInt(savedScrollY, 10), behavior: 'instant' });
-    } else if (lastExamKey) {
-      const card = document.getElementById('card-' + lastExamKey);
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Comprehensive List of All 28 Exams grouped into Categories
+    const CATEGORIES = [
+      {
+        title: "Corporate Placement & IT Aptitude",
+        icon: "business",
+        color: "#F27C22",
+        exams: [
+          { key: 'nqt', title: 'TCS NQT', desc: 'Speed Math, Quant, Reasoning, English & Coding' }
+        ]
+      },
+      {
+        title: "Banking Recruitment Examinations (IBPS)",
+        icon: "account_balance",
+        color: "#B7791F",
+        exams: [
+          { key: 'ibps_po', title: 'IBPS PO', desc: 'Quant, Reasoning, English, DI, Banking & Descriptive' },
+          { key: 'ibps_clerk', title: 'IBPS Clerk (CSA)', desc: 'Numerical, Reasoning, English, Financial & Computer' },
+          { key: 'ibps_so_2026', title: 'IBPS SO (General)', desc: 'Professional Knowledge, Quant, Reasoning & English' },
+          { key: 'ibps_so_it_2026', title: 'IBPS SO IT Officer', desc: 'Professional Knowledge (IT), Quant, Reasoning & English' }
+        ]
+      },
+      {
+        title: "Union Public Service Commission (UPSC)",
+        icon: "account_balance",
+        color: "#3B5BDB",
+        exams: [
+          { key: 'upsc', title: 'UPSC CSE', desc: 'Polity, History, Geography, Economy, Ethics & CSAT' },
+          { key: 'cds', title: 'UPSC CDS', desc: 'General Knowledge, English & Elementary Maths' },
+          { key: 'nda', title: 'UPSC NDA & NA', desc: 'General Ability Test (GAT 600M) & Mathematics (300M)' }
+        ]
+      },
+      {
+        title: "University Grants Commission (UGC NET)",
+        icon: "school",
+        color: "#4F46E5",
+        exams: [
+          { key: 'ugcnet', title: 'UGC NET', desc: 'Paper 1 Teaching & Research Aptitude + Paper 2 Subject' }
+        ]
+      },
+      {
+        title: "Staff Selection Commission (SSC)",
+        icon: "assignment",
+        color: "#1D9E75",
+        exams: [
+          { key: 'ssc', title: 'SSC CGL', desc: 'Quant, Reasoning, English & General Knowledge' },
+          { key: 'ssc_chsl', title: 'SSC CHSL', desc: 'English, Reasoning, Quant, GA & Computer Knowledge' },
+          { key: 'ssc_mts', title: 'SSC MTS', desc: 'GA, English, Numerical & Reasoning Ability' }
+        ]
+      },
+      {
+        title: "Railway Recruitment Board (RRB)",
+        icon: "train",
+        color: "#6C3483",
+        exams: [
+          { key: 'rrb_ntpc', title: 'RRB NTPC', desc: 'GA, Reasoning & Mathematics (Graduate & UG)' },
+          { key: 'rrb_group_d', title: 'RRB Group D', desc: 'Reasoning, General Science, Math & GA (CEN 09/2025)' }
+        ]
+      },
+      {
+        title: "Engineering & Medical Entrance",
+        icon: "science",
+        color: "#3B5BDB",
+        exams: [
+          { key: 'jee', title: 'JEE Main & Adv', desc: 'Physics, Chemistry & Mathematics (PCM)' },
+          { key: 'neet_ug', title: 'NEET UG', desc: 'Botany, Zoology, Chemistry & Physics (PCB)' }
+        ]
+      },
+      {
+        title: "Management Entrance (MBA)",
+        icon: "trending_up",
+        color: "#E67E22",
+        exams: [
+          { key: 'cat', title: 'CAT (MBA)', desc: 'Quantitative Ability, DILR & VARC' },
+          { key: 'cmat', title: 'CMAT (MBA)', desc: 'Quant & DI, LR, Language, GA, Innovation & Entr' },
+          { key: 'xat', title: 'XAT (XLRI)', desc: 'Decision Making, VALR, QA & DI, General Knowledge' }
+        ]
+      },
+      {
+        title: "Law Entrance Examinations (NLU / CLAT)",
+        icon: "gavel",
+        color: "#7B241C",
+        exams: [
+          { key: 'clat_ug', title: 'CLAT UG', desc: 'Legal Reasoning, Current Affairs, English, LR & Quant' }
+        ]
+      },
+      {
+        title: "Central & State University Entrance (CUET)",
+        icon: "school",
+        color: "#3B82F6",
+        exams: [
+          { key: 'cuet_ug', title: 'CUET UG', desc: 'Language, General Aptitude (GAT), Science, Arts & Commerce Domains' },
+          { key: 'cuet_pg_general', title: 'CUET PG General', desc: 'Quant Aptitude, Logical Reasoning, GK & Computer Basics' }
+        ]
+      },
+      {
+        title: "Chartered Accountancy & Finance (CA / CMA / CFA)",
+        icon: "payments",
+        color: "#C0392B",
+        exams: [
+          { key: 'ca_foundation', title: 'CA Foundation', desc: 'Accounting, Laws, Quantitative & Economics' },
+          { key: 'ca_inter', title: 'CA Intermediate', desc: 'Advanced Accounting, Corporate Law, Tax & Costing' },
+          { key: 'ca_final', title: 'CA Final', desc: 'FR, AFM, Advanced Auditing & Direct Tax' },
+          { key: 'cma_foundation', title: 'CMA Foundation', desc: 'Fundamentals of Accounting, Law, Math & Economics' },
+          { key: 'cfa_l1', title: 'CFA Level 1', desc: 'Ethical Standards, Quantitative Methods, FRA & Equity' },
+          { key: 'cfa_l2', title: 'CFA Level 2', desc: 'Asset Valuation, Equity, Fixed Income & Derivatives' },
+          { key: 'cfa_l3', title: 'CFA Level 3', desc: 'Portfolio Management & Wealth Planning' }
+        ]
+      }
+    ];
+
+    function switchView(mode) {
+      const activeSection = document.getElementById('dashboard-active-section');
+      const categoriesSection = document.getElementById('categories-container');
+      
+      const tabActive = document.getElementById('tab-active-prep');
+      const tabAll = document.getElementById('tab-all-exams');
+      
+      const navDash = document.getElementById('nav-btn-dashboard');
+      const navExams = document.getElementById('nav-btn-exams');
+      
+      const mobDash = document.getElementById('mobile-nav-dashboard');
+      const mobExams = document.getElementById('mobile-nav-exams');
+      
+      const modeText = document.getElementById('view-mode-text');
+
+      if (mode === 'active') {
+        if (activeSection) activeSection.style.display = 'block';
+        if (categoriesSection) categoriesSection.style.display = 'none';
+
+        if (tabActive) tabActive.className = "px-4 md:px-5 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center gap-2 bg-[#6750a4] text-white shadow-lg";
+        if (tabAll) tabAll.className = "px-4 md:px-5 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center gap-2 text-white/70 hover:text-white hover:bg-white/5";
+
+        if (navDash) navDash.className = "w-full text-left bg-[#6750a4]/20 text-[#cfbcff] border-l-4 border-[#cfbcff] px-6 py-4 flex items-center gap-4 transition-all";
+        if (navExams) navExams.className = "w-full text-left text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-all";
+
+        if (mobDash) mobDash.className = "flex flex-col items-center justify-center text-[#cfbcff] font-bold";
+        if (mobExams) mobExams.className = "flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors";
+
+        if (modeText) modeText.textContent = "PrepTrack — Active Prep";
+      } else {
+        if (activeSection) activeSection.style.display = 'none';
+        if (categoriesSection) categoriesSection.style.display = 'block';
+
+        if (tabActive) tabActive.className = "px-4 md:px-5 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center gap-2 text-white/70 hover:text-white hover:bg-white/5";
+        if (tabAll) tabAll.className = "px-4 md:px-5 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center gap-2 bg-[#6750a4] text-white shadow-lg";
+
+        if (navDash) navDash.className = "w-full text-left text-white/70 px-6 py-4 flex items-center gap-4 hover:text-white hover:bg-white/5 transition-all";
+        if (navExams) navExams.className = "w-full text-left bg-[#6750a4]/20 text-[#cfbcff] border-l-4 border-[#cfbcff] px-6 py-4 flex items-center gap-4 transition-all";
+
+        if (mobDash) mobDash.className = "flex flex-col items-center justify-center text-white/60 hover:text-white transition-colors";
+        if (mobExams) mobExams.className = "flex flex-col items-center justify-center text-[#cfbcff] font-bold";
+
+        if (modeText) modeText.textContent = "Browsing All 28 Exams";
       }
     }
 
-    // Attach click handlers to all exam cards to save scroll Y & active card key
-    document.querySelectorAll('.exam-card').forEach(card => {
-      card.addEventListener('click', () => {
-        sessionStorage.setItem('hubScrollY', window.scrollY.toString());
-        if (card.id) {
-          sessionStorage.setItem('lastExamKey', card.id.replace('card-', ''));
+    function getExamUrl(key) {
+      const map = {
+        nqt: 'dashboard-nqt.html',
+        ssc: 'dashboard-ssc.html',
+        ssc_chsl: 'dashboard-ssc.html?exam=chsl',
+        ssc_mts: 'dashboard-ssc.html?exam=mts',
+        ugcnet: 'dashboard-ugcnet.html',
+        upsc: 'dashboard-upsc.html',
+        cma_foundation: 'dashboard-cma.html',
+        cfa_l1: 'dashboard-cfa.html?level=l1',
+        cfa_l2: 'dashboard-cfa.html?level=l2',
+        cfa_l3: 'dashboard-cfa.html?level=l3',
+        nda: 'dashboard-nda.html',
+        ibps_po: 'dashboard-ibps.html',
+        ibps_clerk: 'dashboard-ibps.html?exam=clerk',
+        ibps_so_2026: 'dashboard-ibps.html?exam=so',
+        ibps_so_it_2026: 'dashboard-ibps.html?exam=so_it',
+        jee: 'dashboard-jee.html',
+        neet_ug: 'dashboard-neet.html',
+        cat: 'dashboard-cat.html',
+        cmat: 'dashboard-cmat.html',
+        xat: 'dashboard-xat.html',
+        clat_ug: 'dashboard-clat.html',
+        cuet_ug: 'dashboard-cuet-ug.html',
+        cuet_pg_general: 'dashboard-cuet-pg.html',
+        cds: 'dashboard-cds.html',
+        ca_foundation: 'dashboard-ca.html?level=foundation',
+        ca_inter: 'dashboard-ca.html?level=inter',
+        ca_final: 'dashboard-ca.html?level=final',
+        rrb_ntpc: 'dashboard-rrb.html?exam=ntpc',
+        rrb_group_d: 'dashboard-rrb.html?exam=group_d'
+      };
+      return map[key] || 'index.html';
+    }
+
+    function computeStats(key) {
+      let done = 0;
+      let total = 1;
+      let days = 0;
+      
+      if (key === 'ibps_so_2026' && typeof EXAM_CONFIG_IBPS_SO !== 'undefined') {
+        const stats = readExamStats('ibps_so_2026');
+        done = Object.values(stats).reduce((s, v) => s + v.done, 0);
+        total = EXAM_CONFIG_IBPS_SO.subjects.reduce((sum, s) => sum + s.totalChapters, 0);
+        days = Math.ceil((new Date(EXAM_CONFIG_IBPS_SO.prelimsDate + 'T00:00:00') - new Date()) / 86400000);
+      } else if (key === 'ibps_so_it_2026' && typeof EXAM_CONFIG_IBPS_SO_IT !== 'undefined') {
+        const stats = readExamStats('ibps_so_it_2026');
+        done = Object.values(stats).reduce((s, v) => s + v.done, 0);
+        total = EXAM_CONFIG_IBPS_SO_IT.subjects.reduce((sum, s) => sum + s.totalChapters, 0);
+        days = Math.ceil((new Date(EXAM_CONFIG_IBPS_SO_IT.prelimsDate + 'T00:00:00') - new Date()) / 86400000);
+      } else if (typeof EXAM_CONFIG !== 'undefined' && EXAM_CONFIG[key]) {
+        const stats = readExamStats(key);
+        done = Object.values(stats).reduce((s, v) => s + v.done, 0);
+        total = EXAM_CONFIG[key].totalChapters || 1;
+        days = Math.ceil((new Date(EXAM_CONFIG[key].examDate + 'T00:00:00') - new Date()) / 86400000);
+      }
+
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      return { done, total, pct, days: isNaN(days) ? 0 : days };
+    }
+
+    function renderCardHTML(ex, hexColor, isDashboardView = false) {
+      const stats = computeStats(ex.key);
+      const url = getExamUrl(ex.key);
+      const radius = 34;
+      const circumference = 2 * Math.PI * radius;
+      const dashoffset = circumference - (stats.pct / 100) * circumference;
+      const active = window.isActiveExam ? window.isActiveExam(ex.key) : false;
+
+      return `
+        <div class="glass-panel rounded-2xl p-4 md:p-6 glow-hover transition-all flex flex-col justify-between border border-white/10 group relative overflow-hidden shrink-0 min-w-[250px] md:min-w-0" style="--card-color: ${hexColor}">
+          <div class="absolute inset-0 bg-gradient-to-br from-[var(--card-color)]/10 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          
+          <div>
+            <div class="flex justify-between items-start mb-3 md:mb-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="text-base md:text-xl font-bold text-white group-hover:text-[var(--card-color)] transition-colors">${ex.title}</h4>
+                  ${active ? `<span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">Active</span>` : ''}
+                </div>
+                <p class="text-[11px] md:text-xs text-white/60 mt-0.5 md:mt-1 line-clamp-2">${ex.desc}</p>
+              </div>
+              
+              <!-- Circular Progress Gauge -->
+              <div class="w-12 h-12 md:w-16 md:h-16 relative flex items-center justify-center flex-shrink-0 ml-2">
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
+                  <circle cx="40" cy="40" r="${radius}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+                  <circle cx="40" cy="40" r="${radius}" fill="none" stroke="${hexColor}" stroke-width="6" 
+                    stroke-dasharray="${circumference}" stroke-dashoffset="${dashoffset}" stroke-linecap="round" class="transition-all duration-1000 ease-out"></circle>
+                </svg>
+                <span class="absolute font-mono text-[10px] md:text-xs font-bold text-white">${stats.pct}%</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[10px] md:text-xs font-mono text-white/70 mb-4 bg-white/5 p-2 md:p-2.5 rounded-lg border border-white/5">
+              <span><strong class="text-white font-bold">${stats.days > 0 ? stats.days : '🎯'}</strong> ${stats.days > 0 ? 'days left' : 'exam day'}</span>
+              <span><strong class="text-white font-bold">${stats.done}</strong> / ${stats.total} ch</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-2">
+            <a href="${url}" onclick="if(window.setSelectedExam)window.setSelectedExam('${ex.key}');else localStorage.setItem('selectedExam','${ex.key}')" 
+               class="w-full py-2.5 rounded-xl border border-white/10 text-white font-semibold text-xs text-center transition-all flex items-center justify-center gap-2 group-hover:bg-[var(--card-color)] group-hover:text-black group-hover:border-[var(--card-color)] group-hover:shadow-lg">
+              <span>Open PrepTrack</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+
+            ${isDashboardView ? '' : `
+            <button onclick="window.toggleActiveExamState('${ex.key}')" 
+                    class="w-full py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${active ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20'}">
+              <span class="material-symbols-outlined text-sm">${active ? 'remove_circle_outline' : 'add_circle_outline'}</span>
+              <span>${active ? 'Remove from Active Prep' : 'Add to Active Prep'}</span>
+            </button>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDashboard() {
+      const activeKeys = window.getActiveExams ? window.getActiveExams() : [];
+
+      // 1. Render All Category Sections
+      const container = document.getElementById('categories-container');
+      let html = '';
+      let totalDoneActiveExams = 0;
+
+      CATEGORIES.forEach(cat => {
+        html += `
+          <section class="space-y-4">
+            <div class="flex items-center gap-2 border-b border-white/10 pb-2.5">
+              <span class="material-symbols-outlined text-xl md:text-2xl" style="color:${cat.color}">${cat.icon}</span>
+              <h3 class="text-lg md:text-2xl font-bold text-white tracking-tight">${cat.title}</h3>
+            </div>
+            
+            <div class="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 -mx-4 px-4 hide-scrollbar md:grid md:grid-cols-2 md:xl:grid-cols-3 md:gap-6 md:mx-0 md:px-0">
+              ${cat.exams.map(ex => {
+                const st = computeStats(ex.key);
+                if (activeKeys.includes(ex.key)) {
+                  totalDoneActiveExams += st.done;
+                }
+                return renderCardHTML(ex, cat.color);
+              }).join('')}
+            </div>
+          </section>
+        `;
+      });
+      container.innerHTML = html;
+
+      // 2. Render Active Prep Section (Only Exams in activeExams array)
+      const activeGrid = document.getElementById('active-prep-grid');
+      let activeHTML = '';
+      
+      activeKeys.forEach(k => {
+        for (const cat of CATEGORIES) {
+          const ex = cat.exams.find(e => e.key === k);
+          if (ex) {
+            activeHTML += renderCardHTML(ex, cat.color, true);
+            break;
+          }
         }
       });
+
+      if (!activeHTML) {
+        activeHTML = `
+          <div class="col-span-full glass-panel rounded-2xl p-6 text-center border border-white/10">
+            <p class="text-white/70 mb-3 text-sm">No active exams selected yet.</p>
+            <button onclick="switchView('all')" class="bg-[#6750a4] text-white px-5 py-2.5 rounded-xl font-semibold text-xs inline-flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">school</span>
+              Browse & Add Active Exams (28)
+            </button>
+          </div>
+        `;
+      }
+
+      activeGrid.innerHTML = activeHTML;
+
+      // 3. Update Hero Daily Goal Circle & Streak
+      const streak = localStorage.getItem('currentStreak') || '1';
+      document.getElementById('hero-streak-text').textContent = `🔥 ${streak}-Day Study Streak`;
+
+      document.getElementById('goal-done-count').textContent = totalDoneActiveExams;
+      const circle = document.getElementById('goal-svg-circle');
+      if (circle) {
+        const maxOffset = 251;
+        const targetOffset = Math.max(0, maxOffset - Math.min(totalDoneActiveExams * 5, maxOffset));
+        circle.setAttribute('stroke-dashoffset', targetOffset);
+      }
+
+      // Check URL params to pick initial mode
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('select') === 'true' || activeKeys.length === 0) {
+        switchView('all');
+      } else {
+        switchView('active');
+      }
+    }
+
+    function resumeLastExam() {
+      const activeKeys = window.getActiveExams ? window.getActiveExams() : [];
+      const selected = localStorage.getItem('selectedExam');
+      if (activeKeys.length > 0) {
+        const examToOpen = activeKeys.includes(selected) ? selected : activeKeys[0];
+        localStorage.setItem('selectedExam', examToOpen);
+        window.location.href = getExamUrl(examToOpen);
+      } else {
+        switchView('all');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDashboard();
+    });
+
+    window.addEventListener('cloudDataSynced', () => {
+      renderDashboard();
+    });
+
+    window.addEventListener('storage', () => {
+      renderDashboard();
     });
   </script>
-  <script type="module" src="assets/auth-sync.js?v=21"></script>
 </body>
 </html>

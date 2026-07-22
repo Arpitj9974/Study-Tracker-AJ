@@ -19,6 +19,11 @@ body {
   background: var(--bg-base); color: var(--text-primary);
   display: flex; height: 100vh; overflow: hidden;
 }
+body.nav-loading {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
 
 /* ── SIDEBAR ── */
 #sidebar {

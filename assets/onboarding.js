@@ -9,11 +9,12 @@ const obEmail = document.getElementById('ob-email');
 const obName = document.getElementById('ob-name');
 const obAge = document.getElementById('ob-age');
 const obMobile = document.getElementById('ob-mobile');
-const obExam = document.getElementById('ob-exam');
 const obStatus = document.getElementById('ob-status');
-const obTargetDate = document.getElementById('ob-target-date');
+const obStream = document.getElementById('ob-stream');
 const obBtn = document.getElementById('ob-btn');
 const obError = document.getElementById('ob-error');
+const obState = document.getElementById('ob-state');
+const obCity = document.getElementById('ob-city');
 
 let currentUid = null;
 
@@ -28,9 +29,6 @@ onAuthStateChanged(auth, async (user) => {
       
       if (userSnap.exists()) {
         const data = userSnap.data();
-        if (data.selectedExam && obExam) {
-          obExam.value = data.selectedExam;
-        }
         if (data.onboardingComplete) {
           // Already onboarded, redirect to home
           window.location.href = 'index.html';
@@ -62,24 +60,20 @@ obForm.addEventListener('submit', async (e) => {
   obBtn.textContent = 'Saving Profile...';
   obError.textContent = '';
   
-  const chosenExam = obExam ? obExam.value : null;
-
   const payload = {
     name: obName.value.trim(),
     age: parseInt(obAge.value, 10),
     mobile: obMobile.value.trim() || null,
     status: obStatus.value,
-    targetExamDate: obTargetDate.value,
+    stream: obStream ? obStream.value : '',
+    state: obState ? obState.value.trim() : '',
+    city: obCity ? obCity.value.trim() : '',
+    activeExams: [],
     onboardingComplete: true
   };
-  
-  if (chosenExam) {
-    payload.selectedExam = chosenExam;
-    localStorage.setItem('selectedExam', chosenExam);
-    if (typeof window.setSelectedExam === 'function') {
-      window.setSelectedExam(chosenExam);
-    }
-  }
+
+  localStorage.setItem('activeExams', JSON.stringify([]));
+  localStorage.removeItem('selectedExam');
 
   try {
     const userRef = doc(db, "users", currentUid);
