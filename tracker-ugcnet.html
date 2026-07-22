@@ -1,77 +1,345 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>UGC NET Subject Tracker — Arpit's Exam Hub</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Subject Tracker — PrepTrack | AspirantFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="assets/ugcnet_exam_data.js"></script>
-  <style>
-    .cat-group { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:12px; margin-bottom:20px; overflow:hidden; }
-    .cat-header { background:var(--bg-surface); padding:14px 20px; font:700 15px/1.2 'DM Sans'; color:var(--text-primary); border-bottom:1px solid var(--border-medium); display:flex; align-items:center; justify-content:space-between; }
-    .ch-item { padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:10px; transition:background .15s; }
-    .ch-item:last-child { border-bottom:none; }
-    .ch-item:hover { background:rgba(255,255,255,0.02); }
-    .ch-row { display:flex; align-items:center; justify-content:space-between; gap:16px; }
-    .ch-title { font:600 15px/1.4 'DM Sans'; color:var(--text-primary); }
-    .ch-meta { display:flex; align-items:center; gap:10px; font:400 12px/1 'JetBrains Mono'; color:var(--text-tertiary); margin-top:4px; }
-    .topic-list { margin-top:6px; padding-left:18px; font:400 13px/1.6 'DM Sans'; color:var(--text-secondary); }
-    .p-badge { font:600 10px/1 'JetBrains Mono'; text-transform:uppercase; padding:3px 8px; border-radius:12px; }
-    .p-VERY-HIGH { background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid rgba(239,68,68,0.3); }
-    .p-HIGH { background:rgba(245,158,11,0.15); color:#F59E0B; border:1px solid rgba(245,158,11,0.3); }
-    .p-MEDIUM { background:rgba(59,91,219,0.15); color:#3B5BDB; border:1px solid rgba(59,91,219,0.3); }
-    .p-LOW { background:rgba(107,114,128,0.15); color:#9CA3AF; border:1px solid rgba(107,114,128,0.3); }
-    .check-btn { width:24px; height:24px; border-radius:6px; border:2px solid var(--border-medium); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0; }
-    .check-btn.checked { background:var(--accent-green, #10B981); border-color:var(--accent-green, #10B981); color:white; }
   
-    .check-btn.revised { background:#F59E0B !important; border-color:#F59E0B !important; color:white !important; }
-    .check-btn.mock { background:#EC4899 !important; border-color:#EC4899 !important; color:white !important; }
+  <style>
+    body {
+      font-family: 'Inter', sans-serif !important;
+      background: #0A0C10;
+      color: #e6e0e9;
+      overflow: hidden;
+    }
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glass-card {
+      background: rgba(33, 31, 36, 0.50);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 142, 156, 0.15);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(207, 188, 255, 0.25);
+      background: rgba(33, 31, 36, 0.70);
+    }
+    .tracker-page {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 28px 32px 60px;
+      gap: 24px;
+    }
+    .tracker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-b: 1px solid rgba(73, 69, 81, 0.3);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .th-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #e6e0e9;
+      letter-spacing: -0.02em;
+    }
+    .timeline-tabs {
+      display: flex;
+      gap: 20px;
+      align-items: flex-end;
+    }
+    .timeline-tab {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(203, 196, 210, 0.6);
+      text-decoration: none;
+      padding-bottom: 8px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .timeline-tab.active {
+      color: var(--page-accent, #cfbcff);
+      border-bottom-color: var(--page-accent, #cfbcff);
+    }
+    .timeline-tab:hover:not(.active) {
+      color: #e6e0e9;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .stats-grid { grid-template-columns: 1fr; } }
+    .stat-card {
+      padding: 18px;
+      border-radius: 14px;
+    }
+    .stat-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(203, 196, 210, 0.6);
+      margin-bottom: 6px;
+    }
+    .stat-val {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stat-sub {
+      font-size: 13px;
+      color: rgba(203, 196, 210, 0.5);
+    }
+    .category-group {
+      margin-bottom: 32px;
+    }
+    .cat-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(203, 196, 210, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 768px) { .chapter-grid { grid-template-columns: 1fr; } }
+    .ch-card {
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .ch-card:hover {
+      border-color: rgba(207, 188, 255, 0.25);
+    }
+    .ch-card.done {
+      background: rgba(33, 31, 36, 0.25);
+      opacity: 0.7;
+    }
+    .ch-card.done .ch-title {
+      text-decoration: line-through;
+      color: rgba(203, 196, 210, 0.4);
+    }
+    .ck-box-custom {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      background: rgba(255,255,255,0.03);
+      font-size: 11px;
+      margin-top: 1px;
+    }
+    .ch-card.done .ck-box-custom {
+      background: var(--page-accent, #1D9E75);
+      border-color: var(--page-accent, #1D9E75);
+      color: #fff;
+    }
+    .ch-card.done.revised .ck-box-custom {
+      background: #F59E0B !important;
+      border-color: #F59E0B !important;
+      color: white !important;
+    }
+    .ch-card.done.mock .ck-box-custom {
+      background: #EC4899 !important;
+      border-color: #EC4899 !important;
+      color: white !important;
+    }
+    .ch-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(203, 196, 210, 0.45);
+      min-width: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .ch-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+      gap: 6px;
+    }
+    .ch-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e6e0e9;
+      line-height: 1.4;
+      transition: color 0.2s;
+    }
+    .ch-card:hover .ch-title {
+      color: var(--page-accent, #cfbcff);
+    }
+    .ch-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .badge-pri {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+    .pri-VERY-HIGH {
+      background: rgba(239, 68, 68, 0.12);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+    .pri-HIGH {
+      background: rgba(249, 115, 22, 0.12);
+      color: #f97316;
+      border-color: rgba(249, 115, 22, 0.2);
+    }
+    .pri-MEDIUM {
+      background: rgba(234, 179, 8, 0.12);
+      color: #eab308;
+      border-color: rgba(234, 179, 8, 0.2);
+    }
+    .pri-LOW {
+      background: rgba(148, 163, 184, 0.1);
+      color: #94a3b8;
+      border-color: rgba(148, 163, 184, 0.15);
+    }
+    .meta-tag {
+      font-size: 10px;
+      color: rgba(203, 196, 210, 0.5);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .meta-tag-icon {
+      font-size: 11px !important;
+      opacity: 0.65;
+    }
+    #mobile-tabs { display: none !important; }
   </style>
 </head>
-<body>
-<main>
+<body style="--page-accent:#cfbcff" class="nav-loading">
 
-  <div class="content-wrapper">
-  <div class="tracker-shell page-content">
-    
-    <!-- Top Nav Header -->
-    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--bg-elevated);padding:16px 20px;border-radius:12px;border:1px solid var(--border-medium)">
-      <div>
-        <div style="font:700 20px/1.2 'DM Sans';color:var(--text-primary);display:flex;align-items:center;gap:10px">
-          <span id="subj-icon">🎓</span> <span id="subj-name">Loading Subject...</span>
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-orb" style="width:600px;height:600px;background:rgba(127,119,221,0.06);top:-200px;left:-100px;"></div>
+  <div class="ambient-orb" style="width:400px;height:400px;background:#cfbcff08;bottom:-150px;right:-150px;"></div>
+
+  <main>
+    <div class="content-wrapper">
+      <div class="tracker-page">
+
+        <!-- ① HEADER -->
+        <div class="tracker-header">
+          <div class="header-left">
+            <h2 class="th-title" id="subject-title"><span id="subj-icon"></span> <span id="subj-name">🏦 Subject Tracker</span></h2>
+            <span class="badge" id="stage-badge"><span id="subj-exam-label">Subject Stage</span></span>
+          </div>
+          <nav class="timeline-tabs">
+            <a class="timeline-tab active" href="#">Syllabus</a>
+            <a class="timeline-tab" href="#">Timeline</a>
+            <a class="timeline-tab" href="#">Tasks</a>
+          </nav>
         </div>
-        <div style="font:400 13px/1.4 'DM Sans';color:var(--text-secondary);margin-top:4px" id="subj-exam-label">
-          UGC NET Paper 1 Prep
+
+        <!-- ② STATS OVERVIEW GRID -->
+        <div class="stats-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-label">Done Chapters</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span class="stat-val" id="stat-done" style="color:var(--page-accent);">0</span>
+              <span class="stat-sub" id="stat-done-total-sub">of --</span>
+            </div>
+            <!-- Mirror elements -->
+            <span id="subj-progress-text" style="display:none"></span>
+            <div id="subj-bar-fill" style="display:none"></div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-label">Remaining</div>
+            <div>
+              <span class="stat-val" id="stat-rem" style="color:#e6e0e9;">0</span>
+            </div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-label">Total Progress</div>
+            <div>
+              <span class="stat-val" id="stat-pct" style="color:#1D9E75;">0%</span>
+              <span id="subj-pct-text" style="display:none">0%</span>
+            </div>
+          </div>
+          <div class="glass-card stat-card" style="border: 1px solid rgba(207, 188, 255, 0.12); background: rgba(207, 188, 255, 0.03);">
+            <div class="stat-label" style="color:#cfbcff;">Study Pacing</div>
+            <div>
+              <span class="stat-val" id="stat-pacing" style="color:#cfbcff; font-size: 18px;">2 chapters / week</span>
+              <div style="font-size:10px;color:rgba(203,196,210,0.5);margin-top:2px;">Recommended pace</div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <a href="dashboard-ugcnet.html" class="btn-tab">📊 UGC NET Dashboard</a>
-      </div>
-    </div>
 
-    <!-- Progress Summary Bar -->
-    <div style="background:var(--bg-elevated);border:1px solid var(--border-medium);border-radius:12px;padding:20px;margin-bottom:24px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font:600 13px/1 'JetBrains Mono';color:var(--text-secondary)" id="subj-progress-text">0 / 0 completed</div>
-        <div style="font:700 16px/1 'JetBrains Mono';color:#4F46E5" id="subj-pct-text">0%</div>
-      </div>
-      <div style="width:100%;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden">
-        <div id="subj-bar-fill" style="width:0%;height:100%;background:#4F46E5;transition:width .3s ease"></div>
+        <!-- ③ CATEGORIES & TOPICS -->
+        <div id="categories-container" style="margin-top:8px;"></div>
+        <div id="chapters-container" style="margin-top:8px;"></div>
+
       </div>
     </div>
+  </main>
 
-    <!-- Chapter Checklist Container grouped by Category -->
-    <div id="chapters-container">
-      <!-- Injected by JS -->
-    </div>
-
-  </div>
-  </div>
-
-</main>
-
-<script src="assets/nav.js?v=21"></script>
-<script type="module" src="assets/auth-sync.js?v=21"></script>
-<script>
+  <script src="assets/nav.js?v=23"></script>
+  <script type="module" src="assets/auth-sync.js?v=22"></script>
+  <script>
 (function() {
   const params = new URLSearchParams(window.location.search);
   const subjKey = params.get('subj');
@@ -110,34 +378,54 @@
       groupDiv.className = 'cat-group';
 
       let catDone = 0;
-      let itemsHTML = chList.map(ch => {
+      let itemsHTML = chList.map((ch, index) => {
         const val = localStorage.getItem(ch.key);
         const isDone = val === '1' || val === '2' || val === '3';
-        let checkIcon = '✓';
-        let checkClass = '';
-        if (val === '2') { checkIcon = '⭐'; checkClass = ' revised'; }
-        else if (val === '3') { checkIcon = '🏆'; checkClass = ' mock'; }
-        else if (val === '1') { checkIcon = '✓'; checkClass = ' checked'; }
+        let cbContent = '';
+        if (val === '1') {
+          cbContent = '<span class="material-symbols-outlined text-[12px] font-bold">check</span>';
+        } else if (val === '2') {
+          cbContent = '<span style="font-size:10px;">⭐</span>';
+        } else if (val === '3') {
+          cbContent = '<span style="font-size:10px;">🏆</span>';
+        }
+
         if (isDone) { catDone++; totalDone++; }
 
         const topicItems = ch.topics ? ch.topics.map(t => `<li>${t}</li>`).join('') : '';
 
         return `
-          <div class="ch-item">
-            <div class="ch-row">
-              <div style="flex:1">
-                <div class="ch-title">${ch.name}</div>
-                <div class="ch-meta">
-                  <span class="p-badge p-${ch.priority}">${ch.priority}</span>
-                  <span>⏱️ ${ch.days}</span>
-                  <span>📊 ${ch.unitWeight}</span>
+                <div class="glass-card ch-card ${isDone ? 'done' : ''}${val === '2' ? ' revised' : val === '3' ? ' mock' : ''}" onclick="toggleChapter('${ch.key}')">
+                  <div class="ck-box-custom">${cbContent}</div>
+                  <span class="ch-num">${ch.index || (index + 1)}</span>
+                  <div class="ch-info">
+                    <span class="ch-title">${ch.data ? ch.data.name : ch.name}</span>
+                    <div class="ch-meta">
+                      <span class="badge-pri pri-${(ch.data ? ch.data.priority : ch.priority).replace(/ /g,'-')}">${ch.data ? ch.data.priority : ch.priority}</span>
+                      ${(ch.data ? ch.data.difficulty : ch.difficulty) ? `
+                        <span class="meta-tag" title="Difficulty">
+                          <span class="material-symbols-outlined meta-tag-icon">bar_chart</span>
+                          <span>${ch.data ? ch.data.difficulty : ch.difficulty}</span>
+                        </span>` : ''}
+                      ${(ch.data ? ch.data.prelimsWeight : ch.prelimsWeight) ? `
+                        <span class="meta-tag" title="Weight">
+                          <span class="material-symbols-outlined meta-tag-icon">show_chart</span>
+                          <span>${ch.data ? ch.data.prelimsWeight : ch.prelimsWeight}</span>
+                        </span>` : ''}
+                      ${(ch.data ? ch.data.days : ch.days) ? `
+                        <span class="meta-tag" title="Duration">
+                          <span class="material-symbols-outlined meta-tag-icon">schedule</span>
+                          <span>${ch.data ? ch.data.days : ch.days}</span>
+                        </span>` : ''}
+                      ${(ch.data ? ch.data.stage : ch.stage) ? `
+                        <span class="meta-tag" style="color:rgba(203,196,210,0.4)">
+                          <span class="material-symbols-outlined meta-tag-icon">layers</span>
+                          <span>${ch.data ? ch.data.stage : ch.stage}</span>
+                        </span>` : ''}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <button class="check-btn${checkClass}" onclick="toggleChapter('${ch.key}')">
-                ${isDone ? checkIcon : ''}
-              </button>
-            </div>
-            ${topicItems ? `<ul class="topic-list">${topicItems}</ul>` : ''}
+              `;<ul class="topic-list">${topicItems}</ul>` : ''}
           </div>
         `;
       }).join('');
@@ -179,6 +467,45 @@
 
   renderChecklist();
 })();
-</script>
+    
+    // Mirror clat/cuet style stats to standard stats
+    function mirrorStats() {
+      const subjProgress = document.getElementById('subj-progress-text');
+      if (subjProgress && subjProgress.textContent) {
+        const match = subjProgress.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+        if (match) {
+          const done = parseInt(match[1], 10);
+          const total = parseInt(match[2], 10);
+          const rem = Math.max(0, total - done);
+          const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+          
+          const statDone = document.getElementById('stat-done');
+          if (statDone) statDone.textContent = done;
+          
+          const statRem = document.getElementById('stat-rem');
+          if (statRem) statRem.textContent = rem;
+          
+          const statPct = document.getElementById('stat-pct');
+          if (statPct) statPct.textContent = pct + '%';
+          
+          const totalSub = document.getElementById('stat-done-total-sub');
+          if (totalSub) totalSub.textContent = `of ${total}`;
+        }
+      }
+      const pctText = document.getElementById('subj-pct-text');
+      if (pctText && pctText.textContent && !pctText.textContent.includes('undefined')) {
+        const statPct = document.getElementById('stat-pct');
+        if (statPct) statPct.textContent = pctText.textContent;
+      }
+    }
+    
+    window.addEventListener('storage', () => setTimeout(mirrorStats, 50));
+    window.addEventListener('cloudDataSynced', () => setTimeout(mirrorStats, 50));
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(mirrorStats, 100);
+      setTimeout(mirrorStats, 500);
+    });
+    
+  </script>
 </body>
 </html>
