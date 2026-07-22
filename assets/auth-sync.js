@@ -228,7 +228,7 @@ onAuthStateChanged(auth, async (user) => {
     // Inject user email into sidebar and mobile header if present
     const brandSubs = document.querySelectorAll('.sidebar-brand p, .mh-brand-sub');
     brandSubs.forEach(b => {
-      b.innerHTML = `Logged in: <span style="color:var(--accent-purple);font-size:10px">${user.email}</span>`;
+      b.innerHTML = `Logged in: <span style="color:#cfbcff;font-size:10px">${user.email}</span>`;
     });
 
     // Save/update basic user metadata & lastActive timestamp in Firestore

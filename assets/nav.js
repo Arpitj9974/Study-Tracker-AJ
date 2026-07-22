@@ -1115,9 +1115,9 @@ function buildNav() {
   if (customTargetDate && remainingChapters > 0 && days > 0) {
     const chaptersPerWeek = Math.ceil(remainingChapters / remainingWeeks);
     pacingHtml = `
-      <div style="background:var(--bg-elevated); border:1px solid var(--border-subtle); padding:10px; border-radius:10px; margin-bottom:16px; text-align:center">
-        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">🎯 Required Pacing</div>
-        <div style="font:700 14px 'DM Sans';color:#10B981">${chaptersPerWeek} chapters / week</div>
+      <div style="background:rgba(33,31,36,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(148,142,156,0.15);padding:14px;border-radius:14px;text-align:center">
+        <div style="font:700 9px/1 'Inter',sans-serif;color:rgba(203,196,210,0.6);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em">🎯 Required Pacing</div>
+        <div style="font:800 15px/1 'Inter',sans-serif;color:#1D9E75">${chaptersPerWeek} chapters / week</div>
       </div>
     `;
   }
@@ -1132,7 +1132,7 @@ function buildNav() {
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <a href="index.html?select=true" class="switch-exam-btn">🏠 Home</a>
-        <button onclick="window.openSettingsModal()" class="switch-exam-btn" style="background:rgba(255,255,255,0.05);border-color:var(--border-subtle);color:var(--text-secondary);cursor:pointer">⚙️ Settings</button>
+        <button onclick="window.openSettingsModal()" class="switch-exam-btn" style="cursor:pointer">⚙️ Settings</button>
       </div>
       <div class="sidebar-divider"></div>
     </div>
@@ -1153,11 +1153,11 @@ function buildNav() {
           <div class="sc-days" style="color:${daysColor}">${days > 0 ? days : '🎯'}</div>
           <div class="sc-sub">${days > 0 ? 'days' : 'Exam Day!'}</div>
         </div>
-        <div id="leaderboard-percentile" style="background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:10px; margin-top:16px; text-align:center; display:none">
-          <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">🏆 Your Rank</div>
-          <div style="font:700 16px 'DM Sans';color:#3B82F6">Top <span id="percentile-val">--</span>%</div>
+        <div id="leaderboard-percentile" style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:14px; padding:14px; text-align:center; display:none">
+          <div style="font:700 9px/1 'Inter',sans-serif;color:rgba(203,196,210,0.6);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em">🏆 Your Rank</div>
+          <div style="font:800 16px/1 'Inter',sans-serif;color:#3B82F6">Top <span id="percentile-val">--</span>%</div>
         </div>
-        <button id="logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:10px;border-radius:8px;font:600 12px/1 'DM Sans';cursor:pointer;margin-top:16px;transition:all 0.2s">Log Out</button>
+        <button id="logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:11px;border-radius:12px;font:700 12px/1 'Inter',sans-serif;cursor:pointer;margin-top:4px;transition:all 0.2s">Log Out</button>
       </div>
     </div>
   </div>`;
