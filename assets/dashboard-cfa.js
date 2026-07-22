@@ -36,9 +36,12 @@
 
   // Set countdown color and title border color based on level
   const accentColor = level === 'l1' ? '#1D4ED8' : level === 'l2' ? '#059669' : '#7C3AED';
-  document.getElementById('cfa-header').style.borderLeftColor = accentColor;
-  document.getElementById('countdown-days').style.color = accentColor;
-  document.getElementById('countdown-badge').style.color = accentColor;
+  const _cfaHeader = document.getElementById('cfa-header');
+  if (_cfaHeader) _cfaHeader.style.borderLeftColor = accentColor;
+  const _cdDays = document.getElementById('countdown-days');
+  if (_cdDays) _cdDays.style.color = accentColor;
+  const _cdBadge = document.getElementById('countdown-badge');
+  if (_cdBadge) _cdBadge.style.color = accentColor;
 
   // Set countdown
   const countdownDays = document.getElementById('countdown-days');

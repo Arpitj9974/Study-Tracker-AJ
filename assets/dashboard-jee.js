@@ -48,6 +48,8 @@ function renderJEEMasterStats(stats) {
   const pct = Math.round((grandDone / JEE_TOTAL) * 100);
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   set('ms-total-done', grandDone);
+  set('ms-total-chapters', JEE_TOTAL);
+  set('ms-subj-count', JEE_SUBJECTS.length);
   set('ms-overall-pct', pct + '%');
 }
 

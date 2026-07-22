@@ -8,6 +8,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
+  <script src="./assets/ca_foundation_exam_data.js"></script>
+  <script src="./assets/ca_inter_exam_data.js"></script>
+  <script src="./assets/ca_final_exam_data.js"></script>
   <style>
     body { font-family: 'Inter', sans-serif !important; background:#0A0C10; color:#e6e0e9; overflow:hidden; }
     .ambient-orb { position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0; }
@@ -87,7 +90,7 @@
           <div>
             <div class="status-badge"><span class="status-dot"></span>Tracker Active</div>
             <div class="hero-title" id="hub-name">📒 CA — Chartered Accountancy</div>
-            <div class="hero-tags"><span class="hero-tag">Foundation</span><span class="hero-tag">Inter</span><span class="hero-tag">Final</span></div>
+            <div class="hero-tags"><a class="hero-tag" style="text-decoration:none;cursor:pointer" href="dashboard-ca.html?level=foundation" data-dash-level="foundation">Foundation</a><a class="hero-tag" style="text-decoration:none;cursor:pointer" href="dashboard-ca.html?level=inter" data-dash-level="inter">Inter</a><a class="hero-tag" style="text-decoration:none;cursor:pointer" href="dashboard-ca.html?level=final" data-dash-level="final">Final</a></div>
             <div style="margin-top:6px;font-size:11px;color:rgba(203,196,210,0.55);" id="hub-tag"></div>
           </div>
           <div class="glass-card countdown-card">
@@ -206,7 +209,19 @@
     </div>
   </main>
   <script src="assets/nav.js?v=23"></script>
-  <script src="assets/dashboard-ca.js?v=2"></script>
+  <script>
+  window.DASH_SPEC = {
+    trackerPage: 'tracker-ca.html',
+    param: 'level',
+    variants: [
+      { id: 'foundation', config: EXAM_CONFIG_CA_FOUNDATION, storageKey: 'ca_foundation', trackerQuery: 'level=foundation' },
+      { id: 'inter', config: EXAM_CONFIG_CA_INTER, storageKey: 'ca_inter', trackerQuery: 'level=inter' },
+      { id: 'final', config: EXAM_CONFIG_CA_FINAL, storageKey: 'ca_final', trackerQuery: 'level=final' }
+    ],
+    smart: '<strong>ICAI Strategy:</strong> Master subjective answer-writing for Accounting & Law; the objective papers carry negative marking, so attempt only confident MCQs.'
+  };
+  </script>
+  <script src="assets/dashboard-generic.js?v=2"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     document.addEventListener('DOMContentLoaded', updateStatBars);

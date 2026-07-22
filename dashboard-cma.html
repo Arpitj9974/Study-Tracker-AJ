@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
+  <script src="./assets/cma_foundation_exam_data.js"></script>
   <style>
     body { font-family: 'Inter', sans-serif !important; background:#0A0C10; color:#e6e0e9; overflow:hidden; }
     .ambient-orb { position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0; }
@@ -206,7 +207,14 @@
     </div>
   </main>
   <script src="assets/nav.js?v=23"></script>
-  <script src="assets/dashboard-cma.js?v=2"></script>
+  <script>
+  window.DASH_SPEC = {
+    trackerPage: 'tracker-cma.html',
+    variants: [{ config: EXAM_CONFIG_CMA_FOUNDATION, storageKey: 'cma_foundation' }],
+    smart: '<strong>CMA Foundation Strategy:</strong> Financial & Cost Accounting and Business Math are the biggest scorers. No negative marking — attempt every question.'
+  };
+  </script>
+  <script src="assets/dashboard-generic.js?v=2"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     document.addEventListener('DOMContentLoaded', updateStatBars);

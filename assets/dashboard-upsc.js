@@ -60,6 +60,8 @@ function renderUPSCMasterStats(stats) {
   const pct = Math.round((grandDone / UPSC_TOTAL) * 100);
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   set('ms-total-done', grandDone);
+  set('ms-total-chapters', UPSC_TOTAL);
+  set('ms-subj-count', UPSC_SUBJECTS.length);
   set('ms-overall-pct', pct + '%');
 }
 

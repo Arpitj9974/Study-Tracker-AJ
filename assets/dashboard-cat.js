@@ -52,6 +52,8 @@ function renderCATMasterStats(stats) {
   const pct = Math.round((grandDone / CAT_TOTAL) * 100);
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   set('ms-total-done', grandDone);
+  set('ms-total-chapters', CAT_TOTAL);
+  set('ms-subj-count', CAT_SUBJECTS.length);
   set('ms-overall-pct', pct + '%');
 }
 

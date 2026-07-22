@@ -54,6 +54,8 @@ function renderCMATMasterStats(stats) {
   const pct = Math.round((grandDone / CMAT_TOTAL) * 100);
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   set('ms-total-done', grandDone);
+  set('ms-total-chapters', CMAT_TOTAL);
+  set('ms-subj-count', CMAT_SUBJECTS.length);
   set('ms-overall-pct', pct + '%');
 }
 

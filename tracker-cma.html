@@ -290,8 +290,6 @@
           </div>
           <nav class="timeline-tabs">
             <a class="timeline-tab active" href="#">Syllabus</a>
-            <a class="timeline-tab" href="#">Timeline</a>
-            <a class="timeline-tab" href="#">Tasks</a>
           </nav>
         </div>
 
@@ -376,6 +374,7 @@
     const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
 
     document.getElementById('stat-done').textContent = doneCount;
+    { const _ts = document.getElementById('stat-done-total-sub'); if (_ts) _ts.textContent = 'of ' + total; }
     document.getElementById('stat-rem').textContent = remaining;
     document.getElementById('stat-pct').textContent = pct + '%';
 

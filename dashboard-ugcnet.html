@@ -207,7 +207,14 @@
     </div>
   </main>
   <script src="assets/nav.js?v=23"></script>
-  <script src="assets/dashboard-ugcnet.js?v=2"></script>
+  <script>
+  window.DASH_SPEC = {
+    trackerPage: 'tracker-ugcnet.html',
+    variants: [{ config: EXAM_CONFIG_UGCNET, storageKey: 'ugcnet' }],
+    smart: '<strong>UGC NET Strategy:</strong> Paper 1 (Teaching & Research Aptitude) is common and scoring — secure it fully, then go deep on your subject Paper 2.'
+  };
+  </script>
+  <script src="assets/dashboard-generic.js?v=2"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     document.addEventListener('DOMContentLoaded', updateStatBars);

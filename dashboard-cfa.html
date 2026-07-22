@@ -8,6 +8,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
+  <script src="./assets/cfa_l1_exam_data.js"></script>
+  <script src="./assets/cfa_l2_exam_data.js"></script>
+  <script src="./assets/cfa_l3_exam_data.js"></script>
   <style>
     body { font-family: 'Inter', sans-serif !important; background:#0A0C10; color:#e6e0e9; overflow:hidden; }
     .ambient-orb { position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0; }
@@ -87,7 +90,7 @@
           <div>
             <div class="status-badge"><span class="status-dot"></span>Tracker Active</div>
             <div class="hero-title" id="hub-name">💼 CFA — Chartered Financial Analyst</div>
-            <div class="hero-tags"><span class="hero-tag">Level 1</span><span class="hero-tag">Level 2</span><span class="hero-tag">Level 3</span></div>
+            <div class="hero-tags"><a class="hero-tag" style="text-decoration:none;cursor:pointer" href="dashboard-cfa.html?level=l1" data-dash-level="l1">Level 1</a><a class="hero-tag" style="text-decoration:none;cursor:pointer" href="dashboard-cfa.html?level=l2" data-dash-level="l2">Level 2</a><a class="hero-tag" style="text-decoration:none;cursor:pointer" href="dashboard-cfa.html?level=l3" data-dash-level="l3">Level 3</a></div>
             <div style="margin-top:6px;font-size:11px;color:rgba(203,196,210,0.55);" id="hub-tag"></div>
           </div>
           <div class="glass-card countdown-card">
@@ -206,7 +209,19 @@
     </div>
   </main>
   <script src="assets/nav.js?v=23"></script>
-  <script src="assets/dashboard-cfa.js?v=2"></script>
+  <script>
+  window.DASH_SPEC = {
+    trackerPage: 'tracker-cfa.html',
+    param: 'level',
+    variants: [
+      { id: 'l1', config: EXAM_CONFIG_CFA_L1, storageKey: 'cfa_l1', trackerQuery: 'level=l1' },
+      { id: 'l2', config: EXAM_CONFIG_CFA_L2, storageKey: 'cfa_l2', trackerQuery: 'level=l2' },
+      { id: 'l3', config: EXAM_CONFIG_CFA_L3, storageKey: 'cfa_l3', trackerQuery: 'level=l3' }
+    ],
+    smart: '<strong>CFA Strategy:</strong> Ethics & FSA carry heavy weight across levels. Drill the curriculum end-of-chapter questions and mock exams under timed conditions.'
+  };
+  </script>
+  <script src="assets/dashboard-generic.js?v=2"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     document.addEventListener('DOMContentLoaded', updateStatBars);

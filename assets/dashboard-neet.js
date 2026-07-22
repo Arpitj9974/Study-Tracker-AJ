@@ -53,6 +53,8 @@ function renderNEETMasterStats(stats) {
   const pct = Math.round((grandDone / NEET_TOTAL) * 100);
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   set('ms-total-done', grandDone);
+  set('ms-total-chapters', NEET_TOTAL);
+  set('ms-subj-count', NEET_SUBJECTS.length);
   set('ms-overall-pct', pct + '%');
 }
 

@@ -52,6 +52,8 @@ function renderCDSMasterStats(stats) {
   const pct = Math.round((grandDone / CDS_TOTAL) * 100);
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   set('ms-total-done', grandDone);
+  set('ms-total-chapters', CDS_TOTAL);
+  set('ms-subj-count', CDS_SUBJECTS.length);
   set('ms-overall-pct', pct + '%');
 }
 

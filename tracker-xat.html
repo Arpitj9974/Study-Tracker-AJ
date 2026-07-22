@@ -291,8 +291,6 @@
           </div>
           <nav class="timeline-tabs">
             <a class="timeline-tab active" href="#">Syllabus</a>
-            <a class="timeline-tab" href="#">Timeline</a>
-            <a class="timeline-tab" href="#">Tasks</a>
           </nav>
         </div>
 
@@ -350,7 +348,11 @@
 
   localStorage.setItem('selectedExam', 'xat_2027');
 
-  const subject = configData.subjects.find(s => s.key === subjKey) || configData.subjects[0];
+  const subject = configData.subjects.find(s =>
+      s.key === subjKey ||
+      s.prefix === subjKey + '_' ||
+      (s.prefix || '').replace(/_+$/, '') === subjKey
+    ) || configData.subjects[0];
 
   document.body.style.setProperty('--page-accent', subject.color);
   document.getElementById('subj-icon').textContent = subject.icon;

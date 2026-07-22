@@ -207,7 +207,14 @@
     </div>
   </main>
   <script src="assets/nav.js?v=23"></script>
-  <script src="assets/dashboard-nda.js?v=2"></script>
+  <script>
+  window.DASH_SPEC = {
+    trackerPage: 'tracker-nda.html',
+    variants: [{ config: EXAM_CONFIG_NDA, storageKey: 'nda' }],
+    smart: '<strong>NDA Strategy:</strong> Mathematics (300 marks) is the biggest scorer — drill it daily. GAT rewards broad NCERT science + current affairs.'
+  };
+  </script>
+  <script src="assets/dashboard-generic.js?v=2"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     document.addEventListener('DOMContentLoaded', updateStatBars);

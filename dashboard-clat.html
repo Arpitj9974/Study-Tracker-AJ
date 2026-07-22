@@ -207,7 +207,14 @@
     </div>
   </main>
   <script src="assets/nav.js?v=23"></script>
-  <script src="assets/dashboard-clat.js?v=2"></script>
+  <script>
+  window.DASH_SPEC = {
+    trackerPage: 'tracker-clat.html',
+    variants: [{ config: EXAM_CONFIG_CLAT_UG, storageKey: 'clat_ug' }],
+    smart: '<strong>CLAT Strategy:</strong> Legal Reasoning & English carry the most weight. Read editorials daily and practice passage-based questions under time pressure.'
+  };
+  </script>
+  <script src="assets/dashboard-generic.js?v=2"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     document.addEventListener('DOMContentLoaded', updateStatBars);
