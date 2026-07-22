@@ -410,7 +410,7 @@
     document.getElementById('stat-pct').textContent = pct + '%';
 
     // Update mini-stats in top banner
-    if(document.getElementById('mini-stats')) document.getElementById('mini-stats').innerHTML = `
+    if(document.getElementById('mini-stats')) if(document.getElementById('mini-stats')) document.getElementById('mini-stats').innerHTML = `
       <div class="th-stat">
         <div class="th-stat-val" style="color:${subjConfig.color}">${doneCount}</div>
         <div class="th-stat-lbl">Done of ${total}</div>
@@ -574,7 +574,6 @@
       setTimeout(mirrorStats, 100);
       setTimeout(mirrorStats, 500);
     });
-    
   </script>
 </body>
 </html>
