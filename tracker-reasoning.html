@@ -1,54 +1,481 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Reasoning Tracker — Arpit's Exam Hub</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Subject Tracker — PrepTrack | AspirantFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="./assets/priority-data.js"></script>
+  <script src="./assets/nqt_exam_data.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif !important;
+      background: #0A0C10;
+      color: #e6e0e9;
+      overflow: hidden;
+    }
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glass-card {
+      background: rgba(33, 31, 36, 0.50);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 142, 156, 0.15);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(207, 188, 255, 0.25);
+      background: rgba(33, 31, 36, 0.70);
+    }
+    .tracker-page {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 28px 32px 60px;
+      gap: 24px;
+    }
+    .tracker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-b: 1px solid rgba(73, 69, 81, 0.3);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .th-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #e6e0e9;
+      letter-spacing: -0.02em;
+    }
+    .timeline-tabs {
+      display: flex;
+      gap: 20px;
+      align-items: flex-end;
+    }
+    .timeline-tab {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(203, 196, 210, 0.6);
+      text-decoration: none;
+      padding-bottom: 8px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .timeline-tab.active {
+      color: var(--page-accent, #cfbcff);
+      border-bottom-color: var(--page-accent, #cfbcff);
+    }
+    .timeline-tab:hover:not(.active) {
+      color: #e6e0e9;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .stats-grid { grid-template-columns: 1fr; } }
+    .stat-card {
+      padding: 18px;
+      border-radius: 14px;
+    }
+    .stat-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(203, 196, 210, 0.6);
+      margin-bottom: 6px;
+    }
+    .stat-val {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stat-sub {
+      font-size: 13px;
+      color: rgba(203, 196, 210, 0.5);
+    }
+    .category-group {
+      margin-bottom: 32px;
+    }
+    .cat-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(203, 196, 210, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 768px) { .chapter-grid { grid-template-columns: 1fr; } }
+    .ch-card {
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .ch-card:hover {
+      border-color: rgba(207, 188, 255, 0.25);
+    }
+    .ch-card.done {
+      background: rgba(33, 31, 36, 0.25);
+      opacity: 0.7;
+    }
+    .ch-card.done .ch-title {
+      text-decoration: line-through;
+      color: rgba(203, 196, 210, 0.4);
+    }
+    .ck-box-custom {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      background: rgba(255,255,255,0.03);
+      font-size: 11px;
+      margin-top: 1px;
+    }
+    .ch-card.done .ck-box-custom {
+      background: var(--page-accent, #1D9E75);
+      border-color: var(--page-accent, #1D9E75);
+      color: #fff;
+    }
+    .ch-card.done.revised .ck-box-custom {
+      background: #F59E0B !important;
+      border-color: #F59E0B !important;
+      color: white !important;
+    }
+    .ch-card.done.mock .ck-box-custom {
+      background: #EC4899 !important;
+      border-color: #EC4899 !important;
+      color: white !important;
+    }
+    .ch-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(203, 196, 210, 0.45);
+      min-width: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .ch-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+      gap: 6px;
+    }
+    .ch-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e6e0e9;
+      line-height: 1.4;
+      transition: color 0.2s;
+    }
+    .ch-card:hover .ch-title {
+      color: var(--page-accent, #cfbcff);
+    }
+    .ch-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .badge-pri {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+    .pri-VERY-HIGH {
+      background: rgba(239, 68, 68, 0.12);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+    .pri-HIGH {
+      background: rgba(249, 115, 22, 0.12);
+      color: #f97316;
+      border-color: rgba(249, 115, 22, 0.2);
+    }
+    .pri-MEDIUM {
+      background: rgba(234, 179, 8, 0.12);
+      color: #eab308;
+      border-color: rgba(234, 179, 8, 0.2);
+    }
+    .pri-LOW {
+      background: rgba(148, 163, 184, 0.1);
+      color: #94a3b8;
+      border-color: rgba(148, 163, 184, 0.15);
+    }
+    .meta-tag {
+      font-size: 10px;
+      color: rgba(203, 196, 210, 0.5);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .meta-tag-icon {
+      font-size: 11px !important;
+      opacity: 0.65;
+    }
+    #mobile-tabs { display: none !important; }
+  </style>
 </head>
-<body style="--page-accent:#3B82F6">
-<main>
+<body style="--page-accent:#3B82F6" class="nav-loading">
 
-  <div class="content-wrapper">
-  <div class="tracker-shell page-content">
-    <div class="tracker-header">
-      <div class="th-top">
-        <div class="th-title">🧠 Logical Reasoning</div>
-        <div class="th-badges">
-          <span class="badge badge--nqt">NQT · Phase 1 · 23 ch</span>
-          <span class="badge badge--ssc">SSC · Phase 2 · 21 ch</span>
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-orb" style="width:600px;height:600px;background:rgba(127,119,221,0.06);top:-200px;left:-100px;"></div>
+  <div class="ambient-orb" style="width:400px;height:400px;background:#3B82F608;bottom:-150px;right:-150px;"></div>
+
+  <main>
+    <div class="content-wrapper">
+      <div class="tracker-page">
+
+        <!-- ① HEADER -->
+        <div class="tracker-header">
+          <div class="header-left">
+            <h2 class="th-title" id="subject-title"><span id="subj-icon"></span> <span id="subj-name">🏦 Subject Tracker</span></h2>
+            <span class="badge" id="stage-badge"><span id="subj-exam-label">Subject Stage</span></span>
+          </div>
+          <nav class="timeline-tabs">
+            <a class="timeline-tab active" href="#">Syllabus</a>
+            <a class="timeline-tab" href="#">Timeline</a>
+            <a class="timeline-tab" href="#">Tasks</a>
+          </nav>
         </div>
+
+        <!-- ② STATS OVERVIEW GRID -->
+        <div class="stats-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-label">Done Chapters</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span class="stat-val" id="stat-done" style="color:var(--page-accent);">0</span>
+              <span class="stat-sub" id="stat-done-total-sub">of --</span>
+            </div>
+            <!-- Mirror elements -->
+            <span id="subj-progress-text" style="display:none"></span>
+            <div id="subj-bar-fill" style="display:none"></div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-label">Remaining</div>
+            <div>
+              <span class="stat-val" id="stat-rem" style="color:#e6e0e9;">0</span>
+            </div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-label">Total Progress</div>
+            <div>
+              <span class="stat-val" id="stat-pct" style="color:#1D9E75;">0%</span>
+              <span id="subj-pct-text" style="display:none">0%</span>
+            </div>
+          </div>
+          <div class="glass-card stat-card" style="border: 1px solid rgba(207, 188, 255, 0.12); background: rgba(207, 188, 255, 0.03);">
+            <div class="stat-label" style="color:#cfbcff;">Study Pacing</div>
+            <div>
+              <span class="stat-val" id="stat-pacing" style="color:#cfbcff; font-size: 18px;">2 chapters / week</span>
+              <div style="font-size:10px;color:rgba(203,196,210,0.5);margin-top:2px;">Recommended pace</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ CATEGORIES & TOPICS -->
+        <div id="categories-container" style="margin-top:8px;"></div>
+        <div id="chapters-container" style="margin-top:8px;"></div>
+
       </div>
-      <div class="th-mini-stats" id="reasoning-mini"></div>
     </div>
-    <div class="tracker-iframe-wrap">
-      <iframe id="tracker-frame" src="trackers/arpit_reasoning_tracker.html?v=2" title="Reasoning Tracker"
-        scrolling="no" onload="syncIframeHeight(this)"></iframe>
-    </div>
-  </div>
-  </div>
-</main>
-<script src="assets/nav.js?v=21"></script>
-<script src="assets/dashboard.js?v=5"></script>
-<script type="module" src="assets/auth-sync.js?v=21"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const exam = getCurrentExam();
-    const frame = document.getElementById('tracker-frame');
-    if (frame) frame.src = `trackers/arpit_reasoning_tracker.html?exam=${exam}&v=3`;
-    
-    const badgeContainer = document.querySelector('.th-badges');
-    if (badgeContainer) {
-      if (exam === 'nqt') {
-        badgeContainer.innerHTML = `<span class="badge badge--nqt">TCS NQT · 23 Chapters</span>`;
-      } else if (exam === 'ssc') {
-        badgeContainer.innerHTML = `<span class="badge badge--ssc">SSC CGL · 44 Chapters</span>`;
+  </main>
+
+  <script src="assets/nav.js?v=23"></script>
+  <script type="module" src="assets/auth-sync.js?v=22"></script>
+  <script>
+    const SUBJ = 'reasoning';
+    localStorage.setItem('selectedExam', 'nqt');
+
+    const configData = EXAM_CONFIG_NQT;
+    const priorityData = NQT_PRIORITY_DATA;
+    const subjConfig = configData.subjects.find(s => s.key === SUBJ) || configData.subjects[0];
+
+    document.body.style.setProperty('--page-accent', subjConfig.color);
+    document.getElementById('subject-title').innerHTML = `${subjConfig.icon} ${subjConfig.name}`;
+    document.getElementById('stage-badge').textContent = `TCS NQT · ${subjConfig.examStage}`;
+    document.getElementById('stage-badge').style.background = subjConfig.color + '15';
+    document.getElementById('stage-badge').style.color = subjConfig.color;
+    document.getElementById('stage-badge').style.borderColor = subjConfig.color + '30';
+    document.title = `${subjConfig.name} — TCS NQT Tracker`;
+
+    const chapters = [];
+    for (let i = 1; i <= subjConfig.totalChapters; i++) {
+      const chKey = subjConfig.prefix + i;
+      if (priorityData[chKey]) {
+        chapters.push({ key: chKey, index: i, data: priorityData[chKey] });
       }
     }
 
-    renderMiniStats('reasoning', 'reasoning-mini');
-    setTimeout(() => injectPriorityData('reasoning'), 400);
-  });
-</script>
+    function renderTracker() {
+      let doneCount = 0;
+      chapters.forEach(ch => {
+        const val = localStorage.getItem(ch.key);
+        if (val === '1' || val === '2' || val === '3') doneCount++;
+      });
+
+      const total = chapters.length;
+      const remaining = total - doneCount;
+      const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+      document.getElementById('stat-done').textContent = doneCount;
+      document.getElementById('stat-done-total-sub').textContent = `of ${total}`;
+      document.getElementById('stat-rem').textContent = remaining;
+      document.getElementById('stat-pct').textContent = pct + '%';
+
+      const categories = {};
+      chapters.forEach(ch => {
+        const cat = ch.data.category || 'Core Modules';
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push(ch);
+      });
+
+      const container = document.getElementById('categories-container');
+      container.innerHTML = Object.entries(categories).map(([catName, list]) => `
+        <div class="category-group">
+          <div class="cat-header">
+            <span class="material-symbols-outlined" style="font-size:15px;color:var(--page-accent);">folder_open</span>
+            <span>${catName}</span>
+          </div>
+          <div class="chapter-grid">
+            ${list.map((ch, index) => {
+              const val = localStorage.getItem(ch.key);
+              const isDone = val === '1' || val === '2' || val === '3';
+              let cbContent = '';
+              if (val === '1') cbContent = '<span class="material-symbols-outlined" style="font-size:14px;">check</span>';
+              else if (val === '2') cbContent = '<span style="font-size:10px;">⭐</span>';
+              else if (val === '3') cbContent = '<span style="font-size:10px;">🏆</span>';
+
+              return `
+                <div class="glass-card ch-card ${isDone ? 'done' : ''}${val === '2' ? ' revised' : val === '3' ? ' mock' : ''}" onclick="toggleChapter('${ch.key}')">
+                  <div class="ck-box-custom">${cbContent}</div>
+                  <span class="ch-num">${ch.index}</span>
+                  <div class="ch-info">
+                    <span class="ch-title">${ch.data.name}</span>
+                    <div class="ch-meta">
+                      <span class="badge-pri pri-${ch.data.priority.replace(/ /g,'-')}">${ch.data.priority}</span>
+                      ${ch.data.difficulty ? `<span class="meta-tag"><span class="material-symbols-outlined meta-tag-icon">bar_chart</span>${ch.data.difficulty}</span>` : ''}
+                      ${ch.data.prelimsWeight ? `<span class="meta-tag"><span class="material-symbols-outlined meta-tag-icon">show_chart</span>${ch.data.prelimsWeight}</span>` : ''}
+                      ${ch.data.days ? `<span class="meta-tag"><span class="material-symbols-outlined meta-tag-icon">schedule</span>${ch.data.days}</span>` : ''}
+                      <span class="meta-tag" style="color:rgba(203,196,210,0.4)"><span class="material-symbols-outlined meta-tag-icon">layers</span>${ch.data.stage}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.toggleChapter = function(key) {
+      const current = localStorage.getItem(key);
+      if (current === '1') localStorage.setItem(key, '2');
+      else if (current === '2') localStorage.setItem(key, '3');
+      else if (current === '3') localStorage.removeItem(key);
+      else localStorage.setItem(key, '1');
+      window.dispatchEvent(new Event('storage'));
+      renderTracker();
+    };
+
+    document.addEventListener('DOMContentLoaded', renderTracker);
+    window.addEventListener('cloudDataSynced', renderTracker);
+    window.addEventListener('storage', renderTracker);
+    
+    // Mirror clat/cuet style stats to standard stats
+    function mirrorStats() {
+      const subjProgress = document.getElementById('subj-progress-text');
+      if (subjProgress && subjProgress.textContent) {
+        const match = subjProgress.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+        if (match) {
+          const done = parseInt(match[1], 10);
+          const total = parseInt(match[2], 10);
+          const rem = Math.max(0, total - done);
+          const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+          
+          const statDone = document.getElementById('stat-done');
+          if (statDone) statDone.textContent = done;
+          
+          const statRem = document.getElementById('stat-rem');
+          if (statRem) statRem.textContent = rem;
+          
+          const statPct = document.getElementById('stat-pct');
+          if (statPct) statPct.textContent = pct + '%';
+          
+          const totalSub = document.getElementById('stat-done-total-sub');
+          if (totalSub) totalSub.textContent = `of ${total}`;
+        }
+      }
+      const pctText = document.getElementById('subj-pct-text');
+      if (pctText && pctText.textContent && !pctText.textContent.includes('undefined')) {
+        const statPct = document.getElementById('stat-pct');
+        if (statPct) statPct.textContent = pctText.textContent;
+      }
+    }
+    
+    window.addEventListener('storage', () => setTimeout(mirrorStats, 50));
+    window.addEventListener('cloudDataSynced', () => setTimeout(mirrorStats, 50));
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(mirrorStats, 100);
+      setTimeout(mirrorStats, 500);
+    });
+    
+  </script>
 </body>
 </html>

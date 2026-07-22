@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
+  <script src="./assets/ssc_chsl_exam_data.js"></script>
+  <script src="./assets/ssc_mts_exam_data.js"></script>
   
   <style>
     body {
@@ -350,10 +352,12 @@
 
   // Set exam context in localStorage
   localStorage.setItem('selectedExam', examType === 'mts' ? 'ssc_mts' : 'ssc_chsl');
-  document.getElementById('dash-link').href = `dashboard-ssc.html?exam=${examType}`;
+  const _dashLink = document.getElementById('dash-link');
+  if (_dashLink) _dashLink.href = `dashboard-ssc.html?exam=${examType}`;
 
   const subject = configData.subjects.find(s => s.key === subjKey) || configData.subjects[0];
 
+  document.body.style.setProperty('--page-accent', subject.color);
   document.getElementById('subj-icon').textContent = subject.icon;
   document.getElementById('subj-name').textContent = subject.name;
   document.getElementById('subj-exam-label').textContent = `${configData.examName} · ${subject.examStage}`;
@@ -378,7 +382,7 @@
 
     Object.entries(grouped).forEach(([category, chList]) => {
       const groupDiv = document.createElement('div');
-      groupDiv.className = 'cat-group';
+      groupDiv.className = 'category-group';
 
       let catDone = 0;
       let itemsHTML = chList.map((ch, index) => {
@@ -431,10 +435,10 @@
 
       groupDiv.innerHTML = `
         <div class="cat-header">
+          <span class="material-symbols-outlined" style="font-size:15px;color:var(--page-accent);">folder_open</span>
           <span>${category}</span>
-          <span style="font:600 12px/1 'JetBrains Mono';color:var(--text-tertiary)">${catDone} / ${chList.length}</span>
         </div>
-        <div>${itemsHTML}</div>
+        <div class="chapter-grid">${itemsHTML}</div>
       `;
 
       container.appendChild(groupDiv);
