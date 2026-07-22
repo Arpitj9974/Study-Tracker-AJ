@@ -428,7 +428,7 @@
       else if (current === '2') localStorage.setItem(key, '3');
       else if (current === '3') localStorage.removeItem(key);
       else localStorage.setItem(key, '1');
-      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new StorageEvent('storage', { key }));
       renderTracker();
     };
 

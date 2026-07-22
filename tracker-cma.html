@@ -494,7 +494,7 @@
       localStorage.setItem(key, '1');
     }
     if (window.bumpStreak) window.bumpStreak();
-    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new StorageEvent('storage', { key }));
     renderTracker();
   };
 
