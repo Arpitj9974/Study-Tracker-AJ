@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Complete Profile — Arpit's Exam Hub</title>
+  <title>Complete Profile — ExamPulse (ArpitPrep Hub)</title>
   <link rel="stylesheet" href="assets/style.css">
   <style>
     body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
@@ -38,9 +38,9 @@
   </div>
 
   <div class="auth-card" id="onboarding-view" style="display:none">
-    <div class="brand-icon">👋</div>
-    <div class="brand-title">Welcome to the Hub!</div>
-    <div class="brand-sub">Let's set up your profile</div>
+    <div class="brand-icon">⚡</div>
+    <div class="brand-title">Welcome to ExamPulse!</div>
+    <div class="brand-sub">ArpitPrep Hub</div>
     
     <form class="auth-form" id="onboarding-form">
       <div class="input-group">
@@ -60,6 +60,41 @@
           <label>Mobile Number</label>
           <input type="tel" id="ob-mobile" placeholder="Optional">
         </div>
+      </div>
+      <div class="input-group">
+        <label>Target Exam <span style="color:#EF4444">*</span></label>
+        <select id="ob-exam" required>
+          <option value="" disabled selected>Select your target exam...</option>
+          <option value="nqt">TCS NQT (Corporate / IT Aptitude)</option>
+          <option value="ssc">SSC CGL</option>
+          <option value="ssc_chsl">SSC CHSL</option>
+          <option value="ssc_mts">SSC MTS</option>
+          <option value="upsc">UPSC CSE</option>
+          <option value="cds">UPSC CDS</option>
+          <option value="nda">UPSC NDA & NA</option>
+          <option value="ibps_po">IBPS PO</option>
+          <option value="ibps_clerk">IBPS Clerk</option>
+          <option value="ibps_so_2026">IBPS SO (General)</option>
+          <option value="ibps_so_it_2026">IBPS SO IT Officer</option>
+          <option value="jee">JEE Main & Advanced</option>
+          <option value="neet_ug">NEET UG</option>
+          <option value="cat">CAT (MBA)</option>
+          <option value="cmat">CMAT (MBA)</option>
+          <option value="xat">XAT (XLRI)</option>
+          <option value="clat_ug">CLAT UG</option>
+          <option value="cuet_ug">CUET UG</option>
+          <option value="cuet_pg_general">CUET PG General</option>
+          <option value="ugcnet">UGC NET</option>
+          <option value="rrb_ntpc">RRB NTPC</option>
+          <option value="rrb_group_d">RRB Group D</option>
+          <option value="ca_foundation">CA Foundation</option>
+          <option value="ca_inter">CA Intermediate</option>
+          <option value="ca_final">CA Final</option>
+          <option value="cma_foundation">CMA Foundation</option>
+          <option value="cfa_l1">CFA Level 1</option>
+          <option value="cfa_l2">CFA Level 2</option>
+          <option value="cfa_l3">CFA Level 3</option>
+        </select>
       </div>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
         <div class="input-group">

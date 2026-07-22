@@ -925,7 +925,7 @@ function getCurrentExam() {
     return 'ca_foundation';
   }
   // For tracker pages, check localStorage for last selected exam
-  return localStorage.getItem('selectedExam') || 'nqt';
+  return localStorage.getItem('selectedExam') || null;
 }
 
 // ── Read stats filtered by exam ───────────────────────────────────────────────

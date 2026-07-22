@@ -1,6 +1,13 @@
 import { auth, db } from "./firebase-config.js";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult
+} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 // --- Form Elements ---
 const loginForm = document.getElementById('login-form');
@@ -11,6 +18,17 @@ const loginErr = document.getElementById('login-error');
 const signupErr = document.getElementById('signup-error');
 
 const googleProvider = new GoogleAuthProvider();
+
+// --- Handle Redirect Result (For Mobile / Fallback Sign-Ins) ---
+getRedirectResult(auth).then(async (result) => {
+  if (result && result.user) {
+    await hydrateLocalCache(result.user.uid, result.user.email);
+    window.location.href = 'index.html';
+  }
+}).catch((err) => {
+  console.error("Google Redirect Auth Error:", err);
+  if (loginErr) loginErr.textContent = err.message.replace('Firebase: ', '');
+});
 
 // --- Hydrate LocalStorage from Cloud ---
 // This is the magic that restores progress on a new device
@@ -60,21 +78,50 @@ async function hydrateLocalCache(uid, email) {
 }
 
 // --- Google Sign In ---
+const isMobileDevice = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 async function handleGoogleLogin(e) {
   e.preventDefault();
   const btn = e.currentTarget;
   const originalHtml = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = "Opening Google...";
+
+  // On mobile or in-app webview, use redirect directly to avoid popup blocking
+  if (isMobileDevice()) {
+    btn.innerHTML = "Redirecting to Google...";
+    try {
+      await signInWithRedirect(auth, googleProvider);
+      return;
+    } catch (err) {
+      console.error("Google redirect failed:", err);
+      alert("Google Sign-In failed: " + err.message);
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+      return;
+    }
+  }
   
+  btn.innerHTML = "Opening Google...";
   try {
     const result = await signInWithPopup(auth, googleProvider);
     btn.innerHTML = "Syncing Data...";
     await hydrateLocalCache(result.user.uid, result.user.email);
     window.location.href = 'index.html';
   } catch (err) {
-    console.error(err);
-    alert("Google Sign-In failed: " + err.message);
+    console.error("Popup login error:", err);
+    // If popup was blocked or closed on desktop browser, fallback to redirect
+    if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user') {
+      try {
+        btn.innerHTML = "Redirecting to Google...";
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      } catch (redirectErr) {
+        console.error("Google redirect fallback failed:", redirectErr);
+        alert("Google Sign-In failed: " + redirectErr.message);
+      }
+    } else {
+      alert("Google Sign-In failed: " + err.message);
+    }
     btn.disabled = false;
     btn.innerHTML = originalHtml;
   }

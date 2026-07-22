@@ -164,7 +164,7 @@ function getExamMode() {
       else if (window.parent.localStorage) exam = window.parent.localStorage.getItem('selectedExam');
     } catch(e) {}
   }
-  if (!exam) exam = localStorage.getItem('selectedExam') || 'nqt';
+  if (!exam) exam = localStorage.getItem('selectedExam') || null;
   return exam;
 }
 

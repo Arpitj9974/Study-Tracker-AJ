@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/f
 let cachedUsers = [];
 
 const EXAM_LABELS = {
+  not_selected: 'Not Selected',
   nqt: 'TCS NQT',
   ssc: 'SSC CGL',
   ssc_chsl: 'SSC CHSL',
@@ -31,6 +32,7 @@ const EXAM_LABELS = {
 };
 
 const EXAM_COLORS = {
+  not_selected: '#9CA3AF',
   nqt: '#7F77DD', ssc: '#1D9E75', ssc_chsl: '#8E44AD', ssc_mts: '#E67E22',
   ugcnet: '#4F46E5', upsc: '#3B5BDB', nda: '#F59E0B', ibps_po: '#B7791F',
   ibps_clerk: '#E11D48', jee: '#3B5BDB', neet_ug: '#4C9A3F', cat: '#E67E22',
@@ -107,7 +109,7 @@ async function loadAdminData() {
         lastLogin: data.lastLogin || null,
         lastActive: data.lastActive || data.lastLogin || null,
         loginCount: data.loginCount || 1,
-        selectedExam: data.selectedExam || 'nqt',
+        selectedExam: data.selectedExam || 'not_selected',
         progress: data.progress || {}
       });
     });
@@ -187,7 +189,7 @@ function renderMetrics() {
     if (now - actTime <= dayMs) active24h++;
     if (now - actTime <= 7 * dayMs) active7d++;
 
-    const ex = u.selectedExam || 'nqt';
+    const ex = u.selectedExam || 'not_selected';
     examCounts[ex] = (examCounts[ex] || 0) + 1;
   });
 
@@ -211,7 +213,7 @@ function populateExamFilter() {
   const select = document.getElementById('exam-filter');
   select.innerHTML = `<option value="ALL">All Selected Exams</option>`;
   
-  const uniqueExams = Array.from(new Set(cachedUsers.map(u => u.selectedExam || 'nqt')));
+  const uniqueExams = Array.from(new Set(cachedUsers.map(u => u.selectedExam || 'not_selected')));
   uniqueExams.forEach(ex => {
     const opt = document.createElement('option');
     opt.value = ex;
@@ -227,7 +229,7 @@ function renderUserTable() {
 
   let filtered = cachedUsers.filter(u => {
     const matchSearch = u.email.toLowerCase().includes(searchQuery);
-    const matchExam = examFilter === 'ALL' || (u.selectedExam || 'nqt') === examFilter;
+    const matchExam = examFilter === 'ALL' || (u.selectedExam || 'not_selected') === examFilter;
     return matchSearch && matchExam;
   });
 
@@ -262,9 +264,9 @@ function renderUserTable() {
   const dayMs = 86400000;
   tableBody.innerHTML = filtered.map(u => {
     const doneCount = countUserCompletedChapters(u.progress);
-    const exKey = u.selectedExam || 'nqt';
+    const exKey = u.selectedExam || 'not_selected';
     const exLabel = EXAM_LABELS[exKey] || exKey;
-    const exColor = EXAM_COLORS[exKey] || '#7F77DD';
+    const exColor = EXAM_COLORS[exKey] || '#9CA3AF';
 
     // Activity status dot
     const actTime = u.lastActive ? new Date(u.lastActive).getTime() : 0;

@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const loadingOverlay = document.getElementById('loading-overlay');
 const onboardingView = document.getElementById('onboarding-view');
@@ -9,6 +9,7 @@ const obEmail = document.getElementById('ob-email');
 const obName = document.getElementById('ob-name');
 const obAge = document.getElementById('ob-age');
 const obMobile = document.getElementById('ob-mobile');
+const obExam = document.getElementById('ob-exam');
 const obStatus = document.getElementById('ob-status');
 const obTargetDate = document.getElementById('ob-target-date');
 const obBtn = document.getElementById('ob-btn');
@@ -27,6 +28,9 @@ onAuthStateChanged(auth, async (user) => {
       
       if (userSnap.exists()) {
         const data = userSnap.data();
+        if (data.selectedExam && obExam) {
+          obExam.value = data.selectedExam;
+        }
         if (data.onboardingComplete) {
           // Already onboarded, redirect to home
           window.location.href = 'index.html';
@@ -58,6 +62,8 @@ obForm.addEventListener('submit', async (e) => {
   obBtn.textContent = 'Saving Profile...';
   obError.textContent = '';
   
+  const chosenExam = obExam ? obExam.value : null;
+
   const payload = {
     name: obName.value.trim(),
     age: parseInt(obAge.value, 10),
@@ -67,9 +73,17 @@ obForm.addEventListener('submit', async (e) => {
     onboardingComplete: true
   };
   
+  if (chosenExam) {
+    payload.selectedExam = chosenExam;
+    localStorage.setItem('selectedExam', chosenExam);
+    if (typeof window.setSelectedExam === 'function') {
+      window.setSelectedExam(chosenExam);
+    }
+  }
+
   try {
     const userRef = doc(db, "users", currentUid);
-    await updateDoc(userRef, payload);
+    await setDoc(userRef, payload, { merge: true });
     
     // Successfully saved, go to hub
     window.location.href = 'index.html';
