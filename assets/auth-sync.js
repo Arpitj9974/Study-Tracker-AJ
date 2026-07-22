@@ -280,23 +280,7 @@ onAuthStateChanged(auth, async (user) => {
       }
     }
 
-    if ((page === 'index.html' || page === '') && !isSelectMode) {
-      let activeList = [];
-      try {
-        const raw = localStorage.getItem('activeExams');
-        if (raw) activeList = JSON.parse(raw);
-      } catch (e) {}
-
-      // If ONLY 1 active exam: Direct redirect to that exam's tracker dashboard!
-      if (Array.isArray(activeList) && activeList.length === 1) {
-        const targetUrl = getDashboardUrl(activeList[0]);
-        if (targetUrl) {
-          window.location.href = targetUrl;
-          return;
-        }
-      }
-      // If 0 active exams or > 1 active exams: Stay on index.html
-    }
+    // Stay on index.html when user navigates to Home portal without delayed auto-redirects
 
   } else {
     // Not logged in! Redirect to login if we are not already there
