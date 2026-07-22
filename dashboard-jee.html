@@ -1,139 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>JEE Dashboard — Arpit's Exam Hub</title>
-  <meta name="description" content="JEE Main & Advanced Exam Preparation Dashboard."/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>JEE Dashboard — PrepTrack | AspirantFlow</title>
+  <meta name="description" content="JEE Advanced / Main preparation dashboard."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/style.css"/>
-  <script src="./assets/jee_exam_data.js"></script>
   <style>
-    .page-content { padding: 28px 32px 60px; display: flex; flex-direction: column; gap: 32px; }
-    /* Hub header */
-    .hub-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 26px; background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); flex-wrap:wrap; border-left:3px solid #3B5BDB; }
-    .hub-name   { font:700 21px/1.2 'DM Sans'; color:var(--text-primary); margin-bottom:4px; }
-    .hub-tag    { font:500 10px/1 'JetBrains Mono'; color:#3B5BDB; text-transform:uppercase; letter-spacing:.08em; }
-    .cdown-lbl  { font:500 9px/1 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.07em; color:var(--text-tertiary); margin-bottom:4px; }
-    .cdown-row  { display:flex; align-items:baseline; gap:6px; }
-    #countdown-days  { font:700 38px/1 'JetBrains Mono'; }
-    #countdown-badge { font:600 13px/1 'DM Sans'; }
-    /* Master stats */
-    .master-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
-    @media(max-width:900px){ .master-grid{ grid-template-columns:repeat(3,1fr); } }
-    @media(max-width:550px){ .master-grid{ grid-template-columns:repeat(2,1fr); } }
-    .ms-card { background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:5px; border-left:3px solid transparent; transition:all .2s; }
-    .ms-card:hover{ background:var(--bg-hover); }
-    .ms-lbl { font:500 9px/1 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.06em; color:var(--text-tertiary); }
-    .ms-val { font:600 26px/1 'JetBrains Mono'; color:var(--text-primary); }
-    .ms-sub { font:400 11px/1 'DM Sans'; color:var(--text-tertiary); }
-    /* Donut + stats together */
-    .overview-row { display:grid; grid-template-columns:120px 1fr; gap:24px; align-items:center; }
-    .donut-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; }
-    /* Subject cards */
-    .subject-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    @media(max-width:800px){ .subject-grid{ grid-template-columns:1fr; } }
-    .subject-card { background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column; gap:12px; border-top:2px solid var(--subj-color,#3B5BDB); box-shadow:0 0 0 1px var(--border-subtle),0 4px 20px rgba(0,0,0,.25); transition:transform .2s,box-shadow .2s; }
-    .subject-card:hover{ transform:translateY(-2px); box-shadow:0 0 0 1px var(--border-medium),0 8px 28px rgba(0,0,0,.35); }
-    .sc-header  { display:flex; align-items:center; justify-content:space-between; }
-    .sc-title   { display:flex; align-items:center; gap:10px; font:600 15px/1 'DM Sans'; color:var(--text-primary); }
-    .sc-icon    { font-size:18px; }
-    .sc-phases  { display:flex; flex-direction:column; gap:9px; }
-    .sc-phase   { display:flex; flex-direction:column; gap:5px; }
-    .sc-phase-label { display:flex; align-items:center; gap:6px; font:400 12px/1 'DM Sans'; color:var(--text-secondary); }
-    .sc-phase-count { margin-left:auto; font:500 11px/1 'JetBrains Mono'; color:var(--text-tertiary); }
-    .sc-link    { display:inline-flex; align-items:center; font:500 12px/1 'DM Sans'; color:var(--text-tertiary); text-decoration:none; border-top:1px solid var(--border-subtle); padding-top:10px; transition:color .2s; }
-    .sc-link:hover{ color:var(--subj-color,#3B5BDB); }
-    /* Focus + Smart */
-    .focus-wrap  { background:var(--bg-surface); border:1px solid var(--accent-amber); border-radius:var(--radius-lg); padding:22px; }
-    .focus-on-track{ font:500 14px/1.5 'DM Sans'; color:var(--accent-green); }
-    .focus-title { font:700 12px/1 'JetBrains Mono'; color:var(--accent-amber); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px; }
-    .focus-items { display:flex; flex-direction:column; gap:10px; }
-    .focus-item  { display:flex; align-items:center; gap:12px; }
-    .focus-subject{ font:600 13px/1 'DM Sans'; color:var(--text-primary); min-width:140px; }
-    .focus-pct   { font:500 12px/1 'JetBrains Mono'; min-width:42px; color:var(--accent-amber); }
-    .smart-wrap  { background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); padding:22px; }
+    body { font-family: 'Inter', sans-serif !important; background:#0A0C10; color:#e6e0e9; overflow:hidden; }
+    .ambient-orb { position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0; }
+    .glass-card { background:rgba(33,31,36,0.50);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(148,142,156,0.15);transition:border-color .2s ease,background .2s ease; }
+    .glass-card:hover { border-color:rgba(207,188,255,0.25);background:rgba(33,31,36,0.70); }
+    .preptrack-page { position:relative;z-index:1;flex:1;display:flex;flex-direction:column;overflow-y:auto;padding:28px 32px 60px;gap:28px; }
+    .status-badge { display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:rgba(207,188,255,0.1);color:#cfbcff;border:1px solid rgba(207,188,255,0.2);width:fit-content; }
+    .status-dot { width:6px;height:6px;border-radius:50%;background:#cfbcff;animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .hero-header { display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap; }
+    .hero-title { font-size:clamp(20px,3vw,30px);font-weight:800;color:#e6e0e9;letter-spacing:-0.02em;line-height:1.2;margin:8px 0 10px; }
+    .hero-tags { display:flex;flex-wrap:wrap;gap:8px; }
+    .hero-tag { padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(203,196,210,0.8);border:1px solid rgba(73,69,81,0.6);border-radius:4px;background:rgba(29,27,32,0.8); }
+    .countdown-card { display:flex;align-items:center;gap:24px;padding:20px 24px;border-radius:14px;flex-shrink:0; }
+    .countdown-divider { width:1px;height:40px;background:rgba(73,69,81,0.5); }
+    .countdown-days-num { font-size:52px;font-weight:800;line-height:1;letter-spacing:-0.03em; }
+    .stats-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:16px; }
+    @media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+    .stat-card { padding:18px;border-radius:14px; }
+    .stat-label { font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(203,196,210,0.7);margin-bottom:8px; }
+    .stat-val { font-size:28px;font-weight:800;line-height:1;letter-spacing:-0.02em; }
+    .stat-sub { font-size:11px;color:rgba(203,196,210,0.5);margin-top:3px; }
+    .stat-bar { height:2px;border-radius:2px;background:rgba(255,255,255,0.06);margin-top:14px;overflow:hidden; }
+    .stat-bar-fill { height:100%;border-radius:2px;transition:width 1s ease; }
+    .main-grid { display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start; }
+    @media(max-width:1100px){.main-grid{grid-template-columns:1fr;}}
+    .section-title { font-size:14px;font-weight:700;color:#e6e0e9;display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(73,69,81,0.3); }
+    .section-title-accent { width:3px;height:16px;border-radius:2px; }
+    .subject-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+    @media(max-width:650px){.subject-grid{grid-template-columns:1fr;}}
+    .subject-card { border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;cursor:pointer;border-left:3px solid var(--subj-color,#cfbcff);transition:transform .18s ease,box-shadow .18s ease; }
+    .subject-card:hover { transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.35); }
+    .subject-card--wide { grid-column:1/-1; }
+    .sc-header { display:flex;align-items:flex-start;justify-content:space-between;gap:8px; }
+    .sc-icon { font-size:16px; }
+    .sc-title { font-size:13px;font-weight:600;color:#e6e0e9;flex:1;margin-left:10px;line-height:1.3; }
+    .sc-pct { font-size:16px;font-weight:800;flex-shrink:0; }
+    .sc-phases { display:flex;flex-direction:column;gap:8px; }
+    .sc-phase { display:flex;flex-direction:column;gap:4px; }
+    .sc-phase-label { display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(203,196,210,0.6); }
+    .sc-phase-count { margin-left:auto;font-size:10px;color:rgba(203,196,210,0.5); }
+    .sc-link { display:inline-flex;align-items:center;font-size:11px;font-weight:600;text-decoration:none;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;color:rgba(203,196,210,0.5);transition:color .2s; }
+    .sc-link:hover { color:#cfbcff; }
+    .progress-bar { height:3px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden; }
+    .progress-fill { height:100%;border-radius:3px;width:0%;transition:width 1s ease; }
+    .side-card { border-radius:14px;padding:20px; }
+    .strategy-note { font-size:13px;line-height:1.6;color:rgba(203,196,210,0.85); }
+    .focus-items { display:flex;flex-direction:column;gap:12px; }
+    .focus-on-track { font-size:13px;line-height:1.6;color:#1D9E75; }
+    .focus-title { font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#ffb4ab;margin-bottom:12px; }
+    .focus-item { display:flex;align-items:center;gap:10px; }
+    .focus-subject { font-size:12px;font-weight:500;color:#e6e0e9;width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .focus-pct { font-size:11px;font-weight:700;width:32px;text-align:right;flex-shrink:0; }
+    .overview-row { display:grid;grid-template-columns:130px 1fr;gap:20px;align-items:center; }
+    @media(max-width:700px){.overview-row{grid-template-columns:1fr;}}
+    .donut-wrap { display:flex;flex-direction:column;align-items:center;gap:6px; }
+    #mobile-tabs { display:none !important; }
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+    #smart-box { font-size:13px;line-height:1.6;color:rgba(203,196,210,0.85); }
+    #smart-box strong { color:#e6e0e9; }
+    @media(max-width:768px) {
+      .preptrack-page{ padding:16px 16px 80px;gap:20px; }
+      .countdown-card{ flex-direction:column;align-items:flex-start;gap:12px; }
+      .countdown-days-num{ font-size:36px; }
+      .hero-title{ font-size:18px; }
+    }
   </style>
 </head>
 <body class="nav-loading">
-<main>
-
-  <div class="content-wrapper">
-  <div class="page-content">
-
-    <!-- ① HEADER -->
-    <div class="hub-header">
-      <div><div class="hub-name">⚛️ JEE Main & Advanced Preparation</div><div class="hub-tag">Physics · Chemistry · Mathematics (PCM)</div></div>
-      <div>
-        <div class="cdown-lbl">Target Window 2027</div>
-        <div class="cdown-row">
-          <span id="countdown-days" style="color:#3B5BDB">Jan 2027</span>
-          <span id="countdown-badge" style="color:#3B5BDB">Session 1</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ② MASTER STATS -->
-    <div>
-      <div class="section-head" style="--accent-purple:#3B5BDB"><h2>JEE Stats</h2></div>
-      <div class="master-grid">
-        <div class="ms-card" style="border-left-color:#3B5BDB">
-          <span class="ms-lbl">Total Done</span>
-          <span class="ms-val" id="ms-total-done" style="color:#3B5BDB">—</span>
-          <span class="ms-sub">chapters</span>
-        </div>
-        <div class="ms-card" style="border-left-color:var(--border-medium)">
-          <span class="ms-lbl">Total Chapters</span>
-          <span class="ms-val">56</span>
-          <span class="ms-sub">JEE PCM syllabus</span>
-        </div>
-        <div class="ms-card" style="border-left-color:#3B5BDB">
-          <span class="ms-lbl">Overall %</span>
-          <span class="ms-val" id="ms-overall-pct" style="background:linear-gradient(90deg,#3B5BDB,#2B8A6E);-webkit-background-clip:text;color:transparent">—</span>
-          <span class="ms-sub">of syllabus</span>
-        </div>
-        <div class="ms-card" style="border-left-color:#3B5BDB">
-          <span class="ms-lbl">Subjects</span>
-          <span class="ms-val" style="color:#3B5BDB">3</span>
-          <span class="ms-sub">Physics, Chem, Math</span>
-        </div>
-        <div class="ms-card" style="border-left-color:var(--text-muted)">
-          <span class="ms-lbl">Target Exam</span>
-          <span class="ms-val" style="color:var(--accent-amber);font-size:20px">2027</span>
-          <span class="ms-sub" style="color:var(--text-muted)">Session 1 & 2</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ③ DONUT + OVERVIEW -->
-    <div>
-      <div class="section-head" style="--accent-purple:#3B5BDB"><h2>JEE Progress Overview</h2></div>
-      <div class="overview-row">
-        <div class="donut-wrap">
-          <svg id="donut-svg" width="120" height="120" viewBox="0 0 120 120"></svg>
+  <div class="ambient-orb" style="width:700px;height:700px;background:rgba(103,80,164,0.10);top:-200px;left:-100px;"></div>
+  <div class="ambient-orb" style="width:500px;height:500px;background:rgba(59,91,219,0.08);bottom:-100px;right:-100px;"></div>
+  <main>
+    <div class="content-wrapper">
+      <div class="preptrack-page">
+        
+        <div class="hero-header">
+          <div>
+            <div class="status-badge"><span class="status-dot"></span>Tracker Active</div>
+            <div class="hero-title" id="hub-name">⚛️ JEE Advanced / Main</div>
+            <div class="hero-tags"><span class="hero-tag">Physics</span><span class="hero-tag">Chemistry</span><span class="hero-tag">Mathematics</span></div>
+            <div style="margin-top:6px;font-size:11px;color:rgba(203,196,210,0.55);" id="hub-tag"></div>
+          </div>
+          <div class="glass-card countdown-card">
+            <div>
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(203,196,210,0.6);margin-bottom:6px;" id="countdown-lbl">Days until JEE</div>
+              <div style="display:flex;align-items:baseline;gap:8px;">
+                <span class="countdown-days-num" id="countdown-days" style="color:#3B5BDB;">—</span>
+                <span style="font-size:14px;font-weight:600;color:rgba(203,196,210,0.7);" id="countdown-badge">days left</span>
+              </div>
+            </div>
+            <div class="countdown-divider"></div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div>
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(203,196,210,0.6);margin-bottom:4px;">Target Date</div>
+                <div style="font-size:14px;font-weight:700;color:#e6e0e9;" id="ms-target-date">—</div>
+                <div style="font-size:10px;color:rgba(203,196,210,0.5);" id="ms-target-label">Exam Date</div>
+              </div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:18px;color:rgba(203,196,210,0.6);">calendar_today</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div>
-          <div class="section-head green" style="margin-bottom:12px"><h2>Subject Breakdown</h2></div>
-          <div class="subject-grid" id="subject-cards"></div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:rgba(203,196,210,0.5);margin-bottom:12px;" id="ibps-stats-title">Exam Stats</div>
+          <div class="stats-grid">
+            <div class="glass-card stat-card" id="ms-card-done" style="border-left:3px solid #3B5BDB;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                <div class="stat-label">Total Done</div>
+                <span class="material-symbols-outlined" style="font-size:18px;opacity:0.4;color:#3B5BDB;">menu_book</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:6px;">
+                <span class="stat-val" id="ms-total-done" style="color:#3B5BDB;">—</span>
+                <span class="stat-sub">chapters</span>
+              </div>
+              <div class="stat-bar"><div class="stat-bar-fill" id="stat-bar-done" style="background:#3B5BDB;width:0%"></div></div>
+            </div>
+            <div class="glass-card stat-card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                <div class="stat-label">Total Chapters</div>
+                <span class="material-symbols-outlined" style="font-size:18px;opacity:0.4;">layers</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:6px;">
+                <span class="stat-val" id="ms-total-chapters">—</span>
+                <span class="stat-sub" id="ms-syllabus-sub">syllabus</span>
+              </div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="background:rgba(203,196,210,0.3);width:100%"></div></div>
+            </div>
+            <div class="glass-card stat-card" id="ms-card-pct" style="border-left:3px solid #cfbcff;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                <div class="stat-label">Mastery Progress</div>
+                <span class="material-symbols-outlined" style="font-size:18px;opacity:0.4;color:#cfbcff;">auto_awesome</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:6px;">
+                <span class="stat-val" id="ms-overall-pct" style="background:linear-gradient(90deg,#3B5BDB,#cfbcff);-webkit-background-clip:text;color:transparent;">—</span>
+                <span class="stat-sub">of syllabus</span>
+              </div>
+              <div class="stat-bar"><div class="stat-bar-fill" id="stat-bar-pct" style="background:linear-gradient(90deg,#3B5BDB,#cfbcff);width:0%"></div></div>
+            </div>
+            <div class="glass-card stat-card" id="ms-card-subj">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                <div class="stat-label">Active Tracks</div>
+                <span class="material-symbols-outlined" style="font-size:18px;opacity:0.4;color:#cdc0e9;">bolt</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:6px;">
+                <span class="stat-val" id="ms-subj-count" style="color:#cdc0e9;">—</span>
+                <span class="stat-sub">focus areas</span>
+              </div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="background:#cdc0e9;width:50%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="main-grid">
+          <div style="display:flex;flex-direction:column;gap:24px;">
+            <div class="glass-card" style="padding:20px;border-radius:16px;">
+              <div class="section-title">
+                <span class="section-title-accent" style="background:#3B5BDB;"></span>
+                Progress Overview
+              </div>
+              <div class="overview-row">
+                <div class="donut-wrap">
+                  <svg id="donut-svg" width="120" height="120" viewBox="0 0 120 120"></svg>
+                </div>
+                <div>
+                  <div class="section-title" style="margin-bottom:12px;">
+                    <span class="section-title-accent" style="background:#1D9E75;"></span>
+                    Subject Breakdown
+                  </div>
+                  <div class="subject-grid" id="subject-cards"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="glass-card side-card" style="border:1px solid rgba(231,195,101,0.15);background:linear-gradient(135deg,rgba(231,195,101,0.06),transparent);">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;color:#e7c365;">
+                <span class="material-symbols-outlined" style="font-size:18px;">emoji_objects</span>
+                <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;">Strategy Key</span>
+              </div>
+              <div id="smart-box" class="strategy-note"><span style="color:rgba(203,196,210,0.4);">Loading…</span></div>
+            </div>
+            <div class="glass-card side-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <div style="font-size:12px;font-weight:700;color:#e6e0e9;">Current Priority</div>
+                <span style="font-size:9px;font-weight:700;text-transform:uppercase;color:#ffb4ab;letter-spacing:0.06em;">High Impact</span>
+              </div>
+              <div id="focus-box"><span style="color:rgba(203,196,210,0.4);font-size:13px;">Loading…</span></div>
+              <div style="margin-top:14px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:flex-start;">
+                <span class="material-symbols-outlined" style="font-size:14px;color:#ffb4ab;flex-shrink:0;margin-top:1px;">info</span>
+                <p style="font-size:10px;color:rgba(203,196,210,0.6);line-height:1.5;">Complete at least 2 chapters this week to maintain target pacing.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- ④ SMART SUGGESTION -->
-    <div>
-      <div class="section-head amber"><h2>Strategy Recommendation</h2></div>
-      <div class="smart-wrap" id="smart-box"><span style="color:var(--text-tertiary)">Loading…</span></div>
-    </div>
-
-    <!-- ⑤ FOCUS BOX -->
-    <div>
-      <div class="section-head amber"><h2>Priority Focus</h2><span class="sh-sub">Weakest Subjects Below 50%</span></div>
-      <div class="focus-wrap" id="focus-box"><span style="color:var(--text-tertiary)">Loading…</span></div>
-    </div>
-
-  </div>
-  </div>
-</main>
-<script src="assets/nav.js?v=21"></script>
-<script src="assets/dashboard-jee.js?v=1"></script>
-<script type="module" src="assets/auth-sync.js?v=21"></script>
+  </main>
+  <script src="assets/nav.js?v=23"></script>
+  <script src="assets/dashboard-jee.js?v=2"></script>
+  <script type="module" src="assets/auth-sync.js?v=22"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', updateStatBars);
+    window.addEventListener('cloudDataSynced', updateStatBars);
+    window.addEventListener('storage', updateStatBars);
+    setTimeout(updateStatBars, 600);
+    function updateStatBars() {
+      const total = parseInt(((document.getElementById('ms-total-chapters')||{}).textContent||'1'))||1;
+      const done = parseInt(((document.getElementById('ms-total-done')||{}).textContent||'0'))||0;
+      const pct = Math.min(100, Math.round((done/total)*100));
+      const bd = document.getElementById('stat-bar-done');
+      const bp = document.getElementById('stat-bar-pct');
+      if(bd) bd.style.width = pct+'%';
+      if(bp) bp.style.width = pct+'%';
+    }
+  </script>
 </body>
 </html>
