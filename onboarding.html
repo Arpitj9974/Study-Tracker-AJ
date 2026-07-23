@@ -1,57 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Complete Profile — AspirantFlow (ArpitPrep Hub)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Complete Profile — AspirantFlow</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css?v=2">
+  
   <style>
-    body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
-    .auth-card { background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:var(--radius-lg); padding:40px 32px; width:100%; max-width:480px; box-shadow:0 12px 40px rgba(0,0,0,0.5); text-align:center; }
-    .brand-icon { font-size:40px; margin-bottom:12px; }
-    .brand-title { font:700 24px/1.2 'DM Sans'; color:var(--text-primary); margin-bottom:6px; }
-    .brand-sub { font:500 12px/1.5 'JetBrains Mono'; color:var(--accent-purple); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:32px; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      background-color: #0D0F14;
+      font-family: 'Inter', sans-serif;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Ambient Glow Orbs */
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(120px);
+    }
+    .orb-purple {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(127, 119, 221, 0.15) 0%, rgba(13, 15, 20, 0) 70%);
+      top: -120px;
+      right: -100px;
+    }
+    .orb-blue {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(13, 15, 20, 0) 70%);
+      bottom: -100px;
+      left: -100px;
+    }
+
+    .auth-card {
+      position: relative;
+      z-index: 10;
+      background: rgba(20, 23, 32, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      transition: all 0.3s ease;
+      margin: 40px 0;
+    }
+
+    .brand-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      display: inline-block;
+      filter: drop-shadow(0 0 12px rgba(127, 119, 221, 0.4));
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(127, 119, 221, 0.3)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(127, 119, 221, 0.6)); }
+    }
+
+    .brand-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #F0F2FF;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: #7F77DD;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 28px;
+    }
     
-    .auth-form { display:flex; flex-direction:column; gap:16px; text-align:left; }
-    .input-group { display:flex; flex-direction:column; gap:6px; }
-    .input-group label { font:500 12px/1 'DM Sans'; color:var(--text-secondary); }
-    .input-group input, .input-group select { background:var(--bg-surface); border:1px solid var(--border-medium); border-radius:8px; padding:12px 16px; font:400 14px/1 'DM Sans'; color:var(--text-primary); outline:none; transition:border-color 0.2s; }
-    .input-group input:focus, .input-group select:focus { border-color:var(--accent-purple); }
-    .input-group input:disabled { opacity:0.6; cursor:not-allowed; }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #9BA3C4;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .input-group input, .input-group select {
+      background: rgba(13, 15, 20, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-size: 13px;
+      color: #F0F2FF;
+      outline: none;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      border-color: #7F77DD;
+      background: rgba(13, 15, 20, 0.8);
+      box-shadow: 0 0 0 4px rgba(127, 119, 221, 0.15);
+    }
     
-    .btn { background:var(--accent-purple); color:white; border:none; border-radius:8px; padding:14px; font:600 14px/1 'DM Sans'; cursor:pointer; transition:background 0.2s; margin-top:8px; }
-    .btn:hover { background:#6A62C5; }
-    .btn:disabled { opacity:0.6; cursor:not-allowed; }
+    .input-group input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .input-group select option {
+      background: #141720;
+      color: #F0F2FF;
+    }
     
-    .error-msg { color:var(--accent-red,#EF4444); font:500 12px/1.4 'DM Sans'; text-align:center; min-height:16px; margin-top:10px; }
+    .btn {
+      background: linear-gradient(135deg, #7F77DD 0%, #534AB7 100%);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+      box-shadow: 0 4px 16px rgba(127, 119, 221, 0.3);
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(127, 119, 221, 0.5);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
     
-    /* Loading overlay */
-    .loading-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:var(--bg-dark); z-index:100; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--text-primary); }
-    .spinner { border:4px solid rgba(255,255,255,0.1); border-left-color:var(--accent-purple); border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite; margin-bottom:16px; }
-    @keyframes spin { 100% { transform:rotate(360deg); } }
+    .error-msg {
+      color: #EF4444;
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      min-height: 18px;
+      margin-top: 10px;
+    }
+
+    /* Inline Verification Overlay styling */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #0D0F14;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #F0F2FF;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.05);
+      border-left-color: #7F77DD;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Ambient background visuals -->
+  <div class="ambient-orb orb-purple"></div>
+  <div class="ambient-orb orb-blue"></div>
+
+  <!-- Inline Loading verification while initializing -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="spinner"></div>
-    <div style="font:500 14px 'DM Sans'">Verifying Session...</div>
+    <div style="font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; color: #9BA3C4;">Verifying Session...</div>
   </div>
 
   <div class="auth-card" id="onboarding-view" style="display:none">
     <div class="brand-icon">⚡</div>
-    <div class="brand-title">Welcome to AspirantFlow!</div>
-    <div class="brand-sub">ArpitPrep Hub</div>
+    <h2 class="brand-title">Welcome to AspirantFlow!</h2>
+    <div class="brand-sub">Complete Your Profile</div>
     
     <form class="auth-form" id="onboarding-form">
       <div class="input-group">
         <label>Email Address</label>
         <input type="email" id="ob-email" disabled>
       </div>
+      
       <div class="input-group">
         <label>Full Name <span style="color:#EF4444">*</span></label>
-        <input type="text" id="ob-name" required placeholder="John Doe">
+        <input type="text" id="ob-name" required placeholder="e.g. John Doe">
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      
+      <div class="form-row">
         <div class="input-group">
           <label>Age <span style="color:#EF4444">*</span></label>
           <input type="number" id="ob-age" required min="10" max="99" placeholder="e.g. 21">
@@ -61,11 +264,12 @@
           <input type="tel" id="ob-mobile" required placeholder="e.g. 9876543210">
         </div>
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      
+      <div class="form-row">
         <div class="input-group">
           <label>Current Status <span style="color:#EF4444">*</span></label>
           <select id="ob-status" required>
-            <option value="" disabled selected>Select your status...</option>
+            <option value="" disabled selected>Select status...</option>
             <option value="School">School Student</option>
             <option value="Graduation">Undergraduate / College</option>
             <option value="Job">Working Professional (Job)</option>
@@ -76,7 +280,7 @@
         <div class="input-group">
           <label>Academic Stream <span style="color:#EF4444">*</span></label>
           <select id="ob-stream" required>
-            <option value="" disabled selected>Select your stream...</option>
+            <option value="" disabled selected>Select stream...</option>
             <option value="Science (PCM/PCB)">Science (PCM/PCB)</option>
             <option value="Commerce">Commerce</option>
             <option value="Arts/Humanities">Arts / Humanities</option>
@@ -87,7 +291,8 @@
           </select>
         </div>
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      
+      <div class="form-row">
         <div class="input-group">
           <label>State <span style="color:#EF4444">*</span></label>
           <input type="text" id="ob-state" required placeholder="e.g. Gujarat">

@@ -17,6 +17,14 @@ const obState = document.getElementById('ob-state');
 const obCity = document.getElementById('ob-city');
 
 let currentUid = null;
+const FIRESTORE_TIMEOUT_MS = 5000;
+
+function runWithTimeout(promise, errorMsg) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(errorMsg)), FIRESTORE_TIMEOUT_MS))
+  ]);
+}
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -25,28 +33,35 @@ onAuthStateChanged(auth, async (user) => {
     
     try {
       const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
+      const userSnap = await runWithTimeout(getDoc(userRef), "Checking onboarding state");
       
       if (userSnap.exists()) {
         const data = userSnap.data();
         if (data.onboardingComplete) {
-          // Already onboarded, redirect to home
+          // Save state locally
+          localStorage.setItem('onboardingComplete', 'true');
           window.location.href = 'index.html';
           return;
         }
       }
       
-      // Not onboarded, show the form
-      loadingOverlay.style.display = 'none';
-      onboardingView.style.display = 'block';
+      // Not onboarded yet: display the form
+      if (loadingOverlay) loadingOverlay.style.display = 'none';
+      if (onboardingView) onboardingView.style.display = 'block';
     } catch (err) {
-      console.error("Error fetching user data:", err);
-      obError.textContent = "Error loading profile. Please try refreshing.";
-      loadingOverlay.style.display = 'none';
-      onboardingView.style.display = 'block';
+      console.error("[Onboarding] Fetch error or timeout, checking local storage:", err);
+      const isLocallyOnboarded = localStorage.getItem('onboardingComplete') === 'true';
+      if (isLocallyOnboarded) {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      // Not onboarded locally, show the form
+      if (loadingOverlay) loadingOverlay.style.display = 'none';
+      if (onboardingView) onboardingView.style.display = 'block';
     }
   } else {
-    // Not logged in
+    // Session is unauthenticated, redirect to login page
     window.location.href = 'login.html';
   }
 });
@@ -72,19 +87,20 @@ obForm.addEventListener('submit', async (e) => {
     onboardingComplete: true
   };
 
-  localStorage.setItem('activeExams', JSON.stringify([]));
-  localStorage.removeItem('selectedExam');
-
   try {
     const userRef = doc(db, "users", currentUid);
-    await setDoc(userRef, payload, { merge: true });
     
-    // Successfully saved, go to hub
-    window.location.href = 'index.html';
+    // Set basic profile fields in Firestore with timeout
+    await runWithTimeout(setDoc(userRef, payload, { merge: true }), "Saving onboarding profile");
   } catch (err) {
-    console.error("Error updating profile:", err);
-    obError.textContent = "Failed to save profile. Please try again.";
-    obBtn.disabled = false;
-    obBtn.textContent = 'Complete Profile & Continue';
+    console.error("[Onboarding] Firestore profile save timed out/failed. Falling back to local mode:", err);
   }
+
+  // Always write locally so the user is never stuck
+  localStorage.setItem('activeExams', JSON.stringify([]));
+  localStorage.removeItem('selectedExam');
+  localStorage.setItem('onboardingComplete', 'true');
+  
+  // Redirect to the home dashboard
+  window.location.href = 'index.html';
 });
