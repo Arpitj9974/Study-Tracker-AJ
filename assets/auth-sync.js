@@ -293,8 +293,13 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     // Guard 2: Admin Panel check
+    const isUserAdmin = window.isAdmin(user.email);
+    document.querySelectorAll('#admin-nav-link, #mobile-admin-nav-link').forEach(el => {
+      el.style.setProperty('display', isUserAdmin ? 'flex' : 'none', 'important');
+    });
+
     if (page === 'admin.html') {
-      if (!window.isAdmin(user.email)) {
+      if (!isUserAdmin) {
         alert("Access Denied: You do not have administrator permissions.");
         window.location.href = 'index.html';
         return;
@@ -307,6 +312,11 @@ onAuthStateChanged(auth, async (user) => {
     // User is logged out
     currentUid = null;
     window.currentUserEmail = null;
+    
+    // Hide Admin links when logged out
+    document.querySelectorAll('#admin-nav-link, #mobile-admin-nav-link').forEach(el => {
+      el.style.setProperty('display', 'none', 'important');
+    });
     
     if (page !== 'login.html') {
       window.location.href = 'login.html';
