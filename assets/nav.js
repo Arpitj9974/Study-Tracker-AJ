@@ -1056,6 +1056,9 @@ function getTimelineProgress() {
 
 // ── Sidebar injection ─────────────────────────────────────────────────────────
 function buildNav() {
+  // Don't build navigation if we are loaded inside an iframe
+  if (window.self !== window.top) return;
+
   const page = window.location.pathname.split('/').pop() || 'index.html';
   
   // Don't show sidebar on these general/home pages
