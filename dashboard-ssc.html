@@ -89,7 +89,11 @@
           <div>
             <div class="status-badge"><span class="status-dot"></span>Tracker Active</div>
             <div class="hero-title" id="hub-name">📝 SSC — CGL / CHSL / MTS</div>
-            <div class="hero-tags"><span class="hero-tag">CGL</span><span class="hero-tag">CHSL</span><span class="hero-tag">MTS</span></div>
+            <div class="hero-tags">
+              <a href="dashboard-ssc.html?exam=cgl" data-dash-level="cgl" class="hero-tag" style="text-decoration: none; cursor: pointer;">CGL</a>
+              <a href="dashboard-ssc.html?exam=chsl" data-dash-level="chsl" class="hero-tag" style="text-decoration: none; cursor: pointer;">CHSL</a>
+              <a href="dashboard-ssc.html?exam=mts" data-dash-level="mts" class="hero-tag" style="text-decoration: none; cursor: pointer;">MTS</a>
+            </div>
             <div style="margin-top:6px;font-size:11px;color:rgba(203,196,210,0.55);" id="hub-tag"></div>
           </div>
           <div class="glass-card countdown-card">
@@ -209,12 +213,48 @@
   </main>
   <script src="assets/nav.js?v=24"></script>
   <script>
+  const EXAM_CONFIG_CGL = {
+    examKey: "ssc",
+    examName: "SSC CGL",
+    fullName: "SSC Combined Graduate Level Examination",
+    targetYear: 2026,
+    eligibility: "Bachelor's degree; age 18–32 (post-wise)",
+    posts: "ASO, Inspector, Sub Inspector, Tax Assistant",
+    examDate: "2025-09-15",
+    examPattern: {
+      stages: "Tier 1 (Shortlisting, 100 Qs / 200 Marks / 60 Min) → Tier 2 (Merit, Section I, II & III)",
+      tier1: {
+        totalQuestions: 100, totalMarks: 200, durationMinutes: 60,
+        sections: [
+          { name: "General Intelligence & Reasoning", questions: 25 },
+          { name: "General Awareness", questions: 25 },
+          { name: "Quantitative Aptitude", questions: 25 },
+          { name: "English Comprehension", questions: 25 }
+        ],
+        marking: "+2 correct; −0.50 wrong"
+      },
+      tier2: {
+        session1: "Section 1 (Math 30Q + Reasoning 30Q) + Section 2 (English 45Q + GA 25Q) + Section 3 (Computer 20Q Qualifying)",
+        session2: "Data Entry Speed Test (DEST) - Qualifying",
+        marking: "+3 correct; −1 wrong"
+      }
+    },
+    subjects: [
+      { key: "speedmath", name: "Speed Math",           icon: "⚡", color: "#F97316", prefix: "sm_",   totalChapters: 28, tracker: "tracker-speedmath.html" },
+      { key: "quant",     name: "Quantitative Aptitude", icon: "🔢", color: "#7F77DD", prefix: "qt3_",  totalChapters: 41, tracker: "tracker-quant.html" },
+      { key: "reasoning", name: "Reasoning Ability",     icon: "🧠", color: "#3B82F6", prefix: "rs3_",  totalChapters: 44, tracker: "tracker-reasoning.html" },
+      { key: "english",   name: "English Language",      icon: "📝", color: "#1D9E75", prefix: "en_",   totalChapters: 26, tracker: "tracker-english.html" },
+      { key: "gk",        name: "General Knowledge",     icon: "🌍", color: "#EC4899", prefix: "gk_",   totalChapters: 23, tracker: "tracker-gk.html" }
+    ]
+  };
+
   window.DASH_SPEC = {
     trackerPage: 'tracker-ssc.html',
     param: 'exam',
     variants: [
+      { id: 'cgl',  config: EXAM_CONFIG_CGL,  storageKey: 'ssc',      trackerQuery: 'exam=cgl' },
       { id: 'chsl', config: EXAM_CONFIG_CHSL, storageKey: 'ssc_chsl', trackerQuery: 'exam=chsl' },
-      { id: 'mts', config: EXAM_CONFIG_MTS, storageKey: 'ssc_mts', trackerQuery: 'exam=mts' }
+      { id: 'mts',  config: EXAM_CONFIG_MTS,  storageKey: 'ssc_mts',  trackerQuery: 'exam=mts' }
     ],
     smart: '<strong>SSC Strategy:</strong> Tier-1 is about speed. Master Quant & Reasoning shortcuts and revise English grammar + GK daily.'
   };

@@ -105,7 +105,7 @@
             <div class="progress-bar"><div class="progress-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
           </div>
         </div>
-        <a href="${trackerLink(s.key)}" class="sc-link">Open Subject Roadmap →</a>
+        <a href="${s.tracker || trackerLink(s.key)}" class="sc-link">Open Subject Roadmap →</a>
       </div>`).join(''));
 
     // Focus box (weak subjects < 50%)
