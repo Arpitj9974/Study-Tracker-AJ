@@ -476,3 +476,21 @@ main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
   filter: brightness(1.1);
 }
 
+/* Mobile view fixes for PrepTrack Dashboards (< 768px) */
+@media (max-width: 768px) {
+  html, body {
+    overflow: auto !important;
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+  main {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .preptrack-page {
+    overflow: visible !important;
+    height: auto !important;
+  }
+}
+
+
