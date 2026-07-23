@@ -1185,6 +1185,24 @@ function buildNav() {
         <button class="logout-btn-trigger mh-btn logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}">Log Out</button>
       </div>
     </div>
+    
+    <!-- Hamburger Dropdown for Subject Navigation on Mobile -->
+    <div class="mh-dropdown-container">
+      <button class="mh-dropdown-trigger" onclick="document.getElementById('mh-dropdown-menu').classList.toggle('active')">
+        <span class="material-symbols-outlined" style="font-size:18px;">menu</span>
+        <span>Select Subject / Page</span>
+      </button>
+      <div id="mh-dropdown-menu" class="mh-dropdown-menu">
+        ${links.map(l => {
+          const active = isActive(l);
+          return `<a href="${l.href}" class="mh-dropdown-item${active ? ' active' : ''}">
+            <span class="mh-dropdown-icon">${l.icon}</span>
+            <span class="mh-dropdown-label">${l.label}</span>
+          </a>`;
+        }).join('')}
+      </div>
+    </div>
+
     <div class="mh-bottom">
       <div class="mh-progress">
         <div class="spb-bar-wrap">
@@ -1229,6 +1247,16 @@ function buildNav() {
   }).join('');
   document.body.insertAdjacentHTML('beforeend',
     `<nav id="mobile-tabs">${mobTabs}</nav>`);
+
+  // Auto-close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    const container = document.querySelector('.mh-dropdown-container');
+    const menu = document.getElementById('mh-dropdown-menu');
+    const trigger = document.querySelector('.mh-dropdown-trigger');
+    if (container && menu && !container.contains(e.target)) {
+      menu.classList.remove('active');
+    }
+  });
 
   // Auto-scroll active tab into view
   setTimeout(() => {
