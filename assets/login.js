@@ -18,10 +18,11 @@ const signupErr = document.getElementById('signup-error');
 
 const googleProvider = new GoogleAuthProvider();
 
-// --- Handle Redirect Result (For Mobile / Fallback Sign-Ins) ---
+// --- Handle Redirect Result (For Fallback Sign-Ins) ---
 getRedirectResult(auth).then((result) => {
   if (result && result.user) {
-    // The global auth guard in auth-sync.js will handle hydration and redirection.
+    const isComplete = localStorage.getItem('onboardingComplete') === 'true';
+    window.location.href = isComplete ? 'index.html' : 'onboarding.html';
   }
 }).catch((err) => {
   console.error("Google Redirect Auth Error:", err);
@@ -30,45 +31,36 @@ getRedirectResult(auth).then((result) => {
 });
 
 // --- Google Sign In ---
-const isMobileDevice = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
 async function handleGoogleLogin(e) {
   e.preventDefault();
   const btn = e.currentTarget;
   const originalHtml = btn.innerHTML;
   btn.disabled = true;
-
-  if (isMobileDevice()) {
-    btn.innerHTML = "Redirecting to Google...";
-    try {
-      await signInWithRedirect(auth, googleProvider);
-      return;
-    } catch (err) {
-      console.error("Google redirect failed:", err);
-      alert("Google Sign-In failed: " + err.message);
-      btn.disabled = false;
-      btn.innerHTML = originalHtml;
-      return;
-    }
-  }
-  
   btn.innerHTML = "Opening Google...";
+
   try {
-    await signInWithPopup(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
     btn.innerHTML = "Signing in...";
+    if (result && result.user) {
+      // The onAuthStateChanged listener in auth-sync.js will redirect
+      const isComplete = localStorage.getItem('onboardingComplete') === 'true';
+      window.location.href = isComplete ? 'index.html' : 'onboarding.html';
+    }
   } catch (err) {
-    console.error("Popup login error:", err);
-    if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user') {
+    console.error("Google sign-in error:", err);
+    if (err.code === 'auth/popup-blocked') {
+      btn.innerHTML = "Redirecting to Google...";
       try {
-        btn.innerHTML = "Redirecting to Google...";
         await signInWithRedirect(auth, googleProvider);
         return;
       } catch (redirectErr) {
         console.error("Google redirect fallback failed:", redirectErr);
-        alert("Google Sign-In failed: " + redirectErr.message);
+        if (loginErr) loginErr.textContent = redirectErr.message.replace('Firebase: ', '');
+        if (signupErr) signupErr.textContent = redirectErr.message.replace('Firebase: ', '');
       }
-    } else {
-      alert("Google Sign-In failed: " + err.message);
+    } else if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+      if (loginErr) loginErr.textContent = err.message.replace('Firebase: ', '');
+      if (signupErr) signupErr.textContent = err.message.replace('Firebase: ', '');
     }
     btn.disabled = false;
     btn.innerHTML = originalHtml;

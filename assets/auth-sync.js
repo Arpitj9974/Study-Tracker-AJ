@@ -264,7 +264,8 @@ async function syncCloudAndLocalStorage(uid) {
 
 // 4. ROUTE PROTECTION & STATE WATCH
 onAuthStateChanged(auth, async (user) => {
-  const page = window.location.pathname.split('/').pop() || 'index.html';
+  const rawPage = window.location.pathname.split('/').pop() || 'index.html';
+  const page = rawPage.endsWith('.html') ? rawPage : (rawPage ? rawPage + '.html' : 'index.html');
 
   if (user) {
     currentUid = user.uid;
