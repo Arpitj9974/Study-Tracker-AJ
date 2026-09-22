@@ -1201,6 +1201,10 @@ function buildNav() {
         ${streakHTML}
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
+        <button onclick="window.openQuickSearch()" class="switch-exam-btn" style="cursor:pointer;background:rgba(127,119,221,0.15);color:#cfbcff;border-color:rgba(127,119,221,0.3);display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:6px;"><span>🔍</span><span>Search</span></span>
+          <kbd style="font-size:10px;font-family:monospace;background:rgba(0,0,0,0.35);padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)">Ctrl K</kbd>
+        </button>
         <a href="index.html?select=true" class="switch-exam-btn">🏠 Home</a>
         <button onclick="window.openSettingsModal()" class="switch-exam-btn" style="cursor:pointer">⚙️ Settings</button>
         <button onclick="window.promptPwaInstall()" class="switch-exam-btn pwa-install-btn" style="cursor:pointer;display:none;background:rgba(127,119,221,0.15);color:#cfbcff;border-color:rgba(127,119,221,0.3)">📲 Install App</button>
@@ -1250,6 +1254,7 @@ function buildNav() {
         </div>
       </div>
       <div class="mh-actions">
+        <button onclick="window.openQuickSearch()" class="switch-exam-btn mh-btn" style="background:rgba(127,119,221,0.15);border-color:rgba(127,119,221,0.3);color:#cfbcff;cursor:pointer;">🔍 Search</button>
         <button onclick="window.promptPwaInstall()" class="switch-exam-btn mh-btn pwa-install-btn" style="cursor:pointer;display:none;background:rgba(127,119,221,0.15);color:#cfbcff;border-color:rgba(127,119,221,0.3)">📲 App</button>
         <button onclick="window.openSettingsModal()" class="switch-exam-btn mh-btn" style="background:rgba(255,255,255,0.05);border-color:var(--border-subtle);color:var(--text-secondary);cursor:pointer">⚙️ Settings</button>
         <a href="index.html?select=true" class="switch-exam-btn mh-btn">🏠 Home</a>
@@ -1592,14 +1597,114 @@ window.addEventListener('storage', () => {
   buildNav();
 });
 
-// ── PWA Service Worker & Install Prompt ───────────────────────────────────────
+// ── PWA Mobile Install Bottom Sheet & Standalone Detection ────────────────────
 let deferredPrompt = null;
+
+function isStandaloneApp() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.navigator.standalone === true ||
+         document.referrer.includes('android-app://');
+}
+
+function isPwaBannerDismissed() {
+  const dismissed = localStorage.getItem('pwa_banner_dismissed_at');
+  if (!dismissed) return false;
+  return (Date.now() - parseInt(dismissed, 10)) < 7 * 24 * 60 * 60 * 1000;
+}
+
+function ensurePwaInstallSheet() {
+  if (document.getElementById('pwa-install-sheet')) return;
+
+  const sheetHTML = `
+    <div id="pwa-install-backdrop" class="pwa-bottom-sheet-backdrop" onclick="window.dismissPwaInstallSheet()"></div>
+    <div id="pwa-install-sheet" class="pwa-bottom-sheet" role="dialog" aria-modal="true">
+      <div class="pwa-sheet-handle"></div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <img src="assets/icon-192.png" alt="AspirantFlow" style="width:52px;height:52px;border-radius:14px;box-shadow:0 6px 16px rgba(127,119,221,0.35);border:1px solid rgba(255,255,255,0.15);object-fit:cover;" />
+          <div>
+            <div style="font-size:16px;font-weight:700;color:#f3effa;line-height:1.2;">Install AspirantFlow</div>
+            <div style="font-size:11px;color:#cfbcff;margin-top:2px;font-weight:500;">Standalone Study Hub App</div>
+          </div>
+        </div>
+        <button onclick="window.dismissPwaInstallSheet()" style="background:transparent;border:none;color:rgba(255,255,255,0.4);cursor:pointer;padding:4px;" aria-label="Close">
+          <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+        </button>
+      </div>
+
+      <div id="pwa-install-body" style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;">
+        Add AspirantFlow to your home screen for instant full-screen tracking, offline study access, and zero browser tab clutter.
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <button onclick="window.triggerPwaInstall()" style="flex:1;background:linear-gradient(135deg, #7F77DD, #38BDF8);color:#0A0C10;font-weight:700;font-size:13px;padding:12px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(56,189,248,0.25);transition:opacity 0.2s ease;">
+          Install App
+        </button>
+        <button onclick="window.dismissPwaInstallSheet()" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-weight:600;font-size:13px;padding:12px 18px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;">
+          Not Now
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', sheetHTML);
+}
+
+window.showPwaInstallSheet = function() {
+  if (isStandaloneApp() || isPwaBannerDismissed()) return;
+  if (window.innerWidth > 820 && !('ontouchstart' in window)) return;
+  ensurePwaInstallSheet();
+  setTimeout(() => {
+    const backdrop = document.getElementById('pwa-install-backdrop');
+    const sheet = document.getElementById('pwa-install-sheet');
+    if (backdrop && sheet) {
+      backdrop.classList.add('active');
+      sheet.classList.add('active');
+    }
+  }, 50);
+};
+
+window.dismissPwaInstallSheet = function() {
+  localStorage.setItem('pwa_banner_dismissed_at', Date.now().toString());
+  const backdrop = document.getElementById('pwa-install-backdrop');
+  const sheet = document.getElementById('pwa-install-sheet');
+  if (backdrop && sheet) {
+    backdrop.classList.remove('active');
+    sheet.classList.remove('active');
+  }
+};
+
+window.triggerPwaInstall = async function() {
+  const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('[PWA] User choice:', outcome);
+    deferredPrompt = null;
+    window.dismissPwaInstallSheet();
+  } else if (isIos) {
+    const body = document.getElementById('pwa-install-body');
+    if (body) {
+      body.innerHTML = `
+        <div style="background:rgba(255,255,255,0.06);padding:12px 14px;border-radius:12px;border:1px solid rgba(207,188,255,0.2);font-size:12px;color:#f3effa;line-height:1.6;">
+          <div style="font-weight:700;color:#cfbcff;margin-bottom:4px;">How to install on Safari:</div>
+          <div>1. Tap the <strong>Share</strong> button <span style="font-size:14px;">📤</span> at the bottom.</div>
+          <div>2. Scroll down and tap <strong>"Add to Home Screen"</strong> <span style="font-size:14px;">➕</span>.</div>
+        </div>
+      `;
+    }
+  } else {
+    window.promptPwaInstall();
+    window.dismissPwaInstallSheet();
+  }
+};
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   document.querySelectorAll('.pwa-install-btn').forEach(btn => {
     btn.style.display = 'inline-flex';
   });
+  setTimeout(window.showPwaInstallSheet, 2200);
 });
 
 window.addEventListener('appinstalled', () => {
@@ -1607,6 +1712,7 @@ window.addEventListener('appinstalled', () => {
   document.querySelectorAll('.pwa-install-btn').forEach(btn => {
     btn.style.display = 'none';
   });
+  window.dismissPwaInstallSheet();
   console.log('[PWA] AspirantFlow installed successfully');
 });
 
@@ -1614,16 +1720,284 @@ window.promptPwaInstall = async function() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log('[PWA] User choice:', outcome);
     deferredPrompt = null;
-    document.querySelectorAll('.pwa-install-btn').forEach(btn => {
-      btn.style.display = 'none';
-    });
+    document.querySelectorAll('.pwa-install-btn').forEach(btn => btn.style.display = 'none');
   } else {
-    alert('To install AspirantFlow on your home screen:\n\n• iOS (Safari): Tap Share button -> "Add to Home Screen"\n• Android (Chrome): Tap three dots -> "Install app" or "Add to Home screen"\n• Desktop (Chrome/Edge): Click the Install icon in the address bar.');
+    window.showPwaInstallSheet();
   }
 };
 
+// Check iOS Safari launch after 3.5s
+const isIosDevice = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+if (isIosDevice && !isStandaloneApp() && !isPwaBannerDismissed()) {
+  setTimeout(window.showPwaInstallSheet, 3500);
+}
+
+// ── Floating Sync / Offline Status Pill ───────────────────────────────────────
+let syncPillTimer = null;
+function updateSyncPill(isOnline, customMsg = null) {
+  let pill = document.getElementById('sync-status-indicator');
+  if (!pill) {
+    pill = document.createElement('div');
+    pill.id = 'sync-status-indicator';
+    pill.className = 'sync-status-pill';
+    document.body.appendChild(pill);
+  }
+  if (syncPillTimer) {
+    clearTimeout(syncPillTimer);
+    syncPillTimer = null;
+  }
+  if (!isOnline) {
+    pill.className = 'sync-status-pill active state-offline';
+    pill.innerHTML = `
+      <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#f59e0b;box-shadow:0 0 8px #f59e0b;"></span>
+      <span>Offline — Changes saved locally</span>
+    `;
+  } else {
+    pill.className = 'sync-status-pill active state-online';
+    pill.innerHTML = `
+      <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;"></span>
+      <span>${customMsg || 'All synced to cloud'}</span>
+    `;
+    syncPillTimer = setTimeout(() => {
+      pill.classList.remove('active');
+    }, 3500);
+  }
+}
+
+window.addEventListener('offline', () => updateSyncPill(false));
+window.addEventListener('online', () => updateSyncPill(true, 'Connection restored · Synced'));
+window.addEventListener('cloudDataSynced', () => {
+  if (navigator.onLine) {
+    updateSyncPill(true, 'All synced to cloud');
+  }
+});
+if (!navigator.onLine) {
+  setTimeout(() => updateSyncPill(false), 1200);
+}
+
+// ── Global Quick-Search & Jump Modal (Ctrl + K) ──────────────────────────────
+let quickSearchIndex = [];
+let quickSearchSelectedIndex = 0;
+let currentSearchMatches = [];
+
+function buildQuickSearchIndex() {
+  if (quickSearchIndex.length > 0) return quickSearchIndex;
+  const items = [];
+
+  // Index All Exams & Dashboards
+  if (typeof EXAM_CONFIG !== 'undefined') {
+    Object.keys(EXAM_CONFIG).forEach(key => {
+      const cfg = EXAM_CONFIG[key];
+      const dashboardLink = cfg.links && cfg.links[0] ? cfg.links[0].href : `dashboard-${key}.html`;
+
+      items.push({
+        title: `${cfg.label} Dashboard`,
+        subtitle: `${cfg.totalChapters} chapters · Exam Date: ${cfg.examDate}`,
+        href: dashboardLink,
+        category: 'Exams & Dashboards',
+        icon: cfg.icon || '🎓',
+        color: cfg.color || '#7F77DD',
+        keywords: [key, cfg.label, 'dashboard', 'hub']
+      });
+
+      // Index subject trackers for this exam
+      if (Array.isArray(cfg.links)) {
+        cfg.links.slice(1).forEach(link => {
+          items.push({
+            title: `${cfg.label} — ${link.label}`,
+            subtitle: `${cfg.label} Subject Tracker`,
+            href: link.href,
+            category: 'Subject Trackers',
+            icon: link.icon || '📖',
+            color: cfg.color || '#38BDF8',
+            keywords: [key, cfg.label, link.label, 'tracker', 'syllabus']
+          });
+        });
+      }
+    });
+  }
+
+  // Common Hub Destinations & Actions
+  items.push(
+    { title: 'All 28 Exams Catalog', subtitle: 'Browse all competitive exam categories & streams', href: 'index.html?select=true', category: 'Quick Action', icon: '📚', color: '#6750a4', keywords: ['all', 'exams', 'catalog', 'browse'] },
+    { title: 'My Profile & Target Dates', subtitle: 'Customize exam preferences, streaks & dates', href: 'profile.html', category: 'Quick Action', icon: '👤', color: '#38BDF8', keywords: ['profile', 'settings', 'account', 'target'] },
+    { title: 'UPSC CSE Resource Library', subtitle: 'Curated standard NCERTs, PYQs & reference books', href: 'resource-upsc.html', category: 'Resources', icon: '🏛️', color: '#10B981', keywords: ['upsc', 'resource', 'books', 'ncert', 'pyq'] }
+  );
+
+  quickSearchIndex = items;
+  return quickSearchIndex;
+}
+
+function ensureQuickSearchModal() {
+  if (document.getElementById('quick-search-backdrop')) return;
+
+  const modalHTML = `
+    <div id="quick-search-backdrop" class="quick-search-backdrop" onclick="if(event.target===this)window.closeQuickSearch()">
+      <div class="quick-search-dialog" role="dialog" aria-modal="true" aria-label="Quick Search">
+        <div class="quick-search-header">
+          <span class="material-symbols-outlined" style="font-size:22px;color:rgba(207,188,255,0.7);">search</span>
+          <input id="quick-search-input" class="quick-search-input" type="text" placeholder="Search 28 exams, subjects, trackers... (e.g. CAT, Quant, UPSC, Polity)" autocomplete="off" spellcheck="false" />
+          <kbd class="hidden md:inline-block" style="font-size:10px;font-family:monospace;background:rgba(255,255,255,0.08);padding:3px 7px;border-radius:5px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);">ESC</kbd>
+          <button onclick="window.closeQuickSearch()" style="background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:4px;" class="md:hidden">
+            <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+          </button>
+        </div>
+        <div id="quick-search-results" class="quick-search-results">
+          <!-- Dynamic Items -->
+        </div>
+        <div class="quick-search-footer">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span><kbd style="padding:2px 5px;background:rgba(255,255,255,0.08);border-radius:4px;font-family:monospace;font-size:9px;">↑</kbd> <kbd style="padding:2px 5px;background:rgba(255,255,255,0.08);border-radius:4px;font-family:monospace;font-size:9px;">↓</kbd> Navigate</span>
+            <span><kbd style="padding:2px 5px;background:rgba(255,255,255,0.08);border-radius:4px;font-family:monospace;font-size:9px;">↵</kbd> Open</span>
+          </div>
+          <span>28 Exams & Trackers</span>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  const input = document.getElementById('quick-search-input');
+  if (input) {
+    input.addEventListener('input', (e) => {
+      renderQuickSearchResults(e.target.value);
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        navigateQuickSearchResults(1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        navigateQuickSearchResults(-1);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        triggerSelectedSearchResult();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        window.closeQuickSearch();
+      }
+    });
+  }
+}
+
+function renderQuickSearchResults(query) {
+  const index = buildQuickSearchIndex();
+  const q = (query || '').trim().toLowerCase();
+  const container = document.getElementById('quick-search-results');
+  if (!container) return;
+
+  let matches = [];
+  if (!q) {
+    // Show top exams & quick actions by default
+    matches = index.slice(0, 8);
+  } else {
+    matches = index.filter(item => {
+      return item.title.toLowerCase().includes(q) ||
+             item.subtitle.toLowerCase().includes(q) ||
+             item.category.toLowerCase().includes(q) ||
+             (item.keywords && item.keywords.some(k => k.toLowerCase().includes(q)));
+    }).slice(0, 15);
+  }
+
+  currentSearchMatches = matches;
+  quickSearchSelectedIndex = 0;
+
+  if (matches.length === 0) {
+    container.innerHTML = `
+      <div style="padding:32px 16px;text-align:center;color:rgba(255,255,255,0.4);font-size:13px;">
+        <span class="material-symbols-outlined" style="font-size:32px;margin-bottom:8px;display:block;color:rgba(255,255,255,0.2);">search_off</span>
+        No exams or topics matching "<strong>${query}</strong>"
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+  let lastCategory = '';
+  matches.forEach((item, idx) => {
+    if (item.category !== lastCategory) {
+      lastCategory = item.category;
+      html += `<div class="quick-search-group-title">${lastCategory}</div>`;
+    }
+    const isSelected = idx === quickSearchSelectedIndex;
+    html += `
+      <div class="quick-search-item ${isSelected ? 'selected' : ''}" data-idx="${idx}" onclick="window.location.href='${item.href}'">
+        <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+          <span style="font-size:20px;width:28px;text-align:center;flex-shrink:0;">${item.icon}</span>
+          <div style="min-width:0;">
+            <div style="font-size:13px;font-weight:600;color:#f3effa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.title}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.subtitle}</div>
+          </div>
+        </div>
+        <span class="material-symbols-outlined" style="font-size:16px;color:rgba(207,188,255,0.5);flex-shrink:0;margin-left:8px;">arrow_forward</span>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function navigateQuickSearchResults(direction) {
+  if (currentSearchMatches.length === 0) return;
+  quickSearchSelectedIndex = (quickSearchSelectedIndex + direction + currentSearchMatches.length) % currentSearchMatches.length;
+  const items = document.querySelectorAll('.quick-search-item');
+  items.forEach((el, idx) => {
+    if (idx === quickSearchSelectedIndex) {
+      el.classList.add('selected');
+      el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } else {
+      el.classList.remove('selected');
+    }
+  });
+}
+
+function triggerSelectedSearchResult() {
+  if (currentSearchMatches[quickSearchSelectedIndex]) {
+    const target = currentSearchMatches[quickSearchSelectedIndex].href;
+    window.closeQuickSearch();
+    window.location.href = target;
+  }
+}
+
+window.openQuickSearch = function() {
+  ensureQuickSearchModal();
+  const backdrop = document.getElementById('quick-search-backdrop');
+  const input = document.getElementById('quick-search-input');
+  if (backdrop && input) {
+    backdrop.classList.add('active');
+    renderQuickSearchResults(input.value);
+    setTimeout(() => {
+      input.focus();
+      input.select();
+    }, 50);
+  }
+};
+
+window.closeQuickSearch = function() {
+  const backdrop = document.getElementById('quick-search-backdrop');
+  if (backdrop) {
+    backdrop.classList.remove('active');
+  }
+};
+
+// Global Keyboard Shortcut: Ctrl + K, Cmd + K, or "/"
+window.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    const backdrop = document.getElementById('quick-search-backdrop');
+    if (backdrop && backdrop.classList.contains('active')) {
+      window.closeQuickSearch();
+    } else {
+      window.openQuickSearch();
+    }
+  } else if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+    e.preventDefault();
+    window.openQuickSearch();
+  }
+});
+
+// Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
