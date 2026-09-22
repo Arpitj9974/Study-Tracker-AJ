@@ -1,11 +1,11 @@
 // dashboard-nqt.js — NQT-specific dashboard logic
 
 const NQT_SUBJECTS = [
-  { key: 'speedmath', label: 'Speed Math',  icon: '⚡', color: SUBJECT_COLORS.speedmath.primary, link: 'tracker-speedmath.html' },
-  { key: 'quant',     label: 'Quant',       icon: '🔢', color: SUBJECT_COLORS.quant.primary,     link: 'tracker-quant.html' },
-  { key: 'reasoning', label: 'Reasoning',   icon: '🧠', color: SUBJECT_COLORS.reasoning.primary, link: 'tracker-reasoning.html' },
-  { key: 'english',   label: 'English',     icon: '📝', color: SUBJECT_COLORS.english.primary,   link: 'tracker-english.html' },
-  { key: 'coding',    label: 'NQT Coding',  icon: '💻', color: SUBJECT_COLORS.coding.primary,    link: 'tracker-coding.html' },
+  { key: 'speedmath', label: 'Speed Math',  icon: '⚡', color: SUBJECT_COLORS.speedmath.primary, link: 'tracker-speedmath.html?exam=nqt' },
+  { key: 'quant',     label: 'Quant',       icon: '🔢', color: SUBJECT_COLORS.quant.primary,     link: 'tracker-quant.html?exam=nqt' },
+  { key: 'reasoning', label: 'Reasoning',   icon: '🧠', color: SUBJECT_COLORS.reasoning.primary, link: 'tracker-reasoning.html?exam=nqt' },
+  { key: 'english',   label: 'English',     icon: '📝', color: SUBJECT_COLORS.english.primary,   link: 'tracker-english.html?exam=nqt' },
+  { key: 'coding',    label: 'NQT Coding',  icon: '💻', color: SUBJECT_COLORS.coding.primary,    link: 'tracker-coding.html?exam=nqt' },
 ];
 
 const NQT_TOTAL = 119;

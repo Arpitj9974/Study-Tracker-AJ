@@ -34,11 +34,11 @@ function renderSSCDashboard() {
   let subjectsList = [];
   if (examType === 'cgl') {
     subjectsList = [
-      { key: 'speedmath', name: 'Speed Math', icon: '⚡', color: '#7F77DD', tracker: 'tracker-speedmath.html' },
-      { key: 'quant',     name: 'Quantitative Aptitude', icon: '🔢', color: '#1D9E75', tracker: 'tracker-quant.html' },
-      { key: 'reasoning', name: 'Reasoning Ability', icon: '🧠', color: '#3B5BDB', tracker: 'tracker-reasoning.html' },
-      { key: 'english',   name: 'English Language', icon: '📝', color: '#8E44AD', tracker: 'tracker-english.html' },
-      { key: 'gk',        name: 'General Knowledge', icon: '🌍', color: '#B7791F', tracker: 'tracker-gk.html' }
+      { key: 'speedmath', name: 'Speed Math', icon: '⚡', color: '#7F77DD', tracker: 'tracker-speedmath.html?exam=ssc' },
+      { key: 'quant',     name: 'Quantitative Aptitude', icon: '🔢', color: '#1D9E75', tracker: 'tracker-quant.html?exam=ssc' },
+      { key: 'reasoning', name: 'Reasoning Ability', icon: '🧠', color: '#3B5BDB', tracker: 'tracker-reasoning.html?exam=ssc' },
+      { key: 'english',   name: 'English Language', icon: '📝', color: '#8E44AD', tracker: 'tracker-english.html?exam=ssc' },
+      { key: 'gk',        name: 'General Knowledge', icon: '🌍', color: '#B7791F', tracker: 'tracker-gk.html?exam=ssc' }
     ];
   } else if (examType === 'chsl') {
     subjectsList = EXAM_CONFIG_CHSL.subjects.map(s => ({

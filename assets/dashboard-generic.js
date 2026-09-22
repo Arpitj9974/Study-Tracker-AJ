@@ -21,7 +21,9 @@
   const config = variant.config;
   if (!config) return;
 
-  if (variant.storageKey) localStorage.setItem('selectedExam', variant.storageKey);
+  if (variant.storageKey) {
+    localStorage.setItem('selectedExam', variant.storageKey);
+  }
 
   const $ = id => document.getElementById(id);
   const setText = (id, v) => { const e = $(id); if (e) e.textContent = v; };

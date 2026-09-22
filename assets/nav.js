@@ -352,11 +352,11 @@ const EXAM_CONFIG = {
     totalChapters: 119,
     links: [
       { page: 'dashboard-nqt.html', href: 'dashboard-nqt.html', icon: '📊', label: 'NQT Dashboard' },
-      { page: 'tracker-speedmath.html', href: 'tracker-speedmath.html', icon: '⚡', label: 'Speed Math' },
-      { page: 'tracker-quant.html',     href: 'tracker-quant.html',     icon: '🔢', label: 'Quant' },
-      { page: 'tracker-reasoning.html', href: 'tracker-reasoning.html', icon: '🧠', label: 'Reasoning' },
-      { page: 'tracker-english.html',   href: 'tracker-english.html',   icon: '📝', label: 'English' },
-      { page: 'tracker-coding.html',    href: 'tracker-coding.html',    icon: '💻', label: 'NQT Coding' },
+      { page: 'tracker-speedmath.html', href: 'tracker-speedmath.html?exam=nqt', icon: '⚡', label: 'Speed Math' },
+      { page: 'tracker-quant.html',     href: 'tracker-quant.html?exam=nqt',     icon: '🔢', label: 'Quant' },
+      { page: 'tracker-reasoning.html', href: 'tracker-reasoning.html?exam=nqt', icon: '🧠', label: 'Reasoning' },
+      { page: 'tracker-english.html',   href: 'tracker-english.html?exam=nqt',   icon: '📝', label: 'English' },
+      { page: 'tracker-coding.html',    href: 'tracker-coding.html?exam=nqt',    icon: '💻', label: 'NQT Coding' },
     ]
   },
   ssc: {
@@ -368,12 +368,12 @@ const EXAM_CONFIG = {
     examDate: '2025-09-15',
     totalChapters: 162,
     links: [
-      { page: 'dashboard-ssc.html', href: 'dashboard-ssc.html', icon: '📊', label: 'SSC Dashboard' },
-      { page: 'tracker-speedmath.html', href: 'tracker-speedmath.html', icon: '⚡', label: 'Speed Math' },
-      { page: 'tracker-quant.html',     href: 'tracker-quant.html',     icon: '🔢', label: 'Quant' },
-      { page: 'tracker-reasoning.html', href: 'tracker-reasoning.html', icon: '🧠', label: 'Reasoning' },
-      { page: 'tracker-english.html',   href: 'tracker-english.html',   icon: '📝', label: 'English' },
-      { page: 'tracker-gk.html',        href: 'tracker-gk.html',        icon: '🌍', label: 'General Knowledge' },
+      { page: 'dashboard-ssc.html', href: 'dashboard-ssc.html?exam=cgl', icon: '📊', label: 'SSC Dashboard' },
+      { page: 'tracker-speedmath.html', href: 'tracker-speedmath.html?exam=ssc', icon: '⚡', label: 'Speed Math' },
+      { page: 'tracker-quant.html',     href: 'tracker-quant.html?exam=ssc',     icon: '🔢', label: 'Quant' },
+      { page: 'tracker-reasoning.html', href: 'tracker-reasoning.html?exam=ssc', icon: '🧠', label: 'Reasoning' },
+      { page: 'tracker-english.html',   href: 'tracker-english.html?exam=ssc',   icon: '📝', label: 'English' },
+      { page: 'tracker-gk.html',        href: 'tracker-gk.html?exam=ssc',        icon: '🌍', label: 'General Knowledge' },
     ]
   },
   upsc: {
@@ -892,11 +892,13 @@ function setActiveExams(examsList) {
   const cleanList = Array.from(new Set(examsList || []));
   localStorage.setItem('activeExams', JSON.stringify(cleanList));
   
-  // Keep selectedExam in sync with activeExams
+  const params = new URLSearchParams(window.location.search);
+  const explicitExam = params.get('exam');
   const currentSelected = localStorage.getItem('selectedExam');
-  if (cleanList.length === 0) {
-    localStorage.removeItem('selectedExam');
-  } else if (!currentSelected || !cleanList.includes(currentSelected)) {
+  if (explicitExam) {
+    const target = (explicitExam === 'cgl' || explicitExam === 'ssc') ? 'ssc' : (EXAM_CONFIG[explicitExam] ? explicitExam : currentSelected);
+    if (target) localStorage.setItem('selectedExam', target);
+  } else if (!currentSelected && cleanList.length > 0) {
     localStorage.setItem('selectedExam', cleanList[0]);
   }
   
@@ -953,58 +955,104 @@ window.toggleActiveExamState = toggleActiveExamState;
 
 // Detect current exam context from URL
 function getCurrentExam() {
+  const params = new URLSearchParams(window.location.search);
+  const examParam = params.get('exam');
+  let resolved = null;
+
+  if (examParam) {
+    if (examParam === 'ssc' || examParam === 'cgl') resolved = 'ssc';
+    else if (examParam === 'chsl') resolved = 'ssc_chsl';
+    else if (examParam === 'mts') resolved = 'ssc_mts';
+    else if (examParam === 'nqt') resolved = 'nqt';
+    else if (examParam === 'clerk') resolved = 'ibps_clerk';
+    else if (examParam === 'so') resolved = 'ibps_so_2026';
+    else if (examParam === 'so_it') resolved = 'ibps_so_it_2026';
+    else if (examParam === 'po') resolved = 'ibps_po';
+    else if (examParam === 'group_d') resolved = 'rrb_group_d';
+    else if (examParam === 'ntpc') resolved = 'rrb_ntpc';
+    else if (EXAM_CONFIG[examParam]) resolved = examParam;
+  }
+
+  if (!resolved) {
+    const page = window.location.pathname.split('/').pop() || '';
+    if (page.includes('nqt')) resolved = 'nqt';
+    else if (page.includes('ssc')) {
+      const ex = params.get('exam');
+      if (ex === 'chsl') resolved = 'ssc_chsl';
+      else if (ex === 'mts') resolved = 'ssc_mts';
+      else resolved = 'ssc';
+    }
+    else if (page.includes('ugcnet')) resolved = 'ugcnet';
+    else if (page.includes('nda')) resolved = 'nda';
+    else if (page.includes('xat')) resolved = 'xat';
+    else if (page.includes('clat')) resolved = 'clat_ug';
+    else if (page.includes('cuet-pg') || page.includes('cuet_pg')) resolved = 'cuet_pg_general';
+    else if (page.includes('cuet')) resolved = 'cuet_ug';
+    else if (page.includes('upsc')) resolved = 'upsc';
+    else if (page.includes('ibps')) {
+      const ex = params.get('exam');
+      if (ex === 'clerk') resolved = 'ibps_clerk';
+      else if (ex === 'so') resolved = 'ibps_so_2026';
+      else if (ex === 'so_it') resolved = 'ibps_so_it_2026';
+      else resolved = 'ibps_po';
+    }
+    else if (page.includes('jee')) resolved = 'jee';
+    else if (page.includes('neet')) resolved = 'neet_ug';
+    else if (page.includes('cat')) resolved = 'cat';
+    else if (page.includes('cmat')) resolved = 'cmat';
+    else if (page.includes('cds')) resolved = 'cds';
+    else if (page.includes('rrb')) {
+      const ex = params.get('exam');
+      if (ex === 'group_d') resolved = 'rrb_group_d';
+      else resolved = 'rrb_ntpc';
+    }
+    else if (page.includes('cfa')) {
+      const lvl = params.get('level');
+      if (lvl === 'l2') resolved = 'cfa_l2';
+      else if (lvl === 'l3') resolved = 'cfa_l3';
+      else resolved = 'cfa_l1';
+    }
+    else if (page.includes('cma')) resolved = 'cma_foundation';
+    else if (page.includes('ca')) {
+      const lvl = params.get('level');
+      if (lvl === 'inter') resolved = 'ca_inter';
+      else if (lvl === 'final') resolved = 'ca_final';
+      else resolved = 'ca_foundation';
+    }
+  }
+
+  // If resolved from URL or page context, persist to localStorage so subpages and events keep this exam
+  if (resolved) {
+    try {
+      localStorage.setItem('selectedExam', resolved);
+    } catch (e) {}
+    return resolved;
+  }
+
+  // For shared tracker pages without ?exam= param:
   const page = window.location.pathname.split('/').pop() || '';
-  if (page.includes('nqt')) return 'nqt';
-  if (page.includes('ssc')) {
-    const params = new URLSearchParams(window.location.search);
-    const ex = params.get('exam');
-    if (ex === 'chsl') return 'ssc_chsl';
-    if (ex === 'mts') return 'ssc_mts';
+  if (
+    page === 'tracker-speedmath.html' ||
+    page === 'tracker-quant.html' ||
+    page === 'tracker-reasoning.html' ||
+    page === 'tracker-english.html' ||
+    page === 'tracker-gk.html' ||
+    page === 'tracker-coding.html'
+  ) {
+    const last = localStorage.getItem('selectedExam');
+    if (last && EXAM_CONFIG[last]) return last;
     return 'ssc';
   }
-  if (page.includes('ugcnet')) return 'ugcnet';
-  if (page.includes('nda')) return 'nda';
-  if (page.includes('xat')) return 'xat';
-  if (page.includes('clat')) return 'clat_ug';
-  if (page.includes('cuet-pg') || page.includes('cuet_pg')) return 'cuet_pg_general';
-  if (page.includes('cuet')) return 'cuet_ug';
-  if (page.includes('upsc')) return 'upsc';
-  if (page.includes('ibps')) {
-    const params = new URLSearchParams(window.location.search);
-    const ex = params.get('exam');
-    if (ex === 'clerk') return 'ibps_clerk';
-    if (ex === 'so') return 'ibps_so_2026';
-    if (ex === 'so_it') return 'ibps_so_it_2026';
-    return 'ibps_po';
-  }
-  if (page.includes('jee')) return 'jee';
-  if (page.includes('neet')) return 'neet_ug';
-  if (page.includes('cat')) return 'cat';
-  if (page.includes('cmat')) return 'cmat';
-  if (page.includes('cds')) return 'cds';
-  if (page.includes('rrb')) {
-    const params = new URLSearchParams(window.location.search);
-    const ex = params.get('exam');
-    if (ex === 'group_d') return 'rrb_group_d';
-    return 'rrb_ntpc';
-  }
-  if (page.includes('cfa')) {
-    const params = new URLSearchParams(window.location.search);
-    const lvl = params.get('level');
-    if (lvl === 'l2') return 'cfa_l2';
-    if (lvl === 'l3') return 'cfa_l3';
-    return 'cfa_l1';
-  }
-  if (page.includes('cma')) return 'cma_foundation';
-  if (page.includes('ca')) {
-    const params = new URLSearchParams(window.location.search);
-    const lvl = params.get('level');
-    if (lvl === 'inter') return 'ca_inter';
-    if (lvl === 'final') return 'ca_final';
-    return 'ca_foundation';
-  }
-  // For tracker pages, check localStorage for last selected exam
-  return localStorage.getItem('selectedExam') || null;
+
+  // Fallback to localStorage for any other general page
+  const fallback = localStorage.getItem('selectedExam');
+  if (fallback && EXAM_CONFIG[fallback]) return fallback;
+
+  // Fallback to first active exam
+  const active = getActiveExams();
+  if (active.length > 0 && EXAM_CONFIG[active[0]]) return active[0];
+
+  return 'ssc';
 }
 
 // ── Read stats filtered by exam ───────────────────────────────────────────────
@@ -1076,6 +1124,7 @@ function buildNav() {
 
   const examKey = getCurrentExam();
   const config  = EXAM_CONFIG[examKey] || EXAM_CONFIG.nqt;
+  console.log('[DEBUG buildNav] examKey:', examKey, 'config.label:', config.label, 'stack:', new Error().stack.split('\n').slice(1,4).join(' < '));
   const links   = config.links;
 
   const stats   = readExamStats(examKey);

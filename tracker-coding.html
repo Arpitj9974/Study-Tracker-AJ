@@ -335,23 +335,28 @@
     </div>
   </main>
 
-  <script src="assets/nav.js?v=24"></script>
+  <script src="assets/nav.js?v=25"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     const SUBJ = 'coding';
-    localStorage.setItem('selectedExam', 'nqt');
+    const params = new URLSearchParams(window.location.search);
+    const examParam = params.get('exam');
+    const activeExamKey = examParam || 'nqt';
 
     const configData = EXAM_CONFIG_NQT;
     const priorityData = NQT_PRIORITY_DATA;
     const subjConfig = configData.subjects.find(s => s.key === SUBJ) || configData.subjects[0];
 
+    const examTitle = activeExamKey === 'ssc' ? 'SSC CGL' : 'TCS NQT';
+    const stageText = `${examTitle} · ${subjConfig.examStage}`;
+
     document.body.style.setProperty('--page-accent', subjConfig.color);
     document.getElementById('subject-title').innerHTML = `${subjConfig.icon} ${subjConfig.name}`;
-    document.getElementById('stage-badge').textContent = `TCS NQT · ${subjConfig.examStage}`;
+    document.getElementById('stage-badge').textContent = stageText;
     document.getElementById('stage-badge').style.background = subjConfig.color + '15';
     document.getElementById('stage-badge').style.color = subjConfig.color;
     document.getElementById('stage-badge').style.borderColor = subjConfig.color + '30';
-    document.title = `${subjConfig.name} — TCS NQT Tracker`;
+    document.title = `${subjConfig.name} — ${examTitle} Tracker`;
 
     const chapters = [];
     for (let i = 1; i <= subjConfig.totalChapters; i++) {

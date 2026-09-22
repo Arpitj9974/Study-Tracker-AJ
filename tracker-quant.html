@@ -335,31 +335,47 @@
     </div>
   </main>
 
-  <script src="assets/nav.js?v=24"></script>
+  <script src="assets/nav.js?v=25"></script>
   <script type="module" src="assets/auth-sync.js?v=22"></script>
   <script>
     const SUBJ = 'quant';
-    localStorage.setItem('selectedExam', 'nqt');
+    const params = new URLSearchParams(window.location.search);
+    const examParam = params.get('exam');
+    const isSSC = examParam === 'ssc' || examParam === 'cgl';
+    const activeExamKey = isSSC ? 'ssc' : (examParam || 'nqt');
 
     const configData = EXAM_CONFIG_NQT;
     const priorityData = NQT_PRIORITY_DATA;
     const subjConfig = configData.subjects.find(s => s.key === SUBJ) || configData.subjects[0];
 
+    const examTitle = isSSC ? 'SSC CGL' : (activeExamKey === 'ssc' ? 'SSC CGL' : 'TCS NQT');
+    const stageText = isSSC ? 'SSC CGL · Tier 1 & 2' : `${examTitle} · ${subjConfig.examStage}`;
+
     document.body.style.setProperty('--page-accent', subjConfig.color);
     document.getElementById('subject-title').innerHTML = `${subjConfig.icon} ${subjConfig.name}`;
-    document.getElementById('stage-badge').textContent = `TCS NQT · ${subjConfig.examStage}`;
+    document.getElementById('stage-badge').textContent = stageText;
     document.getElementById('stage-badge').style.background = subjConfig.color + '15';
     document.getElementById('stage-badge').style.color = subjConfig.color;
     document.getElementById('stage-badge').style.borderColor = subjConfig.color + '30';
-    document.title = `${subjConfig.name} — TCS NQT Tracker`;
+    document.title = `${subjConfig.name} — ${examTitle} Tracker`;
 
-    const chapters = [];
+    const allChapters = [];
     for (let i = 1; i <= subjConfig.totalChapters; i++) {
       const chKey = subjConfig.prefix + i;
       if (priorityData[chKey]) {
-        chapters.push({ key: chKey, index: i, data: priorityData[chKey] });
+        allChapters.push({ key: chKey, index: i, data: priorityData[chKey] });
       }
     }
+
+    const chapters = allChapters.filter(ch => {
+      const stage = ch.data && ch.data.stage ? ch.data.stage : '';
+      if (isSSC) {
+        return stage === 'SSC + NQT' || stage === 'SSC Only' || stage === 'All Exams';
+      } else if (activeExamKey === 'nqt') {
+        return stage === 'SSC + NQT' || stage === 'NQT Only' || stage === 'All Exams';
+      }
+      return true;
+    });
 
     function renderTracker() {
       let doneCount = 0;
@@ -400,6 +416,7 @@
               else if (val === '2') cbContent = '<span style="font-size:10px;">⭐</span>';
               else if (val === '3') cbContent = '<span style="font-size:10px;">🏆</span>';
 
+              const stageLabel = isSSC ? 'Tier 1 & 2' : (activeExamKey === 'nqt' ? 'TCS NQT' : (ch.data.stage || 'Syllabus'));
               return `
                 <div class="glass-card ch-card ${isDone ? 'done' : ''}${val === '2' ? ' revised' : val === '3' ? ' mock' : ''}" onclick="toggleChapter('${ch.key}')">
                   <div class="ck-box-custom">${cbContent}</div>
@@ -411,7 +428,7 @@
                       ${ch.data.difficulty ? `<span class="meta-tag"><span class="material-symbols-outlined meta-tag-icon">bar_chart</span>${ch.data.difficulty}</span>` : ''}
                       ${ch.data.prelimsWeight ? `<span class="meta-tag"><span class="material-symbols-outlined meta-tag-icon">show_chart</span>${ch.data.prelimsWeight}</span>` : ''}
                       ${ch.data.days ? `<span class="meta-tag"><span class="material-symbols-outlined meta-tag-icon">schedule</span>${ch.data.days}</span>` : ''}
-                      <span class="meta-tag" style="color:rgba(203,196,210,0.4)"><span class="material-symbols-outlined meta-tag-icon">layers</span>${ch.data.stage}</span>
+                      <span class="meta-tag" style="color:rgba(203,196,210,0.6)"><span class="material-symbols-outlined meta-tag-icon">layers</span>${stageLabel}</span>
                     </div>
                   </div>
                 </div>

@@ -60,13 +60,14 @@ function renderMasterStats(stats) {
 }
 
 function renderSubjectCards(stats) {
+  const currentEx = (typeof getCurrentExam === 'function' ? getCurrentExam() : null) || 'nqt';
   const subjects = [
-    { key: 'speedmath', label: 'Speed Math',        icon: '⚡', color: SUBJECT_COLORS.speedmath.primary, link: 'tracker-speedmath.html' },
-    { key: 'quant',     label: 'Quant',             icon: '🔢', color: SUBJECT_COLORS.quant.primary,     link: 'tracker-quant.html' },
-    { key: 'reasoning', label: 'Reasoning',         icon: '🧠', color: SUBJECT_COLORS.reasoning.primary, link: 'tracker-reasoning.html' },
-    { key: 'english',   label: 'English',           icon: '📝', color: SUBJECT_COLORS.english.primary,   link: 'tracker-english.html' },
-    { key: 'coding',    label: 'NQT Coding',        icon: '💻', color: SUBJECT_COLORS.coding.primary,    link: 'tracker-coding.html' },
-    { key: 'gk',        label: 'General Knowledge', icon: '🌍', color: SUBJECT_COLORS.gk.primary,        link: 'tracker-gk.html' },
+    { key: 'speedmath', label: 'Speed Math',        icon: '⚡', color: SUBJECT_COLORS.speedmath.primary, link: `tracker-speedmath.html?exam=${currentEx}` },
+    { key: 'quant',     label: 'Quant',             icon: '🔢', color: SUBJECT_COLORS.quant.primary,     link: `tracker-quant.html?exam=${currentEx}` },
+    { key: 'reasoning', label: 'Reasoning',         icon: '🧠', color: SUBJECT_COLORS.reasoning.primary, link: `tracker-reasoning.html?exam=${currentEx}` },
+    { key: 'english',   label: 'English',           icon: '📝', color: SUBJECT_COLORS.english.primary,   link: `tracker-english.html?exam=${currentEx}` },
+    { key: 'coding',    label: 'NQT Coding',        icon: '💻', color: SUBJECT_COLORS.coding.primary,    link: `tracker-coding.html?exam=${currentEx}` },
+    { key: 'gk',        label: 'General Knowledge', icon: '🌍', color: SUBJECT_COLORS.gk.primary,        link: `tracker-gk.html?exam=${currentEx}` },
   ];
   const container = document.getElementById('subject-cards');
   if (!container) return;

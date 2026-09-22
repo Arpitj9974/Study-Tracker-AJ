@@ -355,7 +355,7 @@
     </a>
   </nav>
 
-  <script src="assets/nav.js?v=24"></script>
+  <script src="assets/nav.js?v=25"></script>
   <script>
     // Comprehensive List of All 28 Exams grouped into Categories
     const CATEGORIES = [
@@ -516,7 +516,7 @@
     function getExamUrl(key) {
       const map = {
         nqt: 'dashboard-nqt.html',
-        ssc: 'dashboard-ssc.html',
+        ssc: 'dashboard-ssc.html?exam=cgl',
         ssc_chsl: 'dashboard-ssc.html?exam=chsl',
         ssc_mts: 'dashboard-ssc.html?exam=mts',
         ugcnet: 'dashboard-ugcnet.html',
@@ -614,7 +614,7 @@
           </div>
 
           <div class="exam-card-actions flex flex-col gap-2 mt-2">
-            <a href="${url}" onclick="if(window.setSelectedExam)window.setSelectedExam('${ex.key}');else localStorage.setItem('selectedExam','${ex.key}')" 
+            <a href="${url}" onclick="localStorage.setItem('selectedExam', '${ex.key}')"
                class="w-full py-2.5 rounded-xl border border-white/10 text-white font-semibold text-xs text-center transition-all flex items-center justify-center gap-2 group-hover:bg-[var(--card-color)] group-hover:text-black group-hover:border-[var(--card-color)] group-hover:shadow-lg">
               <span>Open PrepTrack</span>
               <span class="material-symbols-outlined text-sm">arrow_forward</span>

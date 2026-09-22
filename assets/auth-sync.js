@@ -161,15 +161,23 @@ async function syncCloudAndLocalStorage(uid) {
     }
 
     // A. Sync Selected Exam Preference
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlExam = urlParams.get('exam');
     const cloudSelectedExam = userData.selectedExam;
     const localSelectedExam = localStorage.getItem('selectedExam');
 
-    if (cloudSelectedExam) {
-      localStorage.setItem('selectedExam', cloudSelectedExam);
-    } else if (localSelectedExam) {
-      await runWithTimeout(updateDoc(userRef, { selectedExam: localSelectedExam }), "updateDoc selectedExam").catch(async () => {
-        await runWithTimeout(setDoc(userRef, { selectedExam: localSelectedExam }, { merge: true }), "setDoc selectedExam");
-      });
+    // URL exam param is page context only — do NOT overwrite the user's active prep or push to cloud.
+    // Sync active prep preference between cloud and localStorage only when not URL-driven:
+    if (!urlExam) {
+      if (localSelectedExam) {
+        if (localSelectedExam !== cloudSelectedExam) {
+          await runWithTimeout(updateDoc(userRef, { selectedExam: localSelectedExam }), "updateDoc selectedExam").catch(async () => {
+            await runWithTimeout(setDoc(userRef, { selectedExam: localSelectedExam }, { merge: true }), "setDoc selectedExam");
+          });
+        }
+      } else if (cloudSelectedExam) {
+        localStorage.setItem('selectedExam', cloudSelectedExam);
+      }
     }
 
     // B. Sync Active Exams
@@ -477,3 +485,15 @@ window.addEventListener('message', async (e) => {
     window.dispatchEvent(new Event('storage'));
   }
 });
+
+window.setSelectedExam = async function(examKey) {
+  if (!examKey) return;
+  const cleanKey = (examKey === 'cgl' || examKey === 'ssc') ? 'ssc' : examKey;
+  localStorage.setItem('selectedExam', cleanKey);
+  if (currentUid) {
+    const userRef = doc(db, "users", currentUid);
+    await runWithTimeout(updateDoc(userRef, { selectedExam: cleanKey }), "setSelectedExam updateDoc").catch(async () => {
+      await runWithTimeout(setDoc(userRef, { selectedExam: cleanKey }, { merge: true }), "setSelectedExam setDoc");
+    });
+  }
+};
