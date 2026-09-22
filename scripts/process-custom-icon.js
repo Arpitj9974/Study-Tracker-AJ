@@ -16,7 +16,7 @@ const assetsDir = path.join(rootDir, 'assets');
 
 const files = fs.readdirSync(customIconDir).filter(f => {
   const ext = path.extname(f).toLowerCase();
-  return ['.png', '.jpg', '.jpeg', '.webp', '.bmp'].includes(ext);
+  return ['.png', '.jpg', '.jpeg', '.webp', '.bmp'].includes(ext) && !f.toLowerCase().includes('chatgpt');
 });
 
 if (files.length === 0) {
@@ -24,7 +24,9 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-const sourceImage = path.join(customIconDir, files[0]);
+// Prefer 'the main Logo' or files with 'main'/'logo'
+const preferred = files.find(f => f.toLowerCase().includes('main') || f.toLowerCase().includes('logo')) || files[0];
+const sourceImage = path.join(customIconDir, preferred);
 console.log("Using official image:", path.basename(sourceImage));
 
 // Copy directly to assets/logo.png
@@ -41,7 +43,7 @@ function Resize-Image($srcPath, $destPath, $width, $height, $paddingRatio) {
     $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic;
     $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality;
     $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality;
-    $g.Clear([System.Drawing.Color]::White);
+    $g.Clear([System.Drawing.Color]::Transparent);
 
     $targetW = [int]($width * (1.0 - (2 * $paddingRatio)));
     $targetH = [int]($height * (1.0 - (2 * $paddingRatio)));

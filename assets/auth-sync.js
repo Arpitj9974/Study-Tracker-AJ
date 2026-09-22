@@ -19,18 +19,25 @@ window.setDoc = setDoc;
 window.updateDoc = updateDoc;
 window.deleteField = deleteField;
 
-// 1. DYNAMIC PREMIUM LOADING SCREEN INJECTION
-const overlayId = 'auth-loading-overlay';
-let overlayEl = document.getElementById(overlayId);
-if (!overlayEl) {
+// 1. FULL-SCREEN LOADING OVERLAY (Zero Flash, Seamless)
+let overlayEl = null;
+
+function showLoadingOverlay() {
+  if (overlayEl) return;
+  const overlayId = 'auth-loading-overlay';
+  const existing = document.getElementById(overlayId);
+  if (existing) {
+    overlayEl = existing;
+    return;
+  }
+
   const overlayHtml = `
     <div id="${overlayId}" style="
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
-      background: #0D0F14;
+      background: #0A0C10;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -39,64 +46,74 @@ if (!overlayEl) {
       color: #F0F2FF;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       transition: opacity 0.3s ease, visibility 0.3s ease;
+      overflow: hidden;
     ">
-      <!-- Glow effects -->
+      <!-- Ambient background glow aura -->
       <div style="
         position: absolute;
-        width: 300px;
-        height: 300px;
+        width: 240px;
+        height: 240px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(127, 119, 221, 0.15) 0%, rgba(13, 15, 20, 0) 70%);
-        top: 30%;
-        left: 35%;
+        background: radial-gradient(circle, rgba(127, 119, 221, 0.22) 0%, rgba(10, 12, 16, 0) 70%);
         pointer-events: none;
+        animation: sync-glow 4s ease-in-out infinite alternate;
       "></div>
       
-      <div style="position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px;">
-        <!-- Premium Pulsing & Spinning Ring -->
-        <div style="position: relative; width: 64px; height: 64px;">
-          <div style="
-            box-sizing: border-box;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 3px solid rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-          "></div>
-          <div class="auth-spinner-ring" style="
-            box-sizing: border-box;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 3px solid transparent;
-            border-top-color: #7F77DD;
-            border-right-color: #7F77DD;
-            border-radius: 50%;
-            animation: auth-spin 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
-          "></div>
-          <img src="assets/logo.png" alt="AspirantFlow Logo" style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 44px;
-            height: 44px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 0 14px rgba(127, 119, 221, 0.6);
-          ">
+      <div style="position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 13px; z-index: 2;">
+        <!-- Compact Syncing Hero Graphic (Half-Size) -->
+        <div style="position: relative; display: flex; justify-content: center; align-items: center;">
+          <img src="assets/syncing-cloud-progress.png" alt="AspirantFlow Cloud Sync" style="
+            width: min(190px, 46vw);
+            max-width: 200px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 18px;
+            animation: sync-pulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            display: block;
+          " />
         </div>
         
-        <div style="display: flex; flex-direction: column; gap: 4px;">
-          <div style="font-weight: 700; font-size: 16px; letter-spacing: -0.01em; color: #F0F2FF;">AspirantFlow</div>
-          <div id="auth-loading-text" style="font-size: 11px; font-weight: 600; color: #9BA3C4; letter-spacing: 0.05em; text-transform: uppercase;">Verifying Session...</div>
+        <!-- Dynamic Status Pill -->
+        <div id="auth-loading-text" style="
+          font-size: 10px;
+          font-weight: 700;
+          color: #cfbcff;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255, 255, 255, 0.05);
+          padding: 6px 15px;
+          border-radius: 20px;
+          border: 1px solid rgba(207, 188, 255, 0.18);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        ">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#38BDF8;box-shadow:0 0 10px #38BDF8;animation:sync-dot 1.2s infinite ease-in-out"></span>
+          <span id="auth-loading-label">Verifying Session...</span>
         </div>
       </div>
       
       <style>
-        @keyframes auth-spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        @keyframes sync-pulse {
+          0%, 100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 25px rgba(127, 119, 221, 0.35));
+          }
+          50% {
+            transform: scale(1.03);
+            filter: drop-shadow(0 0 45px rgba(56, 189, 248, 0.55));
+          }
+        }
+        @keyframes sync-glow {
+          0% { transform: scale(0.9); opacity: 0.6; }
+          100% { transform: scale(1.2); opacity: 1; }
+        }
+        @keyframes sync-dot {
+          0%, 100% { opacity: 0.4; transform: scale(0.85); }
+          50% { opacity: 1; transform: scale(1.3); }
         }
       </style>
     </div>
@@ -105,9 +122,16 @@ if (!overlayEl) {
   overlayEl = document.getElementById(overlayId);
 }
 
+showLoadingOverlay();
+
 function updateLoadingText(text) {
-  const el = document.getElementById('auth-loading-text');
-  if (el) el.textContent = text;
+  const label = document.getElementById('auth-loading-label');
+  if (label) {
+    label.textContent = text;
+  } else {
+    const el = document.getElementById('auth-loading-text');
+    if (el) el.textContent = text;
+  }
 }
 
 function hideLoadingOverlay() {

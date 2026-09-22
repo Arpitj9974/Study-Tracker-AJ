@@ -4,6 +4,7 @@
   "description": "Interactive study & syllabus tracker for 28 competitive exams",
   "main": "index.html",
   "scripts": {
+    "start": "node scripts/server.js",
     "bump": "node scripts/bump-version.js",
     "check": "node scripts/check-health.js",
     "test": "node scripts/check-health.js"

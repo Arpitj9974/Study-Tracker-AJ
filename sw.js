@@ -2,7 +2,7 @@
  * sw.js — AspirantFlow Service Worker
  * Enables offline caching, PWA installation, and quick asset delivery.
  */
-const CACHE_NAME = 'aspirantflow-v31';
+const CACHE_NAME = 'aspirantflow-v33';
 
 const PRECACHE_ASSETS = [
   './',
@@ -14,7 +14,8 @@ const PRECACHE_ASSETS = [
   'assets/auth-sync.js',
   'assets/dashboard-generic.js',
   'assets/mock-tracker.js',
-  'assets/icon.svg',
+  'assets/logo.png',
+  'assets/syncing-cloud-progress.png',
   'assets/icon-192.png',
   'assets/icon-512.png'
 ];
