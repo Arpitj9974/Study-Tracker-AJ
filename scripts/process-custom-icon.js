@@ -24,11 +24,7 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-const sourceImage = path.join(customIconDir, 'AspirantFlow logo image.png');
-if (!fs.existsSync(sourceImage)) {
-  console.error("Error: AspirantFlow logo image.png not found in custom-icon/");
-  process.exit(1);
-}
+const sourceImage = path.join(customIconDir, files[0]);
 console.log("Using official image:", path.basename(sourceImage));
 
 // Copy directly to assets/logo.png
