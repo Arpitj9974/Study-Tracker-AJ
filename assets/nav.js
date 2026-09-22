@@ -864,13 +864,24 @@ const EXAM_CONFIG = {
   }
 };
 
-// Override all exam dates globally if the user has set a custom Target Exam Date
-const customTargetDate = localStorage.getItem('targetExamDate');
-if (customTargetDate && customTargetDate.trim() !== '') {
-  Object.keys(EXAM_CONFIG).forEach(key => {
-    EXAM_CONFIG[key].examDate = customTargetDate;
-  });
+// Resolve target exam date: checks per-exam date, legacy global date, or config default
+function getTargetExamDate(examKey) {
+  const key = examKey || getCurrentExam() || 'nqt';
+  const customPerExam = localStorage.getItem('targetExamDate_' + key);
+  if (customPerExam && customPerExam.trim() !== '') return customPerExam;
+  const legacyGlobal = localStorage.getItem('targetExamDate');
+  if (legacyGlobal && legacyGlobal.trim() !== '') return legacyGlobal;
+  return EXAM_CONFIG[key] ? EXAM_CONFIG[key].examDate : '2026-12-31';
 }
+window.getTargetExamDate = getTargetExamDate;
+
+// Apply per-exam custom target dates to EXAM_CONFIG
+Object.keys(EXAM_CONFIG).forEach(key => {
+  const custom = localStorage.getItem('targetExamDate_' + key);
+  if (custom && custom.trim() !== '') {
+    EXAM_CONFIG[key].examDate = custom;
+  }
+});
 
 // ── Active Exams Management ───────────────────────────────────────────────────
 function getActiveExams() {
@@ -1161,15 +1172,19 @@ function buildNav() {
   const streak = parseInt(localStorage.getItem('currentStreak') || '0', 10);
   const streakHTML = streak > 0 ? `<div style="font-size:12px; font-weight:700; color:#F97316; margin-top:4px; display:flex; align-items:center; gap:4px; background:rgba(249,115,22,0.15); padding:4px 8px; border-radius:6px; width:fit-content; border:1px solid rgba(249,115,22,0.3)">🔥 ${streak} Day Streak</div>` : '';
 
+  const targetDateStr = getTargetExamDate(examKey);
+  const targetExamDateObj = new Date(targetDateStr + 'T00:00:00');
+  const targetDays = Math.ceil((targetExamDateObj - new Date()) / 86400000);
   const remainingChapters = total - done;
-  const remainingWeeks = days / 7;
+  const remainingWeeks = targetDays / 7;
   let pacingHtml = '';
-  if (customTargetDate && remainingChapters > 0 && days > 0) {
+  if (remainingChapters > 0 && targetDays > 0) {
     const chaptersPerWeek = Math.ceil(remainingChapters / remainingWeeks);
     pacingHtml = `
       <div style="background:rgba(33,31,36,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(148,142,156,0.15);padding:14px;border-radius:14px;text-align:center">
-        <div style="font:700 9px/1 'Inter',sans-serif;color:rgba(203,196,210,0.6);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em">🎯 Required Pacing</div>
+        <div style="font:700 9px/1 'Inter',sans-serif;color:rgba(203,196,210,0.6);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em">🎯 Required Pacing</div>
         <div style="font:800 15px/1 'Inter',sans-serif;color:#1D9E75">${chaptersPerWeek} chapters / week</div>
+        <div style="font:500 10px 'Inter',sans-serif;color:rgba(203,196,210,0.5);margin-top:3px;">Target: ${targetDateStr}</div>
       </div>
     `;
   }
@@ -1185,6 +1200,7 @@ function buildNav() {
       <div style="display:flex;flex-direction:column;gap:6px">
         <a href="index.html?select=true" class="switch-exam-btn">🏠 Home</a>
         <button onclick="window.openSettingsModal()" class="switch-exam-btn" style="cursor:pointer">⚙️ Settings</button>
+        <button onclick="window.promptPwaInstall()" class="switch-exam-btn pwa-install-btn" style="cursor:pointer;display:none;background:rgba(127,119,221,0.15);color:#cfbcff;border-color:rgba(127,119,221,0.3)">📲 Install App</button>
       </div>
       <div class="sidebar-divider"></div>
     </div>
@@ -1209,6 +1225,7 @@ function buildNav() {
           <div style="font:700 9px/1 'Inter',sans-serif;color:rgba(203,196,210,0.6);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em">🏆 Your Rank</div>
           <div style="font:800 16px/1 'Inter',sans-serif;color:#3B82F6">Top <span id="percentile-val">--</span>%</div>
         </div>
+        <button class="pwa-install-btn" onclick="window.promptPwaInstall()" style="width:100%;display:none;background:rgba(127,119,221,0.15);color:#cfbcff;border:1px solid rgba(127,119,221,0.3);padding:11px;border-radius:12px;font:700 12px/1 'Inter',sans-serif;cursor:pointer;margin-top:4px;transition:all 0.2s">📲 Install App</button>
         <button id="logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}" style="width:100%;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:11px;border-radius:12px;font:700 12px/1 'Inter',sans-serif;cursor:pointer;margin-top:4px;transition:all 0.2s">Log Out</button>
       </div>
     </div>
@@ -1229,6 +1246,7 @@ function buildNav() {
         </div>
       </div>
       <div class="mh-actions">
+        <button onclick="window.promptPwaInstall()" class="switch-exam-btn mh-btn pwa-install-btn" style="cursor:pointer;display:none;background:rgba(127,119,221,0.15);color:#cfbcff;border-color:rgba(127,119,221,0.3)">📲 App</button>
         <button onclick="window.openSettingsModal()" class="switch-exam-btn mh-btn" style="background:rgba(255,255,255,0.05);border-color:var(--border-subtle);color:var(--text-secondary);cursor:pointer">⚙️ Settings</button>
         <a href="index.html?select=true" class="switch-exam-btn mh-btn">🏠 Home</a>
         <button class="logout-btn-trigger mh-btn logout-btn" onclick="if(window.handleLogout)window.handleLogout();else{localStorage.clear();location.href='login.html';}">Log Out</button>
@@ -1485,32 +1503,36 @@ if (typeof window !== 'undefined') {
     const activeBtnBorder = isActive ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)';
     const activeBtnTextColor = isActive ? '#EF4444' : '#10B981';
 
+    const examConfig = EXAM_CONFIG[currentExam] || EXAM_CONFIG.nqt;
+    const examName = examConfig.label || currentExam.toUpperCase();
+
     const modalHtml = `
-      <div id="settings-modal" style="display:flex; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; backdrop-filter:blur(4px);">
-        <div style="background:var(--bg-elevated); border:1px solid var(--border-medium); border-radius:14px; padding:24px; width:90%; max-width:400px; box-shadow:0 10px 30px rgba(0,0,0,0.5)">
-          <div style="font:700 18px 'DM Sans'; color:var(--text-primary); margin-bottom:16px; display:flex; align-items:center; justify-content:space-between">
-            <span>⚙️ Settings</span>
-            <button onclick="window.closeSettingsModal()" style="background:transparent; border:none; color:var(--text-tertiary); font-size:18px; cursor:pointer">&times;</button>
+      <div id="settings-modal" style="display:flex; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.65); align-items:center; justify-content:center; backdrop-filter:blur(6px);">
+        <div style="background:#141720; border:1px solid rgba(127,119,221,0.3); border-radius:18px; padding:28px; width:92%; max-width:400px; box-shadow:0 20px 50px rgba(0,0,0,0.7)">
+          <div style="font:700 18px 'Inter',sans-serif; color:#F0F2FF; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between">
+            <span>⚙️ Settings · ${examName}</span>
+            <button onclick="window.closeSettingsModal()" style="background:transparent; border:none; color:rgba(203,196,210,0.6); font-size:22px; cursor:pointer">&times;</button>
           </div>
           
-          <div style="margin-bottom:16px">
-            <label style="font:600 12px 'JetBrains Mono'; color:var(--text-secondary); text-transform:uppercase; display:block; margin-bottom:6px">Active Prep Status</label>
-            <button onclick="window.toggleActiveExamState('${currentExam}'); window.openSettingsModal();" style="width:100%; background:${activeBtnColor}; border:1px solid ${activeBtnBorder}; color:${activeBtnTextColor}; font-weight:600; padding:12px; border-radius:8px; cursor:pointer; font-family:'DM Sans'; transition:all 0.2s">
+          <div style="margin-bottom:18px">
+            <label style="font:600 11px 'JetBrains Mono',monospace; color:rgba(203,196,210,0.7); text-transform:uppercase; display:block; margin-bottom:6px">Active Prep Status</label>
+            <button onclick="window.toggleActiveExamState('${currentExam}'); window.openSettingsModal();" style="width:100%; background:${activeBtnColor}; border:1px solid ${activeBtnBorder}; color:${activeBtnTextColor}; font-weight:700; padding:12px; border-radius:10px; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s">
               ${activeBtnText}
             </button>
           </div>
 
-          <div style="margin-bottom:16px">
-            <label style="font:600 12px 'JetBrains Mono'; color:var(--text-secondary); text-transform:uppercase; display:block; margin-bottom:6px">Target Exam Date</label>
-            <input type="date" id="settings-target-date" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; color:var(--text-primary); font-family:'JetBrains Mono'" />
+          <div style="margin-bottom:20px">
+            <label style="font:600 11px 'JetBrains Mono',monospace; color:rgba(203,196,210,0.7); text-transform:uppercase; display:block; margin-bottom:6px">Target Date for ${examName}</label>
+            <input type="date" id="settings-target-date" style="width:100%; box-sizing:border-box; padding:11px 14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:#F0F2FF; font-family:'JetBrains Mono',monospace; font-size:13px" />
+            <div style="font-size:10px; color:rgba(203,196,210,0.5); margin-top:5px">Each exam can have its own independent target date & study pacing.</div>
           </div>
-          <button onclick="window.saveSettings()" style="width:100%; background:#7F77DD; color:white; font-weight:600; padding:10px; border-radius:8px; border:none; cursor:pointer">Save & Apply</button>
+          <button onclick="window.saveSettings('${currentExam}')" style="width:100%; background:linear-gradient(135deg, #7F77DD 0%, #534AB7 100%); color:white; font-weight:700; padding:12px; border-radius:10px; border:none; cursor:pointer">Save & Apply</button>
         </div>
       </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     modal = document.getElementById('settings-modal');
 
-    const savedDate = localStorage.getItem('targetExamDate') || '';
+    const savedDate = getTargetExamDate(currentExam) || '';
     document.getElementById('settings-target-date').value = savedDate;
   };
 
@@ -1519,16 +1541,31 @@ if (typeof window !== 'undefined') {
     if (modal) modal.style.display = 'none';
   };
 
-  window.saveSettings = function() {
+  window.saveSettings = function(examKey) {
+    const key = examKey || window.getCurrentExam() || 'nqt';
     const val = document.getElementById('settings-target-date').value;
     if (val) {
-      localStorage.setItem('targetExamDate', val);
+      localStorage.setItem('targetExamDate_' + key, val);
     } else {
-      localStorage.removeItem('targetExamDate');
+      localStorage.removeItem('targetExamDate_' + key);
     }
+
+    if (window.auth && window.auth.currentUser && window.db && window.setDoc && window.doc) {
+      const updateData = {};
+      updateData[`targetExamDates.${key}`] = val || null;
+      window.setDoc(window.doc(window.db, "users", window.auth.currentUser.uid), updateData, { merge: true }).catch(()=>{});
+    }
+
     window.closeSettingsModal();
     location.reload();
   };
+}
+
+// Load mock test tracker module if not already present
+if (!window.renderMockTracker && !document.querySelector('script[src*="mock-tracker.js"]')) {
+  const mockScript = document.createElement('script');
+  mockScript.src = 'assets/mock-tracker.js?v=27';
+  document.head.appendChild(mockScript);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1550,3 +1587,47 @@ window.addEventListener('cloudDataSynced', () => {
 window.addEventListener('storage', () => {
   buildNav();
 });
+
+// ── PWA Service Worker & Install Prompt ───────────────────────────────────────
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.querySelectorAll('.pwa-install-btn').forEach(btn => {
+    btn.style.display = 'inline-flex';
+  });
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  document.querySelectorAll('.pwa-install-btn').forEach(btn => {
+    btn.style.display = 'none';
+  });
+  console.log('[PWA] AspirantFlow installed successfully');
+});
+
+window.promptPwaInstall = async function() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('[PWA] User choice:', outcome);
+    deferredPrompt = null;
+    document.querySelectorAll('.pwa-install-btn').forEach(btn => {
+      btn.style.display = 'none';
+    });
+  } else {
+    alert('To install AspirantFlow on your home screen:\n\n• iOS (Safari): Tap Share button -> "Add to Home Screen"\n• Android (Chrome): Tap three dots -> "Install app" or "Add to Home screen"\n• Desktop (Chrome/Edge): Click the Install icon in the address bar.');
+  }
+};
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('[PWA] ServiceWorker registered with scope:', reg.scope);
+      })
+      .catch(err => {
+        console.warn('[PWA] ServiceWorker registration failed:', err);
+      });
+  });
+}

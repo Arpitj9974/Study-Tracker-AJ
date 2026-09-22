@@ -200,6 +200,33 @@ async function syncCloudAndLocalStorage(uid) {
     if (userData.targetExamDate) {
       localStorage.setItem('targetExamDate', userData.targetExamDate);
     }
+    // Per-exam independent target dates (Cloud -> Local)
+    if (userData.targetExamDates && typeof userData.targetExamDates === 'object') {
+      for (const [eKey, eDate] of Object.entries(userData.targetExamDates)) {
+        if (eDate) {
+          localStorage.setItem('targetExamDate_' + eKey, eDate);
+        }
+      }
+    }
+    // Mocks: Cloud -> Local
+    if (userData.mocks && typeof userData.mocks === 'object') {
+      for (const [eKey, mockList] of Object.entries(userData.mocks)) {
+        if (Array.isArray(mockList)) {
+          const localMocks = localStorage.getItem('mocks_' + eKey);
+          if (!localMocks) {
+            localStorage.setItem('mocks_' + eKey, JSON.stringify(mockList));
+          } else {
+            try {
+              const parsedLocal = JSON.parse(localMocks);
+              if (mockList.length > parsedLocal.length) {
+                localStorage.setItem('mocks_' + eKey, JSON.stringify(mockList));
+              }
+            } catch(e){}
+          }
+        }
+      }
+    }
+
     if (userData.currentStreak) {
       localStorage.setItem('currentStreak', userData.currentStreak.toString());
     }
@@ -216,7 +243,7 @@ async function syncCloudAndLocalStorage(uid) {
       }
     }
 
-    // E. Sync Progress: Local -> Cloud (Only push if not in cloud or different)
+    // E. Sync Progress, Per-Exam Dates & Mocks: Local -> Cloud (Only push if not in cloud or different)
     let cloudPending = {};
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -225,6 +252,20 @@ async function syncCloudAndLocalStorage(uid) {
         if (val !== null && val !== cloudProgress[key]) {
           cloudPending[`progress.${key}`] = val;
         }
+      } else if (key && key.startsWith('targetExamDate_')) {
+        const eKey = key.replace('targetExamDate_', '');
+        const val = localStorage.getItem(key);
+        if (val && (!userData.targetExamDates || userData.targetExamDates[eKey] !== val)) {
+          cloudPending[`targetExamDates.${eKey}`] = val;
+        }
+      } else if (key && key.startsWith('mocks_')) {
+        const eKey = key.replace('mocks_', '');
+        try {
+          const mList = JSON.parse(localStorage.getItem(key) || '[]');
+          if (Array.isArray(mList) && mList.length > 0 && (!userData.mocks || !userData.mocks[eKey])) {
+            cloudPending[`mocks.${eKey}`] = mList;
+          }
+        } catch(e){}
       }
     }
 

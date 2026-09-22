@@ -64,9 +64,12 @@
     setText('ms-subj-count', config.subjects.length);
     setText('ms-syllabus-sub', name.split(' ')[0]);
 
-    // Countdown
-    if (config.examDate) {
-      const target = new Date(config.examDate + 'T00:00:00');
+    // Countdown (per-exam target date supported)
+    const effectiveExamDate = localStorage.getItem('targetExamDate_' + (variant.storageKey || '')) || 
+                              (typeof getTargetExamDate === 'function' ? getTargetExamDate(variant.storageKey) : null) || 
+                              config.examDate;
+    if (effectiveExamDate) {
+      const target = new Date(effectiveExamDate + 'T00:00:00');
       const days = Math.ceil((target - new Date()) / 86400000);
       setText('countdown-days', days > 0 ? days : '0');
       setText('countdown-lbl', `Days until ${name.split(' ')[0]} Exam`);
@@ -136,6 +139,23 @@
         a.style.color = on ? '#cfbcff' : '';
       });
     } catch (e) {}
+
+    // Mock Tracker integration
+    if (typeof window.renderMockTracker === 'function') {
+      let mockContainer = $('mock-tracker-container');
+      if (!mockContainer) {
+        const leftCol = document.querySelector('.main-grid > div:first-child');
+        if (leftCol) {
+          mockContainer = document.createElement('div');
+          mockContainer.id = 'mock-tracker-container';
+          mockContainer.style.marginTop = '28px';
+          leftCol.appendChild(mockContainer);
+        }
+      }
+      if (mockContainer) {
+        window.renderMockTracker('mock-tracker-container', variant.storageKey || config.examKey, name);
+      }
+    }
 
     // let the page's inline stat-bar script update
     if (typeof window.updateStatBars === 'function') window.updateStatBars();
