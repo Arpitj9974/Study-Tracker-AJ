@@ -24,11 +24,14 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-const preferred = files.find(f => !f.toLowerCase().includes('bgrmv') && !f.toLowerCase().includes('transparent')) || files[0];
-const sourceImage = path.join(customIconDir, preferred);
-console.log("Selected custom image:", preferred);
+const sourceImage = path.join(customIconDir, 'AspirantFlow logo image.png');
+if (!fs.existsSync(sourceImage)) {
+  console.error("Error: AspirantFlow logo image.png not found in custom-icon/");
+  process.exit(1);
+}
+console.log("Using official image:", path.basename(sourceImage));
 
-// Also copy directly to assets/logo.png
+// Copy directly to assets/logo.png
 fs.copyFileSync(sourceImage, path.join(assetsDir, 'logo.png'));
 console.log("Copied to assets/logo.png");
 
@@ -42,7 +45,7 @@ function Resize-Image($srcPath, $destPath, $width, $height, $paddingRatio) {
     $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic;
     $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality;
     $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality;
-    $g.Clear([System.Drawing.Color]::FromArgb(10, 12, 16));
+    $g.Clear([System.Drawing.Color]::White);
 
     $targetW = [int]($width * (1.0 - (2 * $paddingRatio)));
     $targetH = [int]($height * (1.0 - (2 * $paddingRatio)));
