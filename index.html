@@ -6,6 +6,7 @@
   <title>AspirantFlow — ArpitPrep Hub | Interactive Study Hub</title>
   <meta name="description" content="AspirantFlow (ArpitPrep Hub) — Track your preparation for TCS NQT, SSC CGL/CHSL/MTS, UPSC CSE/NDA/CDS, IBPS PO/Clerk/SO, JEE, NEET, CAT, CMAT, XAT, UGC NET, CLAT, CUET, RRB NTPC/Group D, CA, CMA, CFA, and more."/>
   <meta name="theme-color" content="#0A0C10"/>
+  <meta name="color-scheme" content="dark"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <link rel="manifest" href="manifest.json"/>
@@ -15,7 +16,7 @@
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="assets/style.css?v=36"/>
+  <link rel="stylesheet" href="assets/style.css?v=38"/>
 
   <!-- Subject exam data scripts for dynamic stats reading -->
   <script src="assets/ssc_chsl_exam_data.js"></script>
@@ -179,6 +180,46 @@
 </head>
 
 <body class="bg-[#141218] text-[#e6e0e9] min-h-screen font-sans overflow-x-hidden flex relative pb-20 md:pb-0">
+  <!-- Instant Inline Dark Splash for Mobile Launch (Matches Syncing Progress Animation) -->
+  <div id="app-splash" style="position:fixed;inset:0;background:#0A0C10;z-index:9999998;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.3s ease, visibility 0.3s ease;overflow:hidden;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;">
+    <!-- Ambient background glow aura -->
+    <div style="position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle, rgba(127, 119, 221, 0.22) 0%, rgba(10, 12, 16, 0) 70%);pointer-events:none;animation:sync-glow 4s ease-in-out infinite alternate;"></div>
+    
+    <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:13px;z-index:2;">
+      <!-- Compact Syncing Hero Graphic (Half-Size) with breathing pulse -->
+      <div style="position:relative;display:flex;justify-content:center;align-items:center;">
+        <img src="assets/syncing-cloud-progress.png" alt="AspirantFlow" style="width:min(190px, 46vw);max-width:200px;height:auto;object-fit:contain;border-radius:18px;animation:sync-pulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;display:block;" />
+      </div>
+      
+      <!-- Dynamic Status Pill -->
+      <div id="splash-loading-text" style="font-size:10px;font-weight:700;color:#cfbcff;letter-spacing:0.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;background:rgba(255, 255, 255, 0.05);padding:6px 15px;border-radius:20px;border:1px solid rgba(207, 188, 255, 0.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#38BDF8;box-shadow:0 0 10px #38BDF8;animation:sync-dot 1.2s infinite ease-in-out"></span>
+        <span id="splash-loading-label">Verifying Session...</span>
+      </div>
+    </div>
+
+    <style>
+      @keyframes sync-pulse {
+        0%, 100% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 25px rgba(127, 119, 221, 0.35));
+        }
+        50% {
+          transform: scale(1.03);
+          filter: drop-shadow(0 0 45px rgba(56, 189, 248, 0.55));
+        }
+      }
+      @keyframes sync-glow {
+        0% { transform: scale(0.9); opacity: 0.6; }
+        100% { transform: scale(1.2); opacity: 1; }
+      }
+      @keyframes sync-dot {
+        0%, 100% { opacity: 0.4; transform: scale(0.85); }
+        50% { opacity: 1; transform: scale(1.3); }
+      }
+    </style>
+  </div>
+
   <div class="bg-ambient-orb"></div>
   <div class="bg-ambient-orb-2"></div>
 
@@ -361,7 +402,7 @@
     </a>
   </nav>
 
-  <script src="assets/nav.js?v=36"></script>
+  <script src="assets/nav.js?v=38"></script>
   <script>
     // Comprehensive List of All 28 Exams grouped into Categories
     const CATEGORIES = [
@@ -741,6 +782,6 @@
       renderDashboard();
     });
   </script>
-  <script type="module" src="assets/auth-sync.js?v=36"></script>
+  <script type="module" src="assets/auth-sync.js?v=38"></script>
 </body>
 </html>

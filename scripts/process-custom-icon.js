@@ -24,14 +24,17 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-// Prefer 'the main Logo' or files with 'main'/'logo'
-const preferred = files.find(f => f.toLowerCase().includes('main') || f.toLowerCase().includes('logo')) || files[0];
-const sourceImage = path.join(customIconDir, preferred);
-console.log("Using official image:", path.basename(sourceImage));
+// 1. Maintain official brand logo for website headers and sidebars
+const mainLogoFile = files.find(f => f.toLowerCase().includes('main') || f.toLowerCase().includes('the main')) || files[0];
+const mainLogoPath = path.join(customIconDir, mainLogoFile);
+fs.copyFileSync(mainLogoPath, path.join(assetsDir, 'logo.png'));
+console.log("Main navbar logo preserved:", path.basename(mainLogoPath));
 
-// Copy directly to assets/logo.png
-fs.copyFileSync(sourceImage, path.join(assetsDir, 'logo.png'));
-console.log("Copied to assets/logo.png");
+// 2. Select the syncing cloud graphic for mobile PWA splash screen & app icons
+const splashFile = files.find(f => f.toLowerCase().includes('sycing') || f.toLowerCase().includes('syncing')) || mainLogoFile;
+const splashSource = path.join(customIconDir, splashFile);
+fs.copyFileSync(splashSource, path.join(assetsDir, 'syncing-cloud-progress.png'));
+console.log("Using syncing cloud graphic for mobile splash & PWA icons:", path.basename(splashSource));
 
 const psScript = `
 Add-Type -AssemblyName System.Drawing;
@@ -60,12 +63,12 @@ function Resize-Image($srcPath, $destPath, $width, $height, $paddingRatio) {
     $bmp.Dispose();
 }
 
-$source = '${sourceImage.replace(/'/g, "''").replace(/\\/g, '\\\\')}';
+$source = '${splashSource.replace(/'/g, "''").replace(/\\/g, '\\\\')}';
 Resize-Image $source '${path.join(assetsDir, "icon-192.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 192 192 0.0;
 Resize-Image $source '${path.join(assetsDir, "icon-512.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 512 512 0.0;
 Resize-Image $source '${path.join(assetsDir, "icon-maskable-192.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 192 192 0.1;
 Resize-Image $source '${path.join(assetsDir, "icon-maskable-512.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 512 512 0.1;
-Write-Output "Successfully generated PWA icons!";
+Write-Output "Successfully generated mobile splash PWA icons!";
 `;
 
 try {

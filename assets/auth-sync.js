@@ -125,6 +125,8 @@ function showLoadingOverlay() {
 showLoadingOverlay();
 
 function updateLoadingText(text) {
+  const splashLabel = document.getElementById('splash-loading-label');
+  if (splashLabel) splashLabel.textContent = text;
   const label = document.getElementById('auth-loading-label');
   if (label) {
     label.textContent = text;
@@ -135,6 +137,13 @@ function updateLoadingText(text) {
 }
 
 function hideLoadingOverlay() {
+  const splash = document.getElementById('app-splash');
+  if (splash) {
+    splash.style.opacity = '0';
+    setTimeout(() => {
+      if (splash && splash.parentNode) splash.remove();
+    }, 300);
+  }
   if (overlayEl) {
     overlayEl.style.opacity = '0';
     overlayEl.style.visibility = 'hidden';
