@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "node scripts/server.js",
+    "audit": "node scripts/audit.js",
     "bump": "node scripts/bump-version.js",
     "check": "node scripts/check-health.js",
     "test": "node scripts/check-health.js"

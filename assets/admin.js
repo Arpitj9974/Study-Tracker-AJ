@@ -15,6 +15,8 @@ const EXAM_LABELS = {
   nda: 'UPSC NDA',
   ibps_po: 'IBPS PO',
   ibps_clerk: 'IBPS Clerk',
+  ibps_so_2026: 'IBPS SO',
+  ibps_so_it_2026: 'IBPS SO (IT)',
   jee: 'JEE Main & Adv',
   neet_ug: 'NEET UG',
   cat: 'CAT (MBA)',
@@ -24,6 +26,10 @@ const EXAM_LABELS = {
   cuet_ug: 'CUET UG',
   cuet_pg_general: 'CUET PG General',
   cds: 'UPSC CDS',
+  cfa_l1: 'CFA Level 1',
+  cfa_l2: 'CFA Level 2',
+  cfa_l3: 'CFA Level 3',
+  cma_foundation: 'CMA Foundation',
   ca_foundation: 'CA Foundation',
   ca_inter: 'CA Intermediate',
   ca_final: 'CA Final',
@@ -35,10 +41,12 @@ const EXAM_COLORS = {
   not_selected: '#9CA3AF',
   nqt: '#7F77DD', ssc: '#1D9E75', ssc_chsl: '#8E44AD', ssc_mts: '#E67E22',
   ugcnet: '#4F46E5', upsc: '#3B5BDB', nda: '#F59E0B', ibps_po: '#B7791F',
-  ibps_clerk: '#E11D48', jee: '#3B5BDB', neet_ug: '#4C9A3F', cat: '#E67E22',
-  cmat: '#EF4444', xat: '#943126', clat_ug: '#7B241C', cuet_ug: '#3B82F6',
-  cuet_pg_general: '#059669', cds: '#10B981', ca_foundation: '#C0392B',
-  ca_inter: '#B03A2E', ca_final: '#922B21', rrb_ntpc: '#6C3483', rrb_group_d: '#229954'
+  ibps_clerk: '#E11D48', ibps_so_2026: '#1F618D', ibps_so_it_2026: '#117A65',
+  jee: '#3B5BDB', neet_ug: '#4C9A3F', cat: '#E67E22', cmat: '#EF4444',
+  xat: '#943126', clat_ug: '#7B241C', cuet_ug: '#3B82F6', cuet_pg_general: '#059669',
+  cds: '#10B981', cfa_l1: '#C0392B', cfa_l2: '#B03A2E', cfa_l3: '#922B21',
+  cma_foundation: '#7D3C98', ca_foundation: '#C0392B', ca_inter: '#B03A2E',
+  ca_final: '#922B21', rrb_ntpc: '#6C3483', rrb_group_d: '#229954'
 };
 
 function formatDate(isoStr) {
