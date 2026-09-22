@@ -1,0 +1,21 @@
+{
+  "name": "aspirantflow-study-tracker",
+  "version": "2.6.0",
+  "description": "Interactive study & syllabus tracker for 28 competitive exams",
+  "main": "index.html",
+  "scripts": {
+    "bump": "node scripts/bump-version.js",
+    "check": "node scripts/check-health.js",
+    "test": "node scripts/check-health.js"
+  },
+  "keywords": [
+    "study-tracker",
+    "aspirantflow",
+    "exam-prep",
+    "ssc",
+    "upsc",
+    "ibps"
+  ],
+  "author": "Arpit",
+  "license": "MIT"
+}
