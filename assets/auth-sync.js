@@ -74,6 +74,17 @@ if (!overlayEl) {
             border-radius: 50%;
             animation: auth-spin 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
           "></div>
+          <img src="assets/logo.png" alt="AspirantFlow Logo" style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 0 14px rgba(127, 119, 221, 0.6);
+          ">
         </div>
         
         <div style="display: flex; flex-direction: column; gap: 4px;">

@@ -1193,7 +1193,10 @@ function buildNav() {
   <div id="sidebar">
     <div class="sidebar-top">
       <div class="sidebar-brand">
-        <h1>${config.icon} ${config.label}</h1>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <img src="assets/logo.png" alt="AspirantFlow Logo" style="width:34px;height:34px;object-fit:cover;border-radius:9px;box-shadow:0 4px 12px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.12)" />
+          <h1 style="margin:0;font-size:16px;line-height:1.2">${config.icon} ${config.label}</h1>
+        </div>
         <p>${userSub}</p>
         ${streakHTML}
       </div>
@@ -1238,6 +1241,7 @@ function buildNav() {
   <div id="mobile-header">
     <div class="mh-top">
       <div class="mh-brand">
+        <img src="assets/logo.png" alt="AspirantFlow Logo" style="width:34px;height:34px;object-fit:cover;border-radius:9px;box-shadow:0 4px 12px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.12);flex-shrink:0" />
         <span class="mh-icon">${config.icon}</span>
         <div class="mh-brand-info">
           <div class="mh-brand-title">${config.label}</div>

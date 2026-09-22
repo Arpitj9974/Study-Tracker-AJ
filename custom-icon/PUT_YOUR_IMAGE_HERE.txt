@@ -1,0 +1,6 @@
+Put your image file here!
+
+Supported formats: .png, .jpg, .jpeg, .webp, or .svg.
+Name it anything (for example: app-icon.png or logo.png).
+
+Once you drop your image here, just tell me: "I put the image" and I will automatically convert and configure it as the official PWA icon for mobile and desktop!
