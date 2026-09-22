@@ -146,41 +146,150 @@ async function loadAdminData() {
     const isPermissionErr = e.code === 'permission-denied' || (e.message && e.message.includes('permissions'));
     const isTimeout = e.message && e.message.includes('NETWORK_TIMEOUT');
 
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="7" style="padding:24px;text-align:left">
-          <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:22px;color:var(--text-primary)">
-            <div style="font:700 16px/1.2 'DM Sans';color:#EF4444;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
-              <span>⚠️ Firestore Data Fetch Error (${e.code || 'Timeout / Blocked'})</span>
-              <button onclick="window.loadAdminData()" class="btn-inspect" style="background:#EF4444;color:white;border:none;padding:6px 14px">🔄 Retry Now</button>
-            </div>
-            <div style="font:400 13px/1.5 'DM Sans';color:var(--text-secondary);margin-bottom:14px">
-              ${isPermissionErr 
-                ? 'Your Firebase Firestore Security Rules currently restrict reading all user accounts. Update your rules in Firebase Console to grant read access.' 
-                : (isTimeout 
-                  ? 'The request to Firestore timed out after 8 seconds. Please check if an ad-blocker or browser extension (e.g. uBlock, Brave Shields) is blocking Firebase gRPC WebSockets.' 
-                  : e.message)}
-            </div>
-            ${isPermissionErr ? `
-              <div style="background:rgba(0,0,0,0.4);padding:14px;border-radius:8px;font:400 12px 'JetBrains Mono';color:#F59E0B;margin-bottom:14px;white-space:pre-wrap">rules_version = '2';
+    // Attempt self-profile fallback so admin sees their own active progress while updating rules
+    let selfUser = null;
+    if (isPermissionErr && auth.currentUser) {
+      try {
+        const selfDocSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+        if (selfDocSnap.exists()) {
+          const sdata = selfDocSnap.data();
+          selfUser = {
+            uid: selfDocSnap.id,
+            email: sdata.email || auth.currentUser.email || 'Admin',
+            name: sdata.name || auth.currentUser.displayName || 'Administrator (You)',
+            age: sdata.age || '--',
+            mobile: sdata.mobile || 'Not Provided',
+            status: sdata.status || 'Active Admin',
+            createdAt: sdata.createdAt || null,
+            lastLogin: sdata.lastLogin || new Date().toISOString(),
+            lastActive: sdata.lastActive || sdata.lastLogin || new Date().toISOString(),
+            loginCount: sdata.loginCount || 1,
+            selectedExam: sdata.selectedExam || 'not_selected',
+            progress: sdata.progress || {}
+          };
+          cachedUsers = [selfUser];
+          renderMetrics();
+        }
+      } catch (selfErr) {
+        console.warn("[Admin] Self-profile fallback failed:", selfErr);
+      }
+    }
+
+    const firestoreRuleText = `rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
       allow read, write: if request.auth != null;
     }
   }
-}</div>
-              <div style="font:400 12px/1.4 'DM Sans';color:var(--text-tertiary)">
-                👉 <strong>How to fix:</strong> Go to <a href="https://console.firebase.google.com" target="_blank" style="color:#F59E0B">Firebase Console</a> → Project <strong>arpits-exam-hub</strong> → Firestore Database → Rules tab → Paste the rule above and click <strong>Publish</strong>.
+}`;
+
+    const bannerHtml = `
+      <tr>
+        <td colspan="7" style="padding:20px;text-align:left">
+          <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:14px;padding:22px;color:var(--text-primary)">
+            <div style="font:700 16px/1.2 'DM Sans';color:#EF4444;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <span>⚠️ Firestore Data Fetch Error (${e.code || 'permission-denied'})</span>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="window.copyFirestoreRule()" id="btn-copy-rule" class="btn-inspect" style="background:#F59E0B;color:#0A0C10;font-weight:700;border:none;padding:7px 16px;cursor:pointer;">📋 Copy Rule</button>
+                <a href="https://console.firebase.google.com/project/arpits-exam-hub/firestore/rules" target="_blank" class="btn-inspect" style="background:rgba(255,255,255,0.1);color:#ffffff;border:1px solid rgba(255,255,255,0.2);padding:7px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">🚀 Open Firebase Console Rules</a>
+                <button onclick="window.loadAdminData()" class="btn-inspect" style="background:#EF4444;color:white;border:none;padding:7px 16px;cursor:pointer;">🔄 Retry Now</button>
+              </div>
+            </div>
+            <div style="font:400 13px/1.5 'DM Sans';color:var(--text-secondary);margin-bottom:12px">
+              ${isPermissionErr 
+                ? `Your Firebase Firestore Security Rules currently restrict reading all user accounts. ${selfUser ? '<strong>(Your admin account data is loaded below as a preview)</strong>.' : ''} To grant read access to all student records, update your rules in Firebase Console:` 
+                : (isTimeout 
+                  ? 'The request to Firestore timed out after 8 seconds. Please check if an ad-blocker or browser extension (e.g. uBlock, Brave Shields) is blocking Firebase gRPC WebSockets.' 
+                  : e.message)}
+            </div>
+            ${isPermissionErr ? `
+              <div style="position:relative;margin-bottom:12px;">
+                <pre id="firestore-rules-pre" style="background:rgba(0,0,0,0.5);padding:14px;border-radius:8px;font:400 12px/1.5 'JetBrains Mono',monospace;color:#FCD34D;overflow-x:auto;border:1px solid rgba(245,158,11,0.2);margin:0;">${firestoreRuleText}</pre>
+              </div>
+              <div style="font:400 12px/1.5 'DM Sans';color:var(--text-tertiary)">
+                👉 <strong>How to fix in 1 minute:</strong>
+                <ol style="margin:6px 0 0 18px;padding:0;line-height:1.6;">
+                  <li>Click <strong>"Copy Rule"</strong> above.</li>
+                  <li>Click <strong>"Open Firebase Console Rules"</strong> to open project <strong>arpits-exam-hub</strong>.</li>
+                  <li>In the <strong>Rules</strong> tab, select all text, paste the rule, and click <strong>"Publish"</strong>.</li>
+                  <li>Return here and click <strong>"Retry Now"</strong>!</li>
+                </ol>
               </div>
             ` : ''}
           </div>
         </td>
       </tr>
     `;
+
+    if (selfUser) {
+      tableBody.innerHTML = bannerHtml;
+      // Also render self user row below the banner
+      const now = Date.now();
+      const doneCount = countUserCompletedChapters(selfUser.progress);
+      const exKey = selfUser.selectedExam || 'not_selected';
+      const exLabel = EXAM_LABELS[exKey] || exKey;
+      const exColor = EXAM_COLORS[exKey] || '#9CA3AF';
+      tableBody.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td>
+            <div class="user-email">
+              <span class="status-dot dot-active" title="Active Admin"></span>
+              <div style="display:flex; flex-direction:column;">
+                <span style="font-weight:600;color:var(--text-primary);margin-bottom:2px">${selfUser.name} <span style="font-size:10px;background:rgba(207,188,255,0.15);color:#cfbcff;padding:2px 6px;border-radius:4px;margin-left:4px;">ADMIN</span></span>
+                <span style="font-size:11px;color:var(--text-secondary)">${selfUser.email}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="display:flex; flex-direction:column;">
+              <span style="color:var(--text-primary);margin-bottom:2px">${selfUser.status}</span>
+              <span style="font-size:11px;color:var(--text-tertiary)">Age: ${selfUser.age}</span>
+            </div>
+          </td>
+          <td>
+            <span class="exam-pill" style="background:${exColor}20;color:${exColor};border:1px solid ${exColor}40">${exLabel}</span>
+          </td>
+          <td>
+            <span style="font:600 14px 'JetBrains Mono';color:#10B981">${doneCount}</span> chapters
+          </td>
+          <td>${getTimeAgo(selfUser.lastActive)}</td>
+          <td><span style="font:600 13px 'JetBrains Mono'">${selfUser.loginCount}</span></td>
+          <td>
+            <button class="btn-inspect" data-uid="${selfUser.uid}">🔍 Inspect</button>
+          </td>
+        </tr>
+      `);
+      const btn = tableBody.querySelector(`.btn-inspect[data-uid="${selfUser.uid}"]`);
+      if (btn) btn.addEventListener('click', () => openUserModal(selfUser.uid));
+    } else {
+      tableBody.innerHTML = bannerHtml;
+    }
   }
 }
 window.loadAdminData = loadAdminData;
+
+window.copyFirestoreRule = function() {
+  const pre = document.getElementById('firestore-rules-pre');
+  if (pre) {
+    const text = pre.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('btn-copy-rule');
+        if (btn) {
+          btn.textContent = '✅ Copied!';
+          btn.style.background = '#10B981';
+          btn.style.color = '#ffffff';
+          setTimeout(() => {
+            btn.textContent = '📋 Copy Rule';
+            btn.style.background = '#F59E0B';
+            btn.style.color = '#0A0C10';
+          }, 3000);
+        }
+      });
+    }
+  }
+};
 
 function renderMetrics() {
   const totalUsers = cachedUsers.length;

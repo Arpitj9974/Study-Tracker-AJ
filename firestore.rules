@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User Profiles & Study Progress
+    match /users/{userId} {
+      // 1. Every authenticated student can read & write their own progress
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // 2. Administrators can read all student profiles for the Admin Control Panel
+      allow read: if request.auth != null && (
+        request.auth.token.email in ['jaiswalarpit4282@gmail.com', 'arpitj9974@gmail.com']
+      );
+    }
+    
+  }
+}
