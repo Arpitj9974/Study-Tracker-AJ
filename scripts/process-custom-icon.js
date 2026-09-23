@@ -24,17 +24,17 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-// 1. Maintain official brand logo for website headers and sidebars
+// 1. Maintain official brand logo for website headers, sidebars, and PWA application icons
 const mainLogoFile = files.find(f => f.toLowerCase().includes('main') || f.toLowerCase().includes('the main')) || files[0];
 const mainLogoPath = path.join(customIconDir, mainLogoFile);
 fs.copyFileSync(mainLogoPath, path.join(assetsDir, 'logo.png'));
-console.log("Main navbar logo preserved:", path.basename(mainLogoPath));
+console.log("Main brand logo preserved:", path.basename(mainLogoPath));
 
-// 2. Select the syncing cloud graphic for mobile PWA splash screen & app icons
+// 2. Select the syncing cloud graphic for cloud sync status and sync progress animations
 const splashFile = files.find(f => f.toLowerCase().includes('sycing') || f.toLowerCase().includes('syncing')) || mainLogoFile;
 const splashSource = path.join(customIconDir, splashFile);
 fs.copyFileSync(splashSource, path.join(assetsDir, 'syncing-cloud-progress.png'));
-console.log("Using syncing cloud graphic for mobile splash & PWA icons:", path.basename(splashSource));
+console.log("Using syncing cloud graphic for cloud sync animations:", path.basename(splashSource));
 
 const psScript = `
 Add-Type -AssemblyName System.Drawing;
@@ -63,18 +63,18 @@ function Resize-Image($srcPath, $destPath, $width, $height, $paddingRatio) {
     $bmp.Dispose();
 }
 
-$source = '${splashSource.replace(/'/g, "''").replace(/\\/g, '\\\\')}';
+$source = '${mainLogoPath.replace(/'/g, "''").replace(/\\/g, '\\\\')}';
 Resize-Image $source '${path.join(assetsDir, "icon-192.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 192 192 0.0;
 Resize-Image $source '${path.join(assetsDir, "icon-512.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 512 512 0.0;
 Resize-Image $source '${path.join(assetsDir, "icon-maskable-192.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 192 192 0.1;
 Resize-Image $source '${path.join(assetsDir, "icon-maskable-512.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 512 512 0.1;
-Write-Output "Successfully generated mobile splash PWA icons!";
+Write-Output "Successfully generated PWA app icons from main brand logo!";
 `;
 
 try {
   const output = execSync(`powershell -NoProfile -Command "${psScript.replace(/\r?\n/g, ' ')}"`, { encoding: 'utf8' });
   console.log(output);
-  console.log("Updated assets/icon-192.png, assets/icon-512.png and maskable icons.");
+  console.log("Updated assets/icon-192.png, assets/icon-512.png and maskable icons using main brand logo.");
 } catch (err) {
   console.error("Failed to process image:", err.message);
   process.exit(1);

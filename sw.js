@@ -2,7 +2,7 @@
  * sw.js — AspirantFlow Service Worker
  * Enables offline caching, PWA installation, and quick asset delivery.
  */
-const CACHE_NAME = 'aspirantflow-v33';
+const CACHE_NAME = 'aspirantflow-v41';
 
 const PRECACHE_ASSETS = [
   './',
