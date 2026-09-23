@@ -46,7 +46,10 @@ function Resize-Image($srcPath, $destPath, $width, $height, $paddingRatio) {
     $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic;
     $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality;
     $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality;
-    $g.Clear([System.Drawing.Color]::Transparent);
+    $srcBmp = New-Object System.Drawing.Bitmap $srcImg;
+    $cornerColor = $srcBmp.GetPixel(0, 0);
+    $srcBmp.Dispose();
+    $g.Clear($cornerColor);
 
     $targetW = [int]($width * (1.0 - (2 * $paddingRatio)));
     $targetH = [int]($height * (1.0 - (2 * $paddingRatio)));
@@ -66,9 +69,9 @@ function Resize-Image($srcPath, $destPath, $width, $height, $paddingRatio) {
 $source = '${mainLogoPath.replace(/'/g, "''").replace(/\\/g, '\\\\')}';
 Resize-Image $source '${path.join(assetsDir, "icon-192.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 192 192 0.0;
 Resize-Image $source '${path.join(assetsDir, "icon-512.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 512 512 0.0;
-Resize-Image $source '${path.join(assetsDir, "icon-maskable-192.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 192 192 0.1;
-Resize-Image $source '${path.join(assetsDir, "icon-maskable-512.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 512 512 0.1;
-Write-Output "Successfully generated PWA app icons from main brand logo!";
+Resize-Image $source '${path.join(assetsDir, "icon-maskable-192.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 192 192 0.0;
+Resize-Image $source '${path.join(assetsDir, "icon-maskable-512.png").replace(/'/g, "''").replace(/\\/g, '\\\\')}' 512 512 0.0;
+Write-Output "Successfully generated full-bleed PWA app icons from main brand logo!";
 `;
 
 try {
